@@ -1,13 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lingua_eidetic/routes/authentication_page.dart';
+import 'package:lingua_eidetic/routes/authentication/register_page.dart';
+import 'package:lingua_eidetic/routes/authentication/sign_in_page.dart';
 import 'package:lingua_eidetic/routes/landing_page.dart';
 import 'package:lingua_eidetic/routes/test_page.dart';
 
 class RouteGenerator {
   static const String LANDING_PAGE = "/";
   static const String SIGN_IN_PAGE = "/sign-in";
+  static const String REGISTER_PAGE = "/register";
   static const String TEST = "/test";
 
   Route<dynamic> generateRoute(RouteSettings settings) {
@@ -15,7 +17,9 @@ class RouteGenerator {
       case LANDING_PAGE:
         return MaterialPageRoute(builder: (context) => LandingPage());
       case SIGN_IN_PAGE:
-        return MaterialPageRoute(builder: (context) => AuthenticationPage());
+        return MaterialPageRoute(builder: (context) => SignInPage());
+      case REGISTER_PAGE:
+        return MaterialPageRoute(builder: (context) => RegisterPage());
       case TEST:
         return MaterialPageRoute(builder: (context) => TestPage());
       default:
