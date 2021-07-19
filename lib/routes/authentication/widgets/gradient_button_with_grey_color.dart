@@ -16,8 +16,7 @@ class GradientButtonWithGreyBorder extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(15),
       onTap: press,
-      overlayColor:
-      MaterialStateProperty.all(Color(0xFF891212)),
+      overlayColor: MaterialStateProperty.all(Color(0xFF891212)),
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.only(
@@ -32,13 +31,23 @@ class GradientButtonWithGreyBorder extends StatelessWidget {
             width: 3,
           ),
           borderRadius: BorderRadius.circular(15),
-          gradient: LinearGradient(
+          gradient: press != null
+              ? LinearGradient(
+                  begin: Alignment.bottomLeft,
+                  end: Alignment.topRight,
+                  stops: [0, 0.6],
+                  colors: [
+                    Color(0xDAFF2358),
+                    Color(0xDAFF5B27),
+                  ],
+                )
+              : LinearGradient(
             begin: Alignment.bottomLeft,
             end: Alignment.topRight,
             stops: [0, 0.6],
             colors: [
-              Color(0xDAFF2358),
-              Color(0xDAFF5B27),
+              Color(0xFF971433),
+              Color(0xFFA03919),
             ],
           ),
         ),

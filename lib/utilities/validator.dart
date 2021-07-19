@@ -51,7 +51,6 @@ class ValidatorError {
   String get passwordError => _passwordError;
 
   void setEmailError(String emailError) {
-    print(emailError);
     _emailError = emailError;
   }
 

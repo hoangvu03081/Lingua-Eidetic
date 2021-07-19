@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lingua_eidetic/constants.dart';
 
 class SignInTextField extends StatelessWidget {
@@ -63,10 +64,11 @@ class SignInTextField extends StatelessWidget {
         ),
         errorMaxLines: 2,
         labelText: label,
-        labelStyle: TextStyle(
-          color: Color(0xFFBDBCBC),
-          fontFamily: 'Yantramanav',
-          fontWeight: FontWeight.w500,
+        labelStyle: GoogleFonts.openSans(
+          textStyle: TextStyle(
+            color: Color(0xFFBDBCBC),
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
     );
