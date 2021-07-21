@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "23821143905",
+    "project_id": "lingua-eidetic",
+    "storage_bucket": "lingua-eidetic.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:23821143905:android:270046faf80239f4407f20",
+        "android_client_info": {
+          "package_name": "com.example.lingua_eidetic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "23821143905-4f05eltp3rlud7sstv0uj78fs23oi88s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.lingua_eidetic",
+            "certificate_hash": "fa410df2a5aa5953d3e1232ead3c1579aab101e1"
+          }
+        },
+        {
+          "client_id": "23821143905-kq7outta9e7aueg34pr0gd0ut61rar47.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwB2Z-NzF5w-KpYNQGChwHuEuurkk7SmY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "23821143905-kq7outta9e7aueg34pr0gd0ut61rar47.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

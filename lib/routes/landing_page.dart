@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:lingua_eidetic/routes/routes.dart';
+import 'package:lingua_eidetic/widgets/collection_navbar.dart';
 
 class LandingPage extends StatelessWidget {
   const LandingPage({Key? key}) : super(key: key);
@@ -9,6 +10,10 @@ class LandingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      bottomNavigationBar: CollectionNavbar(
+        cameraButtonFunction: () {},
+        galleryButtonFunction: () {},
+      ),
       appBar: AppBar(
         actions: [
           IconButton(
