@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="facebook_app_id">1686262208239925</string> <string name="fb_login_protocol_scheme">fb1686262208239925</string>
+    <string name="facebook_app_id">1686262208239925</string>
+    <string name="fb_login_protocol_scheme">fb1686262208239925</string>
+    <string name="facebook_client_token">EAAX9pYPrmTUBALSFzQLqqLoGEQFKbDR3IPX51l6bZA5UTI9QycH8AIkdLfkfXiLF9raWQHJvgVNLkRCT0c4OYndfkJJZC72Dlq3aRtVGAvbQZAJ0MQxh0ZAjg9TlZABXtZCNeNk8wsJumFNy76oW0aKptqB2cNupQ3fYZA61hfrKWdr2ZAZC9v4d8t6OYdeAIp2mN6Jn7AikW80aZAVrPivZAyYUwtv2dsT81Oqn0F8F0dtLGTUXHZCj3tTH</string>
     <string name="app_name">Lingua Eidetic</string>
 </resources>

@@ -10,6 +10,7 @@ class SignInTextField extends StatelessWidget {
   final String? errorText;
   final TextInputAction? textInputAction;
   final Function(String)? onChanged;
+  final bool obscureText;
 
   const SignInTextField({
     Key? key,
@@ -20,6 +21,7 @@ class SignInTextField extends StatelessWidget {
     this.errorText,
     this.textInputAction,
     this.onChanged,
+    this.obscureText = false,
   }) : super(key: key);
 
   @override
@@ -30,6 +32,7 @@ class SignInTextField extends StatelessWidget {
       onEditingComplete: onEditingComplete,
       onChanged: onChanged,
       textInputAction: textInputAction,
+      obscureText: obscureText,
       decoration: InputDecoration(
         errorText: errorText,
         contentPadding: EdgeInsets.symmetric(
