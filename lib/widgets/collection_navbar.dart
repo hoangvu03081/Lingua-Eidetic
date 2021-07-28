@@ -57,20 +57,18 @@ class _CollectionNavbarState extends State<CollectionNavbar> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      bottomNavigationBar: GestureDetector(
-          onTapUp: onTapListener,
-          child: SizedBox(
-            height: size.height * 0.1,
-            child: RiveAnimation.asset(
-              'assets/lingua_eidetic.riv',
-              fit: BoxFit.cover,
-              onInit: _onRiveInit,
-              artboard: 'Collection Navigation Bar',
-              antialiasing: true,
-            ),
-          )),
-    );
+    return GestureDetector(
+        onTapUp: onTapListener,
+        child: SizedBox(
+          height: size.height * 0.1,
+          child: RiveAnimation.asset(
+            'assets/lingua_eidetic.riv',
+            fit: BoxFit.cover,
+            onInit: _onRiveInit,
+            artboard: 'Collection Navigation Bar',
+            antialiasing: true,
+          ),
+        ));
   }
 
   void onTapListener(TapUpDetails details) {
