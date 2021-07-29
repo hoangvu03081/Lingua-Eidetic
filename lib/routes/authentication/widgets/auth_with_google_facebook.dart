@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lingua_eidetic/constants.dart';
-import 'package:lingua_eidetic/model/Auth.dart';
+import 'package:lingua_eidetic/services/auth_service.dart';
 import 'package:lingua_eidetic/routes/authentication/widgets/error_toast.dart';
 import 'package:provider/provider.dart';
 
@@ -34,6 +34,7 @@ class _AuthWithGoogleFacebookState extends State<AuthWithGoogleFacebook> {
       );
     }
   }
+
   void _signInWithFacebook() async {
     final auth = Provider.of<Auth>(context, listen: false);
     try {
@@ -115,6 +116,4 @@ class _AuthWithGoogleFacebookState extends State<AuthWithGoogleFacebook> {
       ],
     );
   }
-
-
 }

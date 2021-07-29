@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lingua_eidetic/constants.dart';
-import 'package:lingua_eidetic/model/Auth.dart';
+import 'package:lingua_eidetic/services/auth_service.dart';
 import 'package:lingua_eidetic/routes/authentication/widgets/auth_with_google_facebook.dart';
 import 'package:lingua_eidetic/routes/authentication/widgets/error_toast.dart';
 import 'package:lingua_eidetic/routes/authentication/widgets/gradient_button_with_grey_color.dart';

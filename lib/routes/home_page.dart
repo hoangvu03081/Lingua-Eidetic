@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lingua_eidetic/constants.dart';
-import 'package:lingua_eidetic/model/collection_bean.dart';
+import 'package:lingua_eidetic/models/collection_bean.dart';
 import 'package:lingua_eidetic/widgets/drag_sort_view.dart';
 
 class HomePage extends StatefulWidget {

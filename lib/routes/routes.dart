@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lingua_eidetic/model/Auth.dart';
+import 'package:lingua_eidetic/services/auth_service.dart';
 import 'package:lingua_eidetic/routes/authentication/authentication_page.dart';
 import 'package:lingua_eidetic/routes/home_page.dart';
 import 'package:lingua_eidetic/routes/landing_page.dart';
