@@ -1,8 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.lingua_eidetic">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-
     <application
         android:icon="@mipmap/ic_launcher"
         android:label="lingua_eidetic">
@@ -37,9 +35,6 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
-        <meta-data
-            android:name="com.facebook.sdk.ClientToken"
-            android:value="@string/facebook_client_token" />
 
         <activity
             android:name="com.facebook.FacebookActivity"
@@ -63,4 +58,6 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lingua_eidetic/constants.dart';
+import 'package:lingua_eidetic/routes/authentication/widgets/nav_button.dart';
 import 'package:lingua_eidetic/services/auth_service.dart';
 import 'package:lingua_eidetic/routes/authentication/widgets/auth_with_google_facebook.dart';
 import 'package:lingua_eidetic/routes/authentication/widgets/error_toast.dart';
@@ -49,7 +50,6 @@ class _AuthenticationPageState extends State<AuthenticationPage>
   String navigateTitle = 'Register now!';
   String buttonText = 'LOGIN';
   PageState pageState = PageState.sign_in;
-  double offset = 0;
 
   bool _submitted = false;
 
@@ -66,17 +66,15 @@ class _AuthenticationPageState extends State<AuthenticationPage>
   late final Function() onRPasswordEditingComplete;
 
   bool removeRPassword = true;
-
-  double _opacity = 0;
-
   bool _transition = true;
+
+  final duration = 800;
 
   String get _email => emailController.text;
 
   String get _password => passwordController.text;
 
   String get _rPassword => rPasswordController.text;
-
   late final FToast fToast;
 
   Future<void> _submit() async {
@@ -187,8 +185,10 @@ class _AuthenticationPageState extends State<AuthenticationPage>
                           WelcomeText(
                             title: title,
                             subtitle: subtitle,
+                            trigger: removeRPassword,
+                            duration: duration,
                           ),
-                          SizedBox(height: 60),
+                          SizedBox(height: defaultPadding * 6),
 
                           /// children
                           SignInTextField(
@@ -227,76 +227,69 @@ class _AuthenticationPageState extends State<AuthenticationPage>
                           ),
                           SizedBox(height: defaultPadding * 2),
 
-                          if (!removeRPassword)
-                            TweenAnimationBuilder(
-                              tween: Tween<double>(
-                                begin: -35,
-                                end: offset,
-                              ),
-                              curve: Curves.easeInOut,
-                              duration: Duration(milliseconds: 750),
-                              child: SignInTextField(
-                                obscureText: true,
-                                label: 'Input your password again',
-                                controller: rPasswordController,
-                                focusNode: rPasswordFocusNode,
-                                textInputAction: TextInputAction.done,
-                                onEditingComplete: onRPasswordEditingComplete,
-                                errorText: (_submitted &&
-                                        passwordController.text !=
-                                            rPasswordController.text)
-                                    ? 'Password must be the same'
-                                    : null,
-                                onChanged: (_) {
-                                  setState(() {});
-                                },
-                              ),
-                              builder: (_, double offsetY, child) {
-                                return Transform(
-                                  transform:
-                                      Matrix4.translationValues(0, offsetY, 0),
-                                  child: AnimatedOpacity(
-                                    duration: Duration(milliseconds: 325),
-                                    opacity: _opacity,
-                                    curve: Curves.easeIn,
-                                    child: child,
+                          AnimatedContainer(
+                            duration: Duration(milliseconds: duration),
+                            curve: Curves.ease,
+                            height: removeRPassword ? 192 : 264, //
+                            child: Stack(
+                              fit: StackFit.loose,
+                              children: [
+                                AnimatedPositioned(
+                                  top: removeRPassword ? -72 : 0,
+                                  // 0: 264, -72: 192
+                                  left: 0,
+                                  right: 0,
+                                  duration: Duration(milliseconds: duration),
+                                  curve: Curves.ease,
+                                  child: Column(
+                                    children: [
+                                      AnimatedOpacity(
+                                        opacity: removeRPassword ? 0 : 1,
+                                        duration:
+                                            Duration(milliseconds: duration),
+                                        curve: Curves.ease,
+                                        child: SignInTextField(
+                                          obscureText: true,
+                                          label: 'Input your password again',
+                                          controller: rPasswordController,
+                                          focusNode: rPasswordFocusNode,
+                                          textInputAction: TextInputAction.done,
+                                          onEditingComplete:
+                                              onRPasswordEditingComplete,
+                                          errorText: (_submitted &&
+                                                  passwordController.text !=
+                                                      rPasswordController.text)
+                                              ? 'Password must be the same'
+                                              : null,
+                                          onChanged: (_) {
+                                            setState(() {});
+                                          },
+                                        ),
+                                      ),
+                                      SizedBox(height: defaultPadding * 2),
+                                      GradientButtonWithGreyBorder(
+                                        trigger: removeRPassword,
+                                        duration: duration,
+                                        text: buttonText,
+                                        press: _enableSubmit ? _submit : null,
+                                      ),
+                                      SizedBox(height: defaultPadding * 2),
+                                      AuthWithGoogleFacebook(),
+                                      Container(
+                                        margin: EdgeInsets.only(
+                                            top: defaultPadding * 2),
+                                        width: double.infinity,
+                                        child: NavButton(
+                                          navigateTitle: navigateTitle,
+                                          onPressNavigate: onPressNavigate,
+                                          navigateSubtitle: navigateSubtitle,
+                                          transition: _transition,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                );
-                              },
-                            ),
-
-                          ///
-                          if (!removeRPassword)
-                            SizedBox(height: defaultPadding * 2),
-
-                          GradientButtonWithGreyBorder(
-                            text: buttonText,
-                            press: _enableSubmit ? _submit : null,
-                          ),
-                          SizedBox(height: defaultPadding * 2),
-
-                          AuthWithGoogleFacebook(),
-                          Container(
-                            margin: EdgeInsets.only(top: defaultPadding * 2),
-                            width: double.infinity,
-                            child: TextButton(
-                              onPressed: _transition ? onPressNavigate : null,
-                              child: RichText(
-                                textAlign: TextAlign.center,
-                                text: TextSpan(
-                                  style: GoogleFonts.openSans(
-                                    textStyle: TextStyle(color: Colors.black54),
-                                  ),
-                                  children: [
-                                    TextSpan(text: navigateSubtitle),
-                                    TextSpan(
-                                      text: navigateTitle,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
                                 ),
-                              ),
+                              ],
                             ),
                           ),
                         ],
@@ -318,16 +311,14 @@ class _AuthenticationPageState extends State<AuthenticationPage>
 
       /// if current page state is sign_in => prepare to change to register
       if (pageState == PageState.sign_in) {
-        _opacity = 1;
         pageState = PageState.register;
         onPasswordEditingComplete = () {
           if (validator.errors.passwordError.isEmpty) {
             rPasswordFocusNode.requestFocus();
           }
         };
-        offset = 0;
         removeRPassword = false;
-        Future.delayed(Duration(milliseconds: 500), () {
+        Future.delayed(Duration(milliseconds: duration), () {
           setState(() {
             _transition = true;
           });
@@ -339,8 +330,6 @@ class _AuthenticationPageState extends State<AuthenticationPage>
         navigateSubtitle = 'Already have an account?\n';
         clearFocus();
       } else {
-        _opacity = 0;
-        offset = -35;
         onPasswordEditingComplete = _submit;
         pageState = PageState.sign_in;
         rPasswordController.clear();
@@ -349,9 +338,9 @@ class _AuthenticationPageState extends State<AuthenticationPage>
         buttonText = 'LOGIN';
         navigateTitle = 'Register now!';
         navigateSubtitle = 'Don\'t have an account?\n';
-        Future.delayed(Duration(milliseconds: 500), () {
+        removeRPassword = true;
+        Future.delayed(Duration(milliseconds: duration), () {
           setState(() {
-            removeRPassword = true;
             _transition = true;
           });
         });

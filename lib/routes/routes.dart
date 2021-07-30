@@ -39,11 +39,7 @@ class RouteGenerator {
           );
         });
       case SIGN_IN_PAGE:
-        return PageTransition(
-          child: AuthenticationPage(),
-          type: PageTransitionType.leftToRight,
-          duration: Duration(seconds: 1),
-        );
+        return MaterialPageRoute(builder: (context) => AuthenticationPage());
       case HOME_PAGE:
         return MaterialPageRoute(builder: (context) => HomePage());
       case TEST:
