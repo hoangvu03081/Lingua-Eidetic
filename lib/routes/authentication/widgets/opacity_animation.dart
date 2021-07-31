@@ -40,16 +40,11 @@ class _OpacityAnimationState extends State<OpacityAnimation>
     controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         /// forward -> complete
-        setState(() {
-          --count;
-        });
+        --count;
         if (count != 0) controller.reverse(from: 1);
       } else if (status == AnimationStatus.dismissed) {
         /// reverse -> dismissed
-        setState(() {
-          first = false;
-          --count;
-        });
+        --count;
         widget.changeText();
         if (count != 0) controller.forward(from: 0);
       }
@@ -67,14 +62,14 @@ class _OpacityAnimationState extends State<OpacityAnimation>
   bool toggle = true;
   bool first = true;
 
-  Future<void> animate() async {
+  void animate() {
     setState(() {
       toggle = !toggle;
       count = first ? 3 : 2;
+      first = false;
     });
     controller.reverse(from: 1);
   }
-
   @override
   Widget build(BuildContext context) {
     if (widget.trigger != toggle) animate();

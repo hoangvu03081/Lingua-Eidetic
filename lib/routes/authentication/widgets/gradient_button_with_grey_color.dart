@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:lingua_eidetic/constants.dart';
+import 'package:lingua_eidetic/routes/authentication/models/anim_trigger.dart';
 import 'package:lingua_eidetic/routes/authentication/widgets/opacity_animation.dart';
+import 'package:provider/provider.dart';
 
 class GradientButtonWithGreyBorder extends StatefulWidget {
   final String text;
   final Function()? press;
-  final bool trigger;
-  final int duration;
 
   const GradientButtonWithGreyBorder({
     Key? key,
     this.press,
     required this.text,
-    required this.trigger,
-    required this.duration,
   }) : super(key: key);
 
   @override
@@ -71,14 +69,17 @@ class _GradientButtonWithGreyBorderState
                   ],
                 ),
         ),
-        child: OpacityAnimation(
-          duration: widget.duration,
-          trigger: widget.trigger,
-          changeText: () {
-            setState(() {
-              text = widget.text;
-            });
-          },
+        child: Consumer<AnimTriggerModel>(
+          builder: (context, anim, child) => OpacityAnimation(
+            duration: anim.duration,
+            trigger: anim.trigger,
+            changeText: () {
+              setState(() {
+                text = widget.text;
+              });
+            },
+            child: child!,
+          ),
           child: Text(
             text,
             textAlign: TextAlign.center,

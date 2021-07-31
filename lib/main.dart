@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
         supportedLocales: context.supportedLocales,
         locale: context.locale,
         onGenerateRoute: routeGenerator.generateRoute,
-        initialRoute: RouteGenerator.SIGN_IN_PAGE,
+        initialRoute: RouteGenerator.HOME_PAGE,
       ),
     );
   }

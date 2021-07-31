@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lingua_eidetic/routes/authentication/models/anim_trigger.dart';
 import 'package:lingua_eidetic/routes/authentication/widgets/opacity_animation.dart';
+import 'package:provider/provider.dart';
 
 class WelcomeText extends StatefulWidget {
   final String title;
   final String subtitle;
-  final bool trigger;
-  final int duration;
 
   const WelcomeText({
     Key? key,
     required this.title,
     required this.subtitle,
-    required this.trigger,
-    required this.duration,
   }) : super(key: key);
 
   @override
@@ -33,15 +31,19 @@ class _WelcomeTextState extends State<WelcomeText> {
 
   @override
   Widget build(BuildContext context) {
-    print(subtitle);
-    return OpacityAnimation(
-      duration: widget.duration,
-      trigger: widget.trigger,
-      changeText: () {
-        setState(() {
-          title = widget.title;
-          subtitle = widget.subtitle;
-        });
+    return Consumer<AnimTriggerModel>(
+      builder: (context, anim, child) {
+        return OpacityAnimation(
+          duration: anim.duration,
+          trigger: anim.trigger,
+          changeText: () {
+            setState(() {
+              title = widget.title;
+              subtitle = widget.subtitle;
+            });
+          },
+          child: child!,
+        );
       },
       child: RichText(
         text: TextSpan(
