@@ -12,7 +12,7 @@ class DelayedEaseCurve extends Curve {
   }
 }
 
-Future<void> showOverlay(BuildContext context) async {
+Future<void> showOverlay(BuildContext context, String routeName) async {
   final size = MediaQuery.of(context).size;
   final radius = 50;
   final maxScale = (size.height * 1.4) / (radius * 2);
@@ -56,6 +56,7 @@ Future<void> showOverlay(BuildContext context) async {
       ));
   overlayState?.insert(overlayEntry);
   await Future.delayed(Duration(milliseconds: 1000));
+  Navigator.of(context).pushReplacementNamed(routeName);
   await Future.delayed(Duration(milliseconds: 5000));
   overlayEntry.remove();
 }

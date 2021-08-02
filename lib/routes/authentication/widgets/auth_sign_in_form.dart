@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lingua_eidetic/constants.dart';
 import 'package:lingua_eidetic/routes/authentication/models/anim_trigger.dart';
 import 'package:lingua_eidetic/routes/authentication/widgets/nav_button.dart';
+import 'package:lingua_eidetic/routes/routes.dart';
 import 'package:lingua_eidetic/services/auth_service.dart';
 import 'package:lingua_eidetic/routes/authentication/widgets/auth_with_google_facebook.dart';
 import 'package:lingua_eidetic/routes/authentication/widgets/error_toast.dart';
@@ -94,7 +95,8 @@ class _AuthSignInFormState extends State<AuthSignInForm>
         passwordFocusNode.unfocus();
         await auth.signInWithMailAndPassword(_email, _password);
       }
-      showOverlay(context);
+
+      showOverlay(context, RouteGenerator.HOME_PAGE);
     } on FirebaseAuthException catch (e) {
       showToast(
         fToast,
@@ -123,6 +125,30 @@ class _AuthSignInFormState extends State<AuthSignInForm>
     };
     onPasswordEditingComplete = _submit;
     onRPasswordEditingComplete = _submit;
+
+    emailController.addListener(() {
+      validator.validateEmail(_email);
+      setState(() {
+        /// email
+        _enableSubmit = (!_submitted) || (_submitted && !isError());
+      });
+    });
+
+    passwordController.addListener(() {
+      validator.validatePassword(_password);
+      setState(() {
+        /// password
+        _enableSubmit = (!_submitted) || (_submitted && !isError());
+      });
+    });
+
+    rPasswordController.addListener(() {
+      setState(() {
+        /// rpassword
+        _enableSubmit = (!_submitted) || (_submitted && !isError());
+      });
+    });
+
     fToast = FToast();
     fToast.init(context);
   }
@@ -158,25 +184,15 @@ class _AuthSignInFormState extends State<AuthSignInForm>
           subtitle: subtitle,
         ),
         SizedBox(height: defaultPadding * 6),
-
         SignInTextField(
           label: 'Email ID',
           controller: emailController,
           onEditingComplete: onEmailEditingComplete,
           textInputAction: TextInputAction.next,
           focusNode: emailFocusNode,
-          errorText:
-          (errors.emailError.isNotEmpty && _submitted)
+          errorText: (errors.emailError.isNotEmpty && _submitted)
               ? errors.emailError
               : null,
-          onChanged: (_) {
-            validator.validateEmail(_email);
-            setState(() {
-              /// email
-              _enableSubmit =
-                  (!_submitted) || (_submitted && !isError());
-            });
-          },
         ),
         SizedBox(height: defaultPadding * 2),
         SignInTextField(
@@ -188,21 +204,11 @@ class _AuthSignInFormState extends State<AuthSignInForm>
               ? TextInputAction.done
               : TextInputAction.next,
           onEditingComplete: onPasswordEditingComplete,
-          errorText:
-          (errors.passwordError.isNotEmpty && _submitted)
+          errorText: (errors.passwordError.isNotEmpty && _submitted)
               ? errors.passwordError
               : null,
-          onChanged: (_) {
-            validator.validatePassword(_password);
-            setState(() {
-              /// password
-              _enableSubmit =
-                  (!_submitted) || (_submitted && !isError());
-            });
-          },
         ),
         SizedBox(height: defaultPadding * 2),
-
         AnimatedContainer(
           duration: Duration(milliseconds: anim.duration),
           curve: Curves.ease,
@@ -220,8 +226,7 @@ class _AuthSignInFormState extends State<AuthSignInForm>
                   children: [
                     AnimatedOpacity(
                       opacity: removeRPassword ? 0 : 1,
-                      duration:
-                      Duration(milliseconds: anim.duration),
+                      duration: Duration(milliseconds: anim.duration),
                       curve: Curves.ease,
                       child: SignInTextField(
                         obscureText: true,
@@ -229,33 +234,26 @@ class _AuthSignInFormState extends State<AuthSignInForm>
                         controller: rPasswordController,
                         focusNode: rPasswordFocusNode,
                         textInputAction: TextInputAction.done,
-                        onEditingComplete:
-                        onRPasswordEditingComplete,
+                        onEditingComplete: onRPasswordEditingComplete,
                         errorText: (_submitted &&
-                            passwordController.text !=
-                                rPasswordController.text)
+                                passwordController.text !=
+                                    rPasswordController.text)
                             ? 'Password must be the same'
                             : null,
-                        onChanged: (_) {
-                          setState(() {
-                            /// rpassword
-                            _enableSubmit = (!_submitted) ||
-                                (_submitted && !isError());
-                          });
-                        },
                       ),
                     ),
                     SizedBox(height: defaultPadding * 2),
                     GradientButtonWithGreyBorder(
                       text: buttonText,
+                      loading: _loading,
                       press: _enableSubmit
                           ? () {
-                        /// button login
-                        setState(() {
-                          _enableSubmit = !isError();
-                        });
-                        _submit();
-                      }
+                              /// button login
+                              setState(() {
+                                _enableSubmit = !isError();
+                              });
+                              _submit();
+                            }
                           : null,
                     ),
                     SizedBox(height: defaultPadding * 2),
@@ -272,8 +270,7 @@ class _AuthSignInFormState extends State<AuthSignInForm>
                           });
                         }),
                     Container(
-                      margin: EdgeInsets.only(
-                          top: defaultPadding * 2),
+                      margin: EdgeInsets.only(top: defaultPadding * 2),
                       width: double.infinity,
                       child: NavButton(
                         navigateTitle: navigateTitle,
@@ -293,9 +290,9 @@ class _AuthSignInFormState extends State<AuthSignInForm>
   }
 
   void focusRPassword() {
-      if (validator.errors.passwordError.isEmpty) {
-        rPasswordFocusNode.requestFocus();
-      }
+    if (validator.errors.passwordError.isEmpty) {
+      rPasswordFocusNode.requestFocus();
+    }
   }
 
   void onPressNavigate() {

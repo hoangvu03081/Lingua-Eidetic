@@ -7,11 +7,13 @@ import 'package:provider/provider.dart';
 class GradientButtonWithGreyBorder extends StatefulWidget {
   final String text;
   final Function()? press;
+  final bool loading;
 
   const GradientButtonWithGreyBorder({
     Key? key,
     this.press,
     required this.text,
+    required this.loading,
   }) : super(key: key);
 
   @override
@@ -80,15 +82,21 @@ class _GradientButtonWithGreyBorderState
             },
             child: child!,
           ),
-          child: Text(
-            text,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
+          child: widget.loading
+              ? Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                )
+              : Text(
+                  text,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
         ),
       ),
     );

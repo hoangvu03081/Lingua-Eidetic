@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lingua_eidetic/constants.dart';
+import 'package:lingua_eidetic/routes/routes.dart';
 import 'package:lingua_eidetic/services/auth_service.dart';
 import 'package:lingua_eidetic/routes/authentication/widgets/error_toast.dart';
 import 'package:lingua_eidetic/widgets/custom_overlay.dart';
@@ -33,7 +34,7 @@ class _AuthWithGoogleFacebookState extends State<AuthWithGoogleFacebook> {
     try {
       widget.onLogin();
       final user = await signInMethod();
-      showOverlay(context);
+      showOverlay(context, RouteGenerator.HOME_PAGE);
       return user;
     } on FirebaseAuthException catch (e) {
       showToast(
