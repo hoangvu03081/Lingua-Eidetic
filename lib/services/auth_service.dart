@@ -68,4 +68,12 @@ class Auth {
     await _firebaseAuth.signOut();
     _googleUser.signOut();
   }
+
+  Auth._();
+  static final Auth _auth = Auth._();
+
+  ///return a singleton instance of [Auth]
+  factory Auth() {
+    return _auth;
+  }
 }

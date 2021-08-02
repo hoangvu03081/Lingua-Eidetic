@@ -4,6 +4,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lingua_eidetic/constants.dart';
 import 'package:lingua_eidetic/models/collection_bean.dart';
+import 'package:lingua_eidetic/widgets/collection_navbar.dart';
 import 'package:lingua_eidetic/widgets/drag_sort_view.dart';
 
 class HomePage extends StatefulWidget {
@@ -39,6 +40,8 @@ class _HomePageState extends State<HomePage> {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
+      bottomNavigationBar: CollectionNavbar(
+          galleryButtonFunction: () {}, cameraButtonFunction: () {}),
       body: SafeArea(
         child: Column(
           children: [

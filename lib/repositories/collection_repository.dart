@@ -3,24 +3,31 @@ import 'package:lingua_eidetic/models/collection.dart';
 import 'package:lingua_eidetic/utilities/firestore_path.dart';
 
 class CollectionRepository {
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   void addCollection({required String userId, required Collection collection}) {
     CollectionReference collectionRef =
-        FirebaseFirestore.instance.collection(CloudPath.collection(userId));
+        _firestore.collection(CloudPath.collection(userId));
     collectionRef.add(collection.toMap());
   }
 
   void removeCollection(
       {required String userId, required String collectionId}) {
     CollectionReference collectionRef =
-        FirebaseFirestore.instance.collection(CloudPath.collection(userId));
+        _firestore.collection(CloudPath.collection(userId));
     collectionRef.doc(collectionId).delete();
   }
 
   Stream<QuerySnapshot> collectionStream({required String userId}) {
-    return FirebaseFirestore.instance
-        .collection(CloudPath.collection(userId))
-        .snapshots();
+    return _firestore.collection(CloudPath.collection(userId)).snapshots();
+  }
+
+  CollectionRepository._();
+  static final CollectionRepository _collectionRepository =
+      CollectionRepository._();
+
+  ///return a singleton instance of [CollectionRepository]
+  factory CollectionRepository() {
+    return _collectionRepository;
   }
 }
