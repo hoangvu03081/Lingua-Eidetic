@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:lingua_eidetic/routes/routes.dart';
+import 'package:lingua_eidetic/services/collection_service.dart';
 import 'package:lingua_eidetic/widgets/collection_navbar.dart';
+import 'package:provider/provider.dart';
 
 class LandingPage extends StatelessWidget {
   const LandingPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    CollectionService collectionService = context.watch<CollectionService>();
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      bottomNavigationBar: CollectionNavbar(
-        cameraButtonFunction: () {},
-        galleryButtonFunction: () {},
-      ),
       appBar: AppBar(
         actions: [
           IconButton(
@@ -44,7 +43,13 @@ class LandingPage extends StatelessWidget {
           ElevatedButton(
             onPressed: () => context.setLocale(Locale('en')),
             child: Text('en'),
-          )
+          ),
+          ElevatedButton(
+              onPressed: () {
+                collectionService.current = '1';
+                print(collectionService.current);
+              },
+              child: Text('Change value'))
         ],
       ),
     );

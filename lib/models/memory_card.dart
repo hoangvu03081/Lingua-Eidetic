@@ -11,8 +11,8 @@ class MemoryCard {
   MemoryCard({
     required this.imagePath,
     required this.caption,
-    required this.level,
-    required this.exp,
+    this.level = 1,
+    this.exp = 0,
     required this.available,
   });
 
