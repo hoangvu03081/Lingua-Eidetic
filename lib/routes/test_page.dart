@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lingua_eidetic/models/collection.dart';
@@ -15,6 +16,7 @@ class TestPage extends StatelessWidget {
     final CollectionService collectionService = CollectionService();
     final ImageService imageService = ImageService();
     final CardService cardService = CardService();
+    collectionService.current = '7F4T7vQ8cWjExB2t3rtA';
     return Scaffold(
       appBar: AppBar(),
       body: SizedBox(
@@ -69,6 +71,23 @@ class TestPage extends StatelessWidget {
               },
               child: Text('Test upload image'),
             ),
+            StreamBuilder<QuerySnapshot>(
+              stream: cardService.data,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Something went wrong');
+                }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Text("Loading");
+                }
+                Iterable<MemoryCard> memoryCard = snapshot.data!.docs.map(
+                    (DocumentSnapshot document) => MemoryCard.fromMap(
+                        document.data() as Map<String, dynamic>));
+
+                return Text(memoryCard.first.available.toUtc().toString());
+              },
+            )
           ],
         ),
       ),

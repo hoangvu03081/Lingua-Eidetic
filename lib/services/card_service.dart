@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lingua_eidetic/models/memory_card.dart';
 import 'package:lingua_eidetic/repositories/card_repository.dart';
 import 'package:lingua_eidetic/services/auth_service.dart';
@@ -13,6 +14,10 @@ class CardService {
   final CollectionService _collectionService = CollectionService();
   final Auth _auth = Auth();
   final CardRepository _cardRepository = CardRepository();
+
+  /// return a stream of [MemoryCard] to use in a [StreamBuilder]
+  Stream<QuerySnapshot> get data => _cardRepository.collectionStream(
+      userId: _auth.currentUser!.uid, collectionId: _collectionService.current);
 
   String image(String id) {
     return '${AppConstant.path}/$id.png';

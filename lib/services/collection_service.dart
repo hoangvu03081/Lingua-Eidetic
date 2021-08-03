@@ -17,6 +17,28 @@ class CollectionService extends ChangeNotifier {
 
   /// return [String] current collection id.
   String get current => _currentCollection;
+
+  /// return a stream of collection to use in a [StreamBuilder]
+  ///
+  /// For example:
+  /// ```dart
+  /// StreamBuilder<QuerySnapshot>(
+  ///    stream: collectionService.data,
+  ///    builder: (context, snapshot) {
+  ///      if (snapshot.hasError) {
+  ///        return Text('Something went wrong');
+  ///      }
+  ///      if (snapshot.connectionState == ConnectionState.waiting) {
+  ///        return Text("Loading");
+  ///      }
+  ///      Iterable<Collection> collection =
+  ///         snapshot.data!.docs.map(
+  ///      (DocumentSnapshot document) => Collection.fromMap(
+  ///      document.data() as Map<String, dynamic>));
+  ///        return Text(collection.length.toString());
+  ///    },
+  ///)
+  ///```
   Stream<QuerySnapshot> get data =>
       _collectionRepository.collectionStream(userId: _auth.currentUser!.uid);
 

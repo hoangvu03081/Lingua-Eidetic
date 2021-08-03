@@ -5,6 +5,13 @@ import 'package:lingua_eidetic/utilities/firestore_path.dart';
 class CardRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  Stream<QuerySnapshot> collectionStream(
+      {required String userId, required String collectionId}) {
+    return _firestore
+        .collection(CloudPath.card(userId, collectionId))
+        .snapshots();
+  }
+
   /// return one time read of all card in a collection
   Future<Iterable<String>?> oneTimeCardIdList(
       String userId, String collectionId) async {
