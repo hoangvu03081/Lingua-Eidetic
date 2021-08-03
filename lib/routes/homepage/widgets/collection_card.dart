@@ -49,6 +49,9 @@ class _CollectionCardState extends State<CollectionCard> {
 
   @override
   Widget build(BuildContext context) {
+    if (_controller.text != widget.title) {
+      _controller.text = widget.title;
+    }
     return Container(
       height: widget.childHeight,
       width: widget.childWidth,

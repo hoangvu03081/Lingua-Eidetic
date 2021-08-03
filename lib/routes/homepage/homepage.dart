@@ -129,6 +129,7 @@ class _HomePageState extends State<HomePage> {
     for (int i = 0; i < title.length; i++) {
       double dx = i % 2 == 0 ? 0 : childWidth + gapX;
       double dy = (childHeight + gapY) * (i ~/ 2);
+
       children.add(
         Positioned(
           left: dx,
@@ -183,21 +184,39 @@ class _HomePageState extends State<HomePage> {
         Positioned(
           left: title.length % 2 == 0 ? 0 : childWidth + gapX,
           top: (childHeight + gapY) * (title.length ~/ 2),
-          child: CollectionCard(
-            readOnly: false,
-            childHeight: childHeight,
-            childWidth: childWidth,
-            defaultTextStyle: defaultTextStyle,
-            iconData: Icons.work,
-            left: 1,
-            done: 8,
-            title: '',
-            doneEditing: (val) {
-              setState(() {
-                title.add(val);
-                isAddNew = false;
-              });
-            },
+          child: Stack(
+            children: [
+              CollectionCard(
+                readOnly: false,
+                childHeight: childHeight,
+                childWidth: childWidth,
+                defaultTextStyle: defaultTextStyle,
+                iconData: Icons.work,
+                left: 1,
+                done: 8,
+                title: '',
+                doneEditing: (val) {
+                  setState(() {
+                    title.add(val);
+                    isAddNew = false;
+                  });
+                },
+              ),
+              Positioned(
+                right: 0,
+                child: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      isAddNew = false;
+                    });
+                  },
+                  icon: Icon(
+                    Icons.cancel,
+                    color: Colors.red,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       );
