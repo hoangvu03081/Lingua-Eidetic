@@ -5,7 +5,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 class Auth {
   final _firebaseAuth = FirebaseAuth.instance;
   final _googleUser = GoogleSignIn();
-  final _facebookAuth = FacebookAuth.instance;
 
   User? get currentUser => _firebaseAuth.currentUser;
 
@@ -51,22 +50,23 @@ class Auth {
   }
 
   Future<User?> signInWithFacebook() async {
-    final LoginResult result = await _facebookAuth.login();
+    final LoginResult result = await FacebookAuth.instance.login();
     if (result.status == LoginStatus.success) {
-      final AccessToken accessToken = result.accessToken!;
-      final facebookAuthCredential =
-          FacebookAuthProvider.credential(accessToken.token);
-      final userCredential = await _firebaseAuth.signInWithCredential(
-          FacebookAuthProvider.credential(accessToken.token));
+      // Create a credential from the access token
+      final OAuthCredential credential =
+          FacebookAuthProvider.credential(result.accessToken!.token);
+      // Once signed in, return the UserCredential
+      final userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
       return userCredential.user;
-    } else {
-      throw FirebaseAuthException(code: 'sign-in-aborted-by-user');
     }
+    throw FirebaseAuthException(code: 'sign-in-aborted-by-user');
   }
 
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
-    _googleUser.signOut();
+    await _googleUser.signOut();
+    await FacebookAuth.instance.logOut();
   }
 
   Auth._();

@@ -3,13 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lingua_eidetic/constants.dart';
+import 'package:lingua_eidetic/routes/routes.dart';
 import 'package:lingua_eidetic/services/auth_service.dart';
 import 'package:lingua_eidetic/routes/authentication/widgets/error_toast.dart';
+import 'package:lingua_eidetic/widgets/custom_overlay.dart';
 import 'package:provider/provider.dart';
 
+typedef SignInMethod = Future<User?> Function();
+
 class AuthWithGoogleFacebook extends StatefulWidget {
+  final bool enable;
+  final VoidCallback onLogin;
+  final VoidCallback onDoneLogin;
+
   const AuthWithGoogleFacebook({
     Key? key,
+    required this.enable,
+    required this.onLogin,
+    required this.onDoneLogin,
   }) : super(key: key);
 
   @override
@@ -19,10 +30,12 @@ class AuthWithGoogleFacebook extends StatefulWidget {
 class _AuthWithGoogleFacebookState extends State<AuthWithGoogleFacebook> {
   late final FToast fToast;
 
-  Future<void> _signInWithGoogle() async {
-    final auth = Provider.of<Auth>(context, listen: false);
+  Future<User?> _signIn(SignInMethod signInMethod) async {
     try {
-      final user = await auth.signInWithGoogle();
+      widget.onLogin();
+      final user = await signInMethod();
+      showOverlay(context, RouteGenerator.HOME_PAGE);
+      return user;
     } on FirebaseAuthException catch (e) {
       showToast(
         fToast,
@@ -32,23 +45,20 @@ class _AuthWithGoogleFacebookState extends State<AuthWithGoogleFacebook> {
         right: 0,
         bottom: defaultPadding * 4 + MediaQuery.of(context).viewInsets.bottom,
       );
+    } finally {
+      widget.onDoneLogin();
     }
+    return null;
+  }
+
+  Future<void> _signInWithGoogle() async {
+    final auth = Provider.of<Auth>(context, listen: false);
+    final user = await _signIn(auth.signInWithGoogle);
   }
 
   void _signInWithFacebook() async {
     final auth = Provider.of<Auth>(context, listen: false);
-    try {
-      final user = await auth.signInWithFacebook();
-    } on FirebaseAuthException catch (e) {
-      showToast(
-        fToast,
-        ErrorToast(errorText: e.code),
-        5,
-        left: 0,
-        right: 0,
-        bottom: defaultPadding * 4 + MediaQuery.of(context).viewInsets.bottom,
-      );
-    }
+    final user = await _signIn(auth.signInWithFacebook);
   }
 
   @override
@@ -64,7 +74,7 @@ class _AuthWithGoogleFacebookState extends State<AuthWithGoogleFacebook> {
       children: [
         Expanded(
           child: InkWell(
-            onTap: _signInWithFacebook,
+            onTap: widget.enable ? _signInWithFacebook : null,
             child: Container(
               decoration: BoxDecoration(
                 color: Color(0xFF0C3A7E),
@@ -90,7 +100,7 @@ class _AuthWithGoogleFacebookState extends State<AuthWithGoogleFacebook> {
         SizedBox(width: defaultPadding * 3),
         Expanded(
           child: InkWell(
-            onTap: _signInWithGoogle,
+            onTap: widget.enable ? _signInWithGoogle : null,
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.transparent,
