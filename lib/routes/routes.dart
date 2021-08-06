@@ -49,7 +49,9 @@ class RouteGenerator {
           );
         });
       case SIGN_IN_PAGE:
-        return MaterialPageRoute(builder: (context) => AuthenticationPage());
+        return MaterialPageRoute(
+            builder: (context) => Provider<Auth>.value(
+                value: auth, builder: (_, __) => AuthenticationPage()));
       case HOME_PAGE:
         return MaterialPageRoute(
           builder: (context) => Provider<Auth>.value(
