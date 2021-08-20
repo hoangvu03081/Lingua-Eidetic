@@ -19,10 +19,14 @@ class CollectionRepository {
   }
 
   Stream<QuerySnapshot> collectionStream({required String userId}) {
-    return _firestore.collection(CloudPath.collection(userId)).snapshots();
+    return _firestore
+        .collection(CloudPath.collection(userId))
+        .orderBy('name')
+        .snapshots();
   }
 
   CollectionRepository._();
+
   static final CollectionRepository _collectionRepository =
       CollectionRepository._();
 

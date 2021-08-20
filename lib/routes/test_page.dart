@@ -14,7 +14,7 @@ class TestPage extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     final CollectionService collectionService = CollectionService();
-    final ImageService imageService = ImageService();
+    // final ImageService imageService = ImageService();
     final CardService cardService = CardService();
     collectionService.current = '7F4T7vQ8cWjExB2t3rtA';
     return Scaffold(
@@ -46,28 +46,28 @@ class TestPage extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () async {
-                final String? temp = await imageService.getImageFromCamera();
-                print(temp);
+                // final String? temp = await imageService.getImageFromCamera();
+                // print(temp);
               },
               child: Text('Get image'),
             ),
             ElevatedButton(
               onPressed: () async {
-                imageService.printHive();
+                // imageService.printHive();
               },
               child: Text('Print hive'),
             ),
             ElevatedButton(
               onPressed: () async {
-                List<String>? temp = await imageService.getMutlipleImages();
+                // List<String>? temp = await imageService.getMutlipleImages();
                 collectionService.current = '7F4T7vQ8cWjExB2t3rtA';
-                temp!.first;
-                cardService.addCard(
-                    MemoryCard(
-                        imagePath: '',
-                        caption: ['nothing', 'something'],
-                        available: DateTime.now()),
-                    temp.first);
+                // temp!.first;
+                // cardService.addCard(
+                //     MemoryCard(
+                //         imagePath: '',
+                //         caption: ['nothing', 'something'],
+                //         available: DateTime.now()),
+                //     temp.first);
               },
               child: Text('Test upload image'),
             ),

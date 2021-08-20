@@ -10,7 +10,8 @@ import 'package:lingua_eidetic/services/image_service.dart';
 class CollectionService extends ChangeNotifier {
   final CollectionRepository _collectionRepository = CollectionRepository();
   final CardRepository _cardRepository = CardRepository();
-  final ImageService _imageService = ImageService();
+
+  // final ImageService _imageService = ImageService();
   final Auth _auth = Auth();
 
   late String _currentCollection;
@@ -54,14 +55,15 @@ class CollectionService extends ChangeNotifier {
   void deleteCollection({required String collectionId}) async {
     final cardIdList = await _cardRepository.oneTimeCardIdList(
         _auth.currentUser!.uid, collectionId);
-    if (cardIdList != null || cardIdList!.isNotEmpty)
-      cardIdList.forEach((id) => _imageService.removeImage(id));
+    // if (cardIdList != null || cardIdList!.isNotEmpty)
+    //   cardIdList.forEach((id) => _imageService.removeImage(id));
     _collectionRepository.removeCollection(
         userId: _auth.currentUser!.uid, collectionId: collectionId);
     notifyListeners();
   }
 
   CollectionService._();
+
   static final CollectionService _collectionService = CollectionService._();
 
   ///return a singleton instance of [CollectionService]

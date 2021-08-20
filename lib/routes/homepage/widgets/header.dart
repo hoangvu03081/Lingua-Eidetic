@@ -20,12 +20,9 @@ class Header extends StatelessWidget {
       ),
       child: Row(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.network(
-              urlImage,
-              width: 50,
-            ),
+          CircleAvatar(
+            radius: 25,
+            backgroundImage: NetworkImage(urlImage),
           ),
           SizedBox(width: defaultPadding),
           Expanded(

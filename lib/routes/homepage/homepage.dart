@@ -6,6 +6,23 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lingua_eidetic/constants.dart';
 import 'package:lingua_eidetic/routes/homepage/widgets/collection_card.dart';
 import 'package:lingua_eidetic/routes/homepage/widgets/header.dart';
+import 'package:lingua_eidetic/widgets/drag_view.dart';
+
+class CollectionBean extends DragBean {
+  final IconData iconData;
+  final String title;
+  final int left;
+  final int done;
+  final Color color;
+
+  CollectionBean({
+    required this.color,
+    required this.iconData,
+    required this.title,
+    required this.left,
+    required this.done,
+  });
+}
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -15,6 +32,23 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final collectionData = <CollectionBean>[
+    CollectionBean(
+      iconData: Icons.work,
+      title: "Work",
+      left: 2,
+      done: 8,
+      color: Color(0x80F8B195),
+    ),
+    CollectionBean(
+      iconData: Icons.animation,
+      title: "Spring",
+      left: 2,
+      done: 8,
+      color: Color(0xFFF67280),
+    ),
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -50,7 +84,7 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  static final defaultTextStyle = GoogleFonts.montserrat(
+  final defaultTextStyle = GoogleFonts.montserrat(
     textStyle: TextStyle(fontWeight: FontWeight.w700),
   );
 
@@ -67,50 +101,69 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: defaultPadding),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Header(
-                  urlImage:
-                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSF6jKor8bzwTj_8iQ2cOC00B80uejzC6LQ1w&usqp=CAU',
-                  username: 'Amanda',
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
+                child: Column(
+                  children: [
+                    Header(
+                      urlImage:
+                          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSF6jKor8bzwTj_8iQ2cOC00B80uejzC6LQ1w&usqp=CAU',
+                      username: 'Amanda',
+                    ),
+                    SizedBox(height: defaultPadding * 2),
+                    TextField(
+                      controller: _searchController,
+                      focusNode: _searchFocusNode,
+                      decoration: InputDecoration(
+                        fillColor: searchBoxColor,
+                        filled: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: defaultPadding * 3,
+                          vertical: defaultPadding * 2,
+                        ),
+                        hintText: 'Search',
+                        hintStyle: TextStyle(color: Colors.black54),
+                      ),
+                    ),
+                    SizedBox(height: defaultPadding * 2),
+                    Text(
+                      'Tasks',
+                      style: defaultTextStyle.copyWith(fontSize: 26),
+                    ),
+                  ],
                 ),
-                SizedBox(height: defaultPadding * 2),
-                TextField(
-                  controller: _searchController,
-                  focusNode: _searchFocusNode,
-                  decoration: InputDecoration(
-                    fillColor: searchBoxColor,
-                    filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    contentPadding: EdgeInsets.symmetric(
-                      horizontal: defaultPadding * 3,
-                      vertical: defaultPadding * 2,
-                    ),
-                    hintText: 'Search',
-                    hintStyle: TextStyle(color: Colors.black54),
-                  ),
-                ),
-                SizedBox(height: defaultPadding * 2),
-                Text(
-                  'Tasks',
-                  style: defaultTextStyle.copyWith(fontSize: 26),
-                ),
-                SizedBox(height: defaultPadding * 2),
-                _buildChild(context),
-              ],
-            ),
+              ),
+              SizedBox(height: defaultPadding * 2),
+              // _buildChild(context),
+              DragView(
+                data: collectionData,
+                itemBuilder: (context, index) {
+                  return CollectionCard(
+                    readOnly: true,
+                    defaultTextStyle: defaultTextStyle,
+                    iconData: collectionData[index].iconData,
+                    left: collectionData[index].left,
+                    done: collectionData[index].done,
+                    title: collectionData[index].title,
+                    color: collectionData[index].color,
+                  );
+                },
+                itemRowCount: 2,
+              ),
+            ],
           ),
         ),
       ),
@@ -136,8 +189,7 @@ class _HomePageState extends State<HomePage> {
           top: dy,
           child: CollectionCard(
             readOnly: true,
-            childHeight: childHeight,
-            childWidth: childWidth,
+            color: Color(0xFFFFFFFF),
             defaultTextStyle: defaultTextStyle,
             iconData: Icons.work,
             left: 1,
@@ -188,8 +240,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               CollectionCard(
                 readOnly: false,
-                childHeight: childHeight,
-                childWidth: childWidth,
+                color: Color(0xFFFFFFFF),
                 defaultTextStyle: defaultTextStyle,
                 iconData: Icons.work,
                 left: 1,
