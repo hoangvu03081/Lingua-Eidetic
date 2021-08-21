@@ -181,8 +181,8 @@ class _ReviewPageState extends State<ReviewPage> with TickerProviderStateMixin {
                                       await Navigator.of(context).pushNamed(
                                     RouteGenerator.WRONG_REVIEW_PAGE,
                                     arguments: {
-                                      'id': cardList[current].id,
-                                      'wrongText': text,
+                                      'text': text,
+                                      'card': cardList[current],
                                     },
                                   ) as ReviewStatus;
                                   switch (reviewStatus) {

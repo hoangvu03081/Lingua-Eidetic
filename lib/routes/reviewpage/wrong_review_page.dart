@@ -1,16 +1,22 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:lingua_eidetic/models/memory_card.dart';
 import 'package:lingua_eidetic/utilities/firestore_path.dart';
 
 class WrongReviewPage extends StatelessWidget {
   const WrongReviewPage({Key? key, required this.wrong}) : super(key: key);
 
-  final Map<String, String> wrong;
+  final Map<String, dynamic> wrong;
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final text = wrong['text'];
+    final temp = wrong['card'] as QueryDocumentSnapshot<Object?>;
+    final cardId = temp.id;
+    final card = MemoryCard.fromMap(temp.data() as Map<String, dynamic>);
     return Scaffold(
       backgroundColor: Color(0xFFEDF2F5),
       body: SizedBox(
@@ -36,7 +42,7 @@ class WrongReviewPage extends StatelessWidget {
                     const Icon(Icons.cancel, color: Color(0xFFFF2358)),
                     const Spacer(),
                     Text(
-                      wrong['wrongText'] as String,
+                      text,
                       style: const TextStyle(
                         fontSize: 24,
                         color: Color(0xFFFF2358),
@@ -64,7 +70,7 @@ class WrongReviewPage extends StatelessWidget {
                 ),
               ]),
               child: Image.file(
-                File(AppConstant.getImage(wrong['id'] as String)),
+                File(AppConstant.getImage(cardId)),
                 fit: BoxFit.fitWidth,
               ),
             ),

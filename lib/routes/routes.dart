@@ -72,7 +72,7 @@ class RouteGenerator {
       case WRONG_REVIEW_PAGE:
         return MaterialPageRoute(
             builder: (context) => WrongReviewPage(
-                wrong: settings.arguments as Map<String, String>));
+                wrong: settings.arguments as Map<String, dynamic>));
       case TEST:
         return MaterialPageRoute(builder: (context) => TestPage());
       default:
