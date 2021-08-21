@@ -8,6 +8,7 @@ import 'package:lingua_eidetic/routes/homepage/widgets/collection_list.dart';
 import 'package:lingua_eidetic/routes/homepage/widgets/header.dart';
 import 'package:lingua_eidetic/services/auth_service.dart';
 import 'package:lingua_eidetic/services/collection_service.dart';
+import 'package:lingua_eidetic/widgets/collection_navbar.dart';
 import 'package:lingua_eidetic/widgets/search_box.dart';
 
 class HomePageV2 extends StatefulWidget {

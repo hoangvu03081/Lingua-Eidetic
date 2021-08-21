@@ -80,9 +80,9 @@ class _CollectionNavbarState extends State<CollectionNavbar> {
     if (x <= size.width * 0.564 && x >= size.width * 0.44)
       _openNav();
     else if (x <= size.width * 0.72 && x >= size.width * 0.575)
-      _galleryButtonClicked();
-    else if (x <= size.width * 0.43 && x >= size.width * 0.29)
       _cameraButtonClicked();
+    else if (x <= size.width * 0.43 && x >= size.width * 0.29)
+      _galleryButtonClicked();
     else if (x >= size.width * 0.85)
       _downloadButtonClicked();
     else if (x <= size.width * 0.15) _homeButtonClicked();

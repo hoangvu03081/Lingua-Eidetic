@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:lingua_eidetic/routes/routes.dart';
 
 class Header extends StatelessWidget {
   const Header({
@@ -36,7 +37,9 @@ class Header extends StatelessWidget {
             ),
           ),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).pushNamed(RouteGenerator.REVIEW_PAGE);
+            },
             child: Container(
               height: 60,
               width: 60,

@@ -15,7 +15,6 @@ import 'package:lingua_eidetic/routes/landing_page.dart';
 import 'package:lingua_eidetic/routes/test_page.dart';
 import 'package:lingua_eidetic/services/collection_service.dart';
 import 'package:lingua_eidetic/services/review_service.dart';
-import 'package:lingua_eidetic/widgets/dragging_sample.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
@@ -96,7 +95,6 @@ class RouteGenerator {
           builder: (context) => ChangeNotifierProvider<ReviewService>(
               create: (_) => ReviewService(), builder: (_, __) => ReviewPage()),
         );
-      //TODO: change settings.arguments
       case WRONG_REVIEW_PAGE:
         return MaterialPageRoute(
             builder: (context) => WrongReviewPage(

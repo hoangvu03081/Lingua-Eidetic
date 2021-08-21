@@ -9,6 +9,7 @@ import 'package:lingua_eidetic/routes/routes.dart';
 import 'package:lingua_eidetic/services/card_service.dart';
 import 'package:lingua_eidetic/services/collection_service.dart';
 import 'package:lingua_eidetic/services/image_service.dart';
+import 'package:lingua_eidetic/widgets/collection_navbar.dart';
 
 class CollectionPage extends StatefulWidget {
   const CollectionPage({Key? key, required this.id, required this.title})
@@ -43,6 +44,17 @@ class _CollectionPageState extends State<CollectionPage> {
     // final size = MediaQuery.of(context).size;
 
     return Scaffold(
+      bottomNavigationBar: CollectionNavbar(galleryButtonFunction: () async {
+        final List<String>? temp = await imageService.getMutlipleImages();
+        if (temp != null)
+          Navigator.of(context)
+              .pushNamed(RouteGenerator.ADD_COLLECTION_PAGE, arguments: temp);
+      }, cameraButtonFunction: () async {
+        final String? temp = await imageService.getImageFromCamera();
+        if (temp != null)
+          Navigator.of(context)
+              .pushNamed(RouteGenerator.ADD_COLLECTION_PAGE, arguments: [temp]);
+      }),
       backgroundColor: Color(0xFFEDF2F5),
       body: SafeArea(
         child: NestedScrollView(
@@ -71,39 +83,6 @@ class _CollectionPageState extends State<CollectionPage> {
                 child: Column(
                   children: List.generate(
                       expandArr.length, (index) => _buildCard(index)).toList(),
-                ),
-              ),
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: defaultPadding * 2,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () async {
-                        final List<String>? temp =
-                            await imageService.getMutlipleImages();
-                        if (temp != null)
-                          Navigator.of(context).pushNamed(
-                              RouteGenerator.ADD_COLLECTION_PAGE,
-                              arguments: temp);
-                      },
-                      child: Text('Add from storage'),
-                    ),
-                    SizedBox(width: defaultPadding * 2),
-                    ElevatedButton(
-                      onPressed: () async {
-                        final String? temp =
-                            await imageService.getImageFromCamera();
-                        if (temp != null)
-                          Navigator.of(context).pushNamed(
-                              RouteGenerator.ADD_COLLECTION_PAGE,
-                              arguments: [temp]);
-                      },
-                      child: Text('Add from camera'),
-                    ),
-                  ],
                 ),
               ),
             ],
