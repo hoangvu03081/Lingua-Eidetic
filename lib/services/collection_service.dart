@@ -15,7 +15,7 @@ class CollectionService extends ChangeNotifier {
 
   late String _currentCollection;
 
-  /// return [String] current collection id.
+  /// return [String] current selected collection's id.
   String get current => _currentCollection;
 
   /// return a stream of collection to use in a [StreamBuilder]
@@ -52,13 +52,30 @@ class CollectionService extends ChangeNotifier {
   }
 
   void deleteCollection({required String collectionId}) async {
-    final cardIdList = await _cardRepository.oneTimeCardIdList(
+    final cardIdList = await _cardRepository.getInstantCardIdList(
         _auth.currentUser!.uid, collectionId);
     if (cardIdList != null || cardIdList!.isNotEmpty)
       cardIdList.forEach((id) => _imageService.removeImage(id));
     _collectionRepository.removeCollection(
         userId: _auth.currentUser!.uid, collectionId: collectionId);
     notifyListeners();
+  }
+
+  Future<int> getAvailableCollectionCount(
+      {required String collectionId}) async {
+    try {
+      final cardList = await _cardRepository.getInstantCardList(
+          _auth.currentUser!.uid, collectionId);
+      int result = 0;
+      final now = DateTime.now();
+      for (var card in cardList) {
+        if (now.compareTo(card.available) >= 0) ++result;
+      }
+      return result;
+    } catch (e) {
+      print(e.toString());
+    }
+    return 0;
   }
 
   CollectionService._();

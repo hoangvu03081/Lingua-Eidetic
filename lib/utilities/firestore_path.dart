@@ -18,4 +18,15 @@ abstract class AppConstant {
     Directory appDocDir = await getApplicationDocumentsDirectory();
     path = appDocDir.path;
   }
+
+  /// return image using memory card id
+  static String getImage(String cardId) => '$path/$cardId.png';
 }
+
+/// ReviewStatus is used when user enter incorrect value in ReviewPage,\
+/// user is moved to ReviewWrong Page,
+/// and user is allowed to choose 1 of the 3 options:
+/// 1. **CONTINUE**: this option will lower the card's exp to 0
+/// 2. **ADD**: this option adds the wrong inputted word to the card's caption
+/// 3. **IGNORE**: this option will do nothing (no lower exp!)
+enum ReviewStatus { ADD, CONTINUE, IGNORE }

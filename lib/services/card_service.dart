@@ -15,9 +15,28 @@ class CardService {
   final Auth _auth = Auth();
   final CardRepository _cardRepository = CardRepository();
 
+  late String _currentCard;
+
+  ///return [String] current selected card's id.
+  String get current => _currentCard;
+  set current(String cardId) => _currentCard = cardId;
+
   /// return a stream of [MemoryCard] to use in a [StreamBuilder]
   Stream<QuerySnapshot> get data => _cardRepository.collectionStream(
       userId: _auth.currentUser!.uid, collectionId: _collectionService.current);
+
+  Future<Iterable<MemoryCard>> getCardList(
+      String userId, String collectionId) async {
+    final result =
+        await _cardRepository.getInstantCardList(userId, collectionId);
+    return result;
+  }
+
+  Future<List<QueryDocumentSnapshot<Object?>>> get availableCard {
+    return _cardRepository.getAvailableCard(
+        userId: _auth.currentUser!.uid,
+        collectionId: _collectionService.current);
+  }
 
   String image(String id) {
     return '${AppConstant.path}/$id.png';
@@ -43,7 +62,19 @@ class CardService {
     _imageService.removeImage(cardId);
   }
 
-  void editCard() {}
+  void updateCard(
+      {required String cardId,
+      required int level,
+      required int exp,
+      required int available}) {
+    _cardRepository.updateCardStatus(
+        userId: _auth.currentUser!.uid,
+        collectionId: _collectionService.current,
+        cardId: cardId,
+        level: level,
+        exp: exp,
+        available: available);
+  }
 
   /// store image to local storage, then add to upload queue (upload to Cloud Storage).
   void storeImage(

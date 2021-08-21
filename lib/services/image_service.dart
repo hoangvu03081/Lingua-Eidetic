@@ -19,7 +19,7 @@ class ImageService {
   ///
   /// second string is the image name of which format is [id.png] where id is the card id that contains the image.
   final Box<List<String>> _box = Hive.box('image_queue');
-  FirebaseStorage _storage = FirebaseStorage.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   /// return an image [File] by capturing photo using camera
   Future<String?> getImageFromCamera() async {
@@ -57,7 +57,7 @@ class ImageService {
         await _uploadImage(editCard);
       }
 
-      await Future.delayed(Duration(seconds: 5));
+      await Future.delayed(const Duration(seconds: 5));
     }
   }
 

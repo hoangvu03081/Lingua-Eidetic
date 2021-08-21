@@ -12,8 +12,34 @@ class CardRepository {
         .snapshots();
   }
 
-  /// return one time read of all card in a collection
-  Future<Iterable<String>?> oneTimeCardIdList(
+  Future<List<QueryDocumentSnapshot<Object?>>> getAvailableCard(
+      {required String userId, required String collectionId}) async {
+    CollectionReference collectionRef =
+        _firestore.collection(CloudPath.card(userId, collectionId));
+    final query = await collectionRef
+        .where('available',
+            isLessThanOrEqualTo: DateTime.now().millisecondsSinceEpoch)
+        .get();
+
+    final result = query.docs;
+    result.removeWhere(
+        (element) => (element.data() as Map<String, dynamic>)['level'] > 5);
+
+    return result;
+  }
+
+  /// return one time read of all card id in a collection
+  Future<Iterable<MemoryCard>> getInstantCardList(
+      String userId, String collectionId) async {
+    CollectionReference collectionRef =
+        _firestore.collection(CloudPath.card(userId, collectionId));
+    final query = await collectionRef.get();
+    return query.docs
+        .map((e) => MemoryCard.fromMap(e.data() as Map<String, dynamic>));
+  }
+
+  /// return one time read of all card id in a collection
+  Future<Iterable<String>?> getInstantCardIdList(
       String userId, String collectionId) async {
     CollectionReference collectionRef =
         _firestore.collection(CloudPath.card(userId, collectionId));
@@ -43,7 +69,7 @@ class CardRepository {
     return returnValue.id;
   }
 
-  void updateCard({
+  void setCard({
     required String userId,
     required String collectionId,
     required String cardId,
@@ -52,6 +78,18 @@ class CardRepository {
     CollectionReference collectionRef =
         _firestore.collection(CloudPath.card(userId, collectionId));
     collectionRef.doc(cardId).set(card.toMap());
+  }
+
+  void updateCardStatus(
+      {required String userId,
+      required String collectionId,
+      required String cardId,
+      required int level,
+      required int exp,
+      required int available}) {
+    final docRef =
+        _firestore.collection(CloudPath.card(userId, collectionId)).doc(cardId);
+    docRef.update({'level': level, 'exp': exp, 'available': available});
   }
 
   void updateImagePath(
