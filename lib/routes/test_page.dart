@@ -53,7 +53,7 @@ class TestPage extends StatelessWidget {
             ElevatedButton(
               onPressed: () async {
                 final String? temp = await imageService.getImageFromCamera();
-                print(temp);
+                // print(temp);
               },
               child: Text('Get image'),
             ),
