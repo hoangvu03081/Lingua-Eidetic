@@ -29,11 +29,13 @@ class _CollectionNavbarState extends State<CollectionNavbar> {
   }
 
   void _homeButtonClicked() {
-    _home!.fire();
+    print('leftmost clicked');
+    //_home!.fire();
   }
 
   void _downloadButtonClicked() {
-    _download!.fire();
+    print('rightmost clicked');
+    //_download!.fire();
   }
 
   SMIBool? _open;
@@ -42,11 +44,11 @@ class _CollectionNavbarState extends State<CollectionNavbar> {
 
   void _onRiveInit(Artboard artboard) {
     final controller =
-        StateMachineController.fromArtboard(artboard, 'state_machine');
+        StateMachineController.fromArtboard(artboard, 'State Machine 1');
     artboard.addController(controller!);
-    _open = controller.findInput<bool>('open') as SMIBool;
-    _home = controller.findInput<bool>('home') as SMITrigger;
-    _download = controller.findInput<bool>('download') as SMITrigger;
+    _open = controller.findInput<bool>('open_main') as SMIBool;
+    //_home = controller.findInput<bool>('home') as SMITrigger;
+    //_download = controller.findInput<bool>('download') as SMITrigger;
   }
 
   @override
@@ -65,7 +67,8 @@ class _CollectionNavbarState extends State<CollectionNavbar> {
             'assets/lingua_eidetic.riv',
             fit: BoxFit.cover,
             onInit: _onRiveInit,
-            artboard: 'Collection Navigation Bar',
+            //TODO: Change artboard name
+            artboard: 'navbar',
             antialiasing: true,
           ),
         ));

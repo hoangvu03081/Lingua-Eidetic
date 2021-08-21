@@ -11,7 +11,7 @@ abstract class AppStartup {
     await EasyLocalization.ensureInitialized();
     await Firebase.initializeApp();
     FirebaseFirestore.instance.settings =
-        Settings(cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED);
+        const Settings(cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED);
 
     await Hive.initFlutter();
     await Hive.openBox<List<String>>('image_queue');

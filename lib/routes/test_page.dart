@@ -8,6 +8,7 @@ import 'package:lingua_eidetic/services/auth_service.dart';
 import 'package:lingua_eidetic/services/card_service.dart';
 import 'package:lingua_eidetic/services/collection_service.dart';
 import 'package:lingua_eidetic/services/image_service.dart';
+import 'package:lingua_eidetic/widgets/collection_navbar.dart';
 
 class TestPage extends StatelessWidget {
   @override
@@ -19,6 +20,11 @@ class TestPage extends StatelessWidget {
     collectionService.current = '7F4T7vQ8cWjExB2t3rtA';
     return Scaffold(
       appBar: AppBar(),
+      bottomNavigationBar: CollectionNavbar(galleryButtonFunction: () {
+        print('click');
+      }, cameraButtonFunction: () {
+        print('click 2');
+      }),
       body: SizedBox(
         width: double.infinity,
         child: Column(
@@ -71,22 +77,50 @@ class TestPage extends StatelessWidget {
               },
               child: Text('Test upload image'),
             ),
-            StreamBuilder<QuerySnapshot>(
-              stream: cardService.data,
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Something went wrong');
-                }
+            ElevatedButton(
+                onPressed: () {
+                  cardService.removeCard(
+                      "19gV4DwE7T1nLaW2kgU9", CollectionService().current);
+                },
+                child: Text('Test delete card')),
+            SizedBox(
+              width: 400,
+              height: 400,
+              child: StreamBuilder<QuerySnapshot>(
+                stream: collectionService.data,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Something went wrong');
+                  }
 
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Text("Loading");
-                }
-                Iterable<MemoryCard> memoryCard = snapshot.data!.docs.map(
-                    (DocumentSnapshot document) => MemoryCard.fromMap(
-                        document.data() as Map<String, dynamic>));
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Text("Loading");
+                  }
 
-                return Text(memoryCard.first.available.toUtc().toString());
+                  return ListView.builder(
+                    itemBuilder: (context, index) {
+                      String id = snapshot.data!.docs[index].id;
+                      Collection item = Collection.fromMap(
+                          snapshot.data!.docs[index].data()
+                              as Map<String, dynamic>);
+                      return Container(
+                        child: Text(id),
+                      );
+                    },
+                    itemCount: snapshot.data!.docs.length,
+                  );
+                },
+              ),
+            ),
+            FutureBuilder(
+              builder: (_, snapshot) {
+                if (snapshot.hasData) {
+                  return Text(snapshot.data.toString());
+                }
+                return Text('');
               },
+              future: collectionService.getAvailableCollectionCount(
+                  collectionId: collectionService.current),
             )
           ],
         ),
