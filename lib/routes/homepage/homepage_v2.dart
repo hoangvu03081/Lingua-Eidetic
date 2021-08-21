@@ -6,6 +6,7 @@ import 'package:lingua_eidetic/routes/authentication/widgets/error_toast.dart';
 import 'package:lingua_eidetic/routes/homepage/widgets/add_btn.dart';
 import 'package:lingua_eidetic/routes/homepage/widgets/collection_list.dart';
 import 'package:lingua_eidetic/routes/homepage/widgets/header.dart';
+import 'package:lingua_eidetic/services/auth_service.dart';
 import 'package:lingua_eidetic/services/collection_service.dart';
 import 'package:lingua_eidetic/widgets/search_box.dart';
 
@@ -50,46 +51,62 @@ class _HomePageV2State extends State<HomePageV2> {
         return false;
       },
       child: Scaffold(
+        backgroundColor: Color(0xFFEDF2F5),
         body: SafeArea(
-          child: Stack(children: [
-            _buildColumn(collectionService, size),
-            Positioned(
-              top: isAdding ? 0 : size.height,
-              child: GestureDetector(
-                onTapDown: (TapDownDetails details) {
-                  if (details.globalPosition.dy < size.height / 2) {
-                    titleFocusNode.unfocus();
-                    setState(() {
-                      isAdding = false;
-                    });
-                  }
-                },
-                child: Container(
-                  width: size.width,
-                  height: size.height,
-                  decoration: BoxDecoration(
-                    color: Colors.black38,
-                  ),
-                  child: Stack(
-                    children: [
-                      _buildAddForm(size, context, collectionService),
-                    ],
+          child: NestedScrollView(
+            headerSliverBuilder: (context, innerBoxIsScrolled) {
+              return [
+                SliverAppBar(
+                  floating: true,
+                  titleSpacing: 0,
+                  title: Header(height: 70),
+                  backgroundColor: Colors.transparent,
+                  toolbarHeight: 70,
+                  leading: SizedBox(),
+                  leadingWidth: 0,
+                )
+              ];
+            },
+            body: Stack(children: [
+              _buildColumn(collectionService, size),
+              Positioned(
+                top: isAdding ? 0 : size.height,
+                child: GestureDetector(
+                  onTapDown: (TapDownDetails details) {
+                    if (details.globalPosition.dy < size.height / 2) {
+                      titleFocusNode.unfocus();
+                      setState(() {
+                        isAdding = false;
+                      });
+                    }
+                  },
+                  child: Container(
+                    width: size.width,
+                    height: size.height,
+                    decoration: BoxDecoration(
+                      color: Colors.black38,
+                    ),
+                    child: Stack(
+                      children: [
+                        _buildAddForm(size, context, collectionService),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            Positioned(
-              child: Offstage(
-                offstage: isAdding,
-                child: AddBtn(onTap: () {
-                  titleFocusNode.requestFocus();
-                  setState(() {
-                    isAdding = true;
-                  });
-                }),
-              ),
-            )
-          ]),
+              Positioned(
+                child: Offstage(
+                  offstage: isAdding,
+                  child: AddBtn(onTap: () {
+                    titleFocusNode.requestFocus();
+                    setState(() {
+                      isAdding = true;
+                    });
+                  }),
+                ),
+              )
+            ]),
+          ),
         ),
       ),
     );
@@ -202,7 +219,9 @@ class _HomePageV2State extends State<HomePageV2> {
     showToast(fToast, ErrorToast(errorText: 'Title must not be empty'), 1);
   }
 
-  Widget _buildColumn(collectionService, size) {
+  var _query = '';
+
+  Widget _buildColumn(CollectionService collectionService, size) {
     final child = SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.all(defaultPadding),
@@ -211,11 +230,11 @@ class _HomePageV2State extends State<HomePageV2> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Header(
-                  urlImage:
-                      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png',
-                  username: 'John'),
-              SearchBox(),
+              SearchBox(filterFunc: (query) {
+                setState(() {
+                  _query = query;
+                });
+              }),
               SizedBox(height: defaultPadding * 4),
               Text(
                 'Collections',
@@ -225,6 +244,7 @@ class _HomePageV2State extends State<HomePageV2> {
               Expanded(
                 child: CollectionList(
                   data: collectionService.data,
+                  query: _query,
                 ),
               ),
             ],

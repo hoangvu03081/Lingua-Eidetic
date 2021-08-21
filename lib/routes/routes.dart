@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lingua_eidetic/repositories/card_repository.dart';
 import 'package:lingua_eidetic/repositories/collection_repository.dart';
+import 'package:lingua_eidetic/routes/add_memory_card_page/add_memory_card_page.dart';
+import 'package:lingua_eidetic/routes/collection_page/collection_page.dart';
 import 'package:lingua_eidetic/routes/homepage/homepage_v2.dart';
 import 'package:lingua_eidetic/services/auth_service.dart';
 import 'package:lingua_eidetic/routes/authentication/authentication_page.dart';
@@ -17,6 +19,8 @@ class RouteGenerator {
   static const String SIGN_IN_PAGE = "/sign-in";
   static const String HOME_PAGE = "/home";
   static const String TEST = "/test";
+  static const String COLLECTION_PAGE = "/collection-page";
+  static const String ADD_COLLECTION_PAGE = "/add-collection-page";
 
   final Auth auth = Auth();
   final CollectionRepository collectionRepository = CollectionRepository();
@@ -60,6 +64,23 @@ class RouteGenerator {
           builder: (context) => Provider<Auth>.value(
             value: auth,
             builder: (_, __) => HomePageV2(),
+          ),
+        );
+      case COLLECTION_PAGE:
+        final arguments = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+          builder: (context) => Provider<Auth>.value(
+            value: auth,
+            builder: (_, __) => CollectionPage(
+                id: arguments['id']!, title: arguments['title']!),
+          ),
+        );
+      case ADD_COLLECTION_PAGE:
+        final arguments = settings.arguments as List<String>?;
+        return MaterialPageRoute(
+          builder: (context) => Provider<Auth>.value(
+            value: auth,
+            builder: (_, __) => AddMemoryCardPage(images: arguments),
           ),
         );
       case TEST:

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lingua_eidetic/constants.dart';
 import 'package:lingua_eidetic/routes/homepage/widgets/text_badge.dart';
+import 'package:lingua_eidetic/routes/routes.dart';
 
 class CollectionCardV2 extends StatefulWidget {
   const CollectionCardV2({
@@ -31,11 +32,17 @@ class _CollectionCardV2State extends State<CollectionCardV2> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    print('${widget.title} $dx');
     return Stack(
       alignment: Alignment.centerRight,
       children: [
         GestureDetector(
+          onTap: () {
+            Navigator.of(context).pushNamed(RouteGenerator.COLLECTION_PAGE,
+                arguments: {
+                  'id': (widget.key as ValueKey).value,
+                  'title': widget.title
+                });
+          },
           onHorizontalDragStart: (details) {
             startX = details.globalPosition.dx;
           },
@@ -51,15 +58,16 @@ class _CollectionCardV2State extends State<CollectionCardV2> {
               const dur = Duration(milliseconds: 40);
               Timer.periodic(dur, (Timer t) {
                 setState(() {
-                  if (v < -1000) dx += v / 25;
-                  else dx -= size.width / 40;
+                  if (v < -1000)
+                    dx += v / 25;
+                  else
+                    dx -= size.width / 40;
                 });
                 if (dx <= -size.width) {
                   widget.remove();
                   t.cancel();
                 }
               });
-
             } else
               setState(() {
                 dx = 0;

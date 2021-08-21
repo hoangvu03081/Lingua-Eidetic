@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:lingua_eidetic/constants.dart';
 
 class SearchBox extends StatelessWidget {
-  const SearchBox({Key? key}) : super(key: key);
+  const SearchBox({Key? key, required this.filterFunc}) : super(key: key);
+  final ValueChanged<String> filterFunc;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      onChanged: (value) => filterFunc(value),
       decoration: InputDecoration(
         filled: true,
         border: OutlineInputBorder(

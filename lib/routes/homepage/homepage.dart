@@ -108,11 +108,7 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
                 child: Column(
                   children: [
-                    Header(
-                      urlImage:
-                          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSF6jKor8bzwTj_8iQ2cOC00B80uejzC6LQ1w&usqp=CAU',
-                      username: 'Amanda',
-                    ),
+                    Header(height: 70),
                     SizedBox(height: defaultPadding * 2),
                     TextField(
                       controller: _searchController,
