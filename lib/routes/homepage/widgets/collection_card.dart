@@ -2,23 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:lingua_eidetic/constants.dart';
 
 class CollectionCard extends StatefulWidget {
+
   CollectionCard({
     Key? key,
-    required this.childHeight,
-    required this.childWidth,
     required this.defaultTextStyle,
     required this.iconData,
     required this.title,
     required this.left,
     required this.done,
     required this.readOnly,
+    required this.color,
     this.doneEditing,
   }) : super(key: key);
 
-  ValueChanged? doneEditing;
+  final Color color;
+  final ValueChanged? doneEditing;
   final bool readOnly;
-  final double childHeight;
-  final double childWidth;
   final TextStyle defaultTextStyle;
   final IconData iconData;
   final String title;
@@ -53,10 +52,8 @@ class _CollectionCardState extends State<CollectionCard> {
       _controller.text = widget.title;
     }
     return Container(
-      height: widget.childHeight,
-      width: widget.childWidth,
       decoration: BoxDecoration(
-        color: Color(0xFFFAEFEE),
+        color: widget.color,
         borderRadius: BorderRadius.circular(22),
       ),
       child: Padding(
