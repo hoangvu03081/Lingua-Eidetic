@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lingua_eidetic/constants.dart';
 import 'package:lingua_eidetic/services/card_service.dart';
 import 'package:lingua_eidetic/routes/collection_page/collection_page.dart';
+import 'package:lingua_eidetic/utilities/firestore_path.dart';
 
 class CardGroup extends StatefulWidget {
   const CardGroup({
@@ -18,7 +21,6 @@ class CardGroup extends StatefulWidget {
 }
 
 class _CardGroupState extends State<CardGroup> {
-  // var levels = Map<int, List<String>>();
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -32,58 +34,63 @@ class _CardGroupState extends State<CardGroup> {
           height: widget.isExpand ? size.height * 0.5 : 0,
           margin: EdgeInsets.all(widget.isExpand ? defaultPadding * 2 : 0),
           decoration: BoxDecoration(
-            color: Color(0xFFD9E4FF),
+            color: const Color(0xFFD9E4FF),
             borderRadius: BorderRadius.circular(8),
           ),
           child: StreamBuilder<QuerySnapshot>(
             stream: cardService.data,
             builder: (context, snapshot) {
               if (snapshot.hasError) {
-                return Text('Something went wrong');
+                return const Text('Something went wrong');
               }
 
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return SizedBox();
+                return const SizedBox();
+              }
+
+              final data = snapshot.data!;
+              final docs = data.docs;
+              final List<Map<String, dynamic>> gridItems = [];
+
+              for (int i = 0; i < data.docs.length; i++) {
+                final item = docs[i].data() as Map<String, dynamic>;
+
+                if (widget.isExpand &&
+                    widget.index + 1 == item['level'] as int) {
+                  gridItems.add({'id': docs[i].id, ...item});
+                }
               }
 
               return GridView.builder(
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: 300,
                   childAspectRatio: 1 / 1,
                   mainAxisSpacing: defaultPadding * 2,
                   crossAxisSpacing: defaultPadding * 2,
                 ),
                 itemBuilder: (context, index) {
-                  final memoryCard =
-                      snapshot.data!.docs[index].data() as Map<String, dynamic>;
-
+                  final memoryCard = gridItems[index];
                   int level = memoryCard['level'] as int;
-                  String imagePath = memoryCard['imagePath'];
+                  final id = memoryCard['id'] as String;
 
-                  if (widget.isExpand && level - 1 == widget.index) {
-                    return Offstage(
-                      offstage: !widget.isExpand,
-                      child: Padding(
-                        padding: const EdgeInsets.all(defaultPadding),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(22),
-                          ),
-                          child: Image.network(
-                            memoryCard['imagePath'],
-                            fit: BoxFit.contain,
-                          ),
+                  return Offstage(
+                    offstage: !widget.isExpand,
+                    child: Padding(
+                      padding: const EdgeInsets.all(defaultPadding),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(22),
+                        ),
+                        child: Image(
+                          image: FileImage(File(AppConstant.getImage(id))),
+                          fit: BoxFit.contain,
                         ),
                       ),
-                    );
-                  }
-                  // if (levels[level] == null) levels[level] = [];
-                  // if (!levels[level]!.contains(imagePath)) levels[level]!.add(
-                  //     imagePath);
-                  return SizedBox();
+                    ),
+                  );
                 },
-                itemCount: snapshot.data!.docs.length,
+                itemCount: gridItems.length,
               );
             },
           ),

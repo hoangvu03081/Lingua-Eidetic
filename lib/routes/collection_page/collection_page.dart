@@ -14,6 +14,7 @@ import 'package:lingua_eidetic/widgets/collection_navbar.dart';
 class CollectionPage extends StatefulWidget {
   const CollectionPage({Key? key, required this.id, required this.title})
       : super(key: key);
+
   final String id;
   final String title;
   static const Map<int, String> titles = {

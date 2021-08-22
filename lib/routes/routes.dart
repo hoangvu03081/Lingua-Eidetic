@@ -10,7 +10,7 @@ import 'package:lingua_eidetic/routes/collection_page/collection_page.dart';
 import 'package:lingua_eidetic/routes/homepage/homepage_v2.dart';
 import 'package:lingua_eidetic/services/auth_service.dart';
 import 'package:lingua_eidetic/routes/authentication/authentication_page.dart';
-import 'package:lingua_eidetic/routes/homepage/homepage.dart';
+// import 'package:lingua_eidetic/routes/homepage/homepage.dart';
 import 'package:lingua_eidetic/routes/landing_page.dart';
 import 'package:lingua_eidetic/routes/test_page.dart';
 import 'package:lingua_eidetic/services/collection_service.dart';
@@ -47,15 +47,15 @@ class RouteGenerator {
                   /// landing page has login and register button
                   return ChangeNotifierProvider<CollectionService>.value(
                       value: collectionService,
-                      builder: (_, __) => LandingPage());
+                      builder: (_, __) => const AuthenticationPage());
                 }
 
                 /// return homepage
                 return ChangeNotifierProvider<CollectionService>.value(
                     value: collectionService,
-                    builder: (_, __) => LandingPage());
+                    builder: (_, __) => const HomePageV2());
               }
-              return CircularProgressIndicator();
+              return const CircularProgressIndicator();
             },
           );
         });

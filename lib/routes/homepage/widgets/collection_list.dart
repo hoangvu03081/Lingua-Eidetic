@@ -1,13 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:lingua_eidetic/constants.dart';
 import 'package:lingua_eidetic/models/collection.dart';
 import 'package:lingua_eidetic/routes/homepage/widgets/collection_card_v2.dart';
 import 'package:lingua_eidetic/services/collection_service.dart';
 
 class CollectionList extends StatefulWidget {
-  CollectionList({
+  const CollectionList({
     Key? key,
     required this.data,
     required this.query,
@@ -21,8 +19,8 @@ class CollectionList extends StatefulWidget {
 
 class _CollectionListState extends State<CollectionList> {
   final CollectionService collectionService = CollectionService();
-  List<Collection> _cached = [];
-  List<String> _ids = [];
+  final List<Collection> _cached = [];
+  final List<String> _ids = [];
 
   @override
   Widget build(BuildContext context) {
@@ -30,16 +28,20 @@ class _CollectionListState extends State<CollectionList> {
       stream: widget.data,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return Text('Something went wrong');
+          return const Text('Something went wrong');
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          if (_cached.isEmpty)
-            return Center(child: CircularProgressIndicator());
+          if (_cached.isEmpty) {
+            return const Center(child: CircularProgressIndicator());
+          }
           return ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
-              if (_cached[index].name.contains(widget.query))
+              if (index < _cached.length &&
+                  _cached[index]
+                      .name
+                      .toLowerCase()
+                      .contains(widget.query.toLowerCase())) {
                 return CollectionCardV2(
                   key: Key(_ids[index]),
                   title: _cached[index].name,
@@ -50,14 +52,14 @@ class _CollectionListState extends State<CollectionList> {
                         collectionId: _ids[index]);
                   },
                 );
-              return SizedBox();
+              }
+              return const SizedBox();
             },
             itemCount: snapshot.data!.docs.length,
           );
         }
 
         return ListView.builder(
-          physics: NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             String id = snapshot.data!.docs[index].id;
 
@@ -71,8 +73,7 @@ class _CollectionListState extends State<CollectionList> {
               _cached.add(item);
               _ids.add(id);
             }
-
-            if (item.name.contains(widget.query))
+            if (item.name.toLowerCase().contains(widget.query.toLowerCase())) {
               return CollectionCardV2(
                 key: Key(id),
                 title: item.name,
@@ -82,7 +83,8 @@ class _CollectionListState extends State<CollectionList> {
                   collectionService.deleteCollection(collectionId: id);
                 },
               );
-            return SizedBox();
+            }
+            return const SizedBox();
           },
           itemCount: snapshot.data!.docs.length,
         );

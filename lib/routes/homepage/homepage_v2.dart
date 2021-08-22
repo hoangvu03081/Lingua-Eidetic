@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lingua_eidetic/constants.dart';
 import 'package:lingua_eidetic/routes/authentication/widgets/error_toast.dart';
+import 'package:lingua_eidetic/routes/collection_page/collection_page.dart';
 import 'package:lingua_eidetic/routes/homepage/widgets/add_btn.dart';
 import 'package:lingua_eidetic/routes/homepage/widgets/collection_list.dart';
 import 'package:lingua_eidetic/routes/homepage/widgets/header.dart';
@@ -39,10 +40,20 @@ class _HomePageV2State extends State<HomePageV2> {
     super.dispose();
   }
 
+  var _query = '';
+
+  void onQuery(String query) {
+    setState(() {
+      _query = query;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final collectionService = CollectionService();
     final size = MediaQuery.of(context).size;
+    final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
+    if (!isAdding) titleFocusNode.unfocus();
 
     return WillPopScope(
       onWillPop: () async {
@@ -52,24 +63,27 @@ class _HomePageV2State extends State<HomePageV2> {
         return false;
       },
       child: Scaffold(
-        backgroundColor: Color(0xFFEDF2F5),
+        backgroundColor: const Color(0xFFEDF2F5),
         body: SafeArea(
           child: NestedScrollView(
             headerSliverBuilder: (context, innerBoxIsScrolled) {
               return [
                 SliverAppBar(
-                  floating: true,
                   titleSpacing: 0,
-                  title: Header(height: 70),
+                  title: Header(height: 200, onQuery: onQuery),
+                  toolbarHeight: 200,
                   backgroundColor: Colors.transparent,
-                  toolbarHeight: 70,
-                  leading: SizedBox(),
+                  leading: const SizedBox(),
                   leadingWidth: 0,
                 )
               ];
             },
             body: Stack(children: [
-              _buildColumn(collectionService, size),
+              // TODO: provider for query
+              CollectionList(
+                data: collectionService.data,
+                query: _query,
+              ),
               Positioned(
                 top: isAdding ? 0 : size.height,
                 child: GestureDetector(
@@ -84,7 +98,7 @@ class _HomePageV2State extends State<HomePageV2> {
                   child: Container(
                     width: size.width,
                     height: size.height,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.black38,
                     ),
                     child: Stack(
@@ -96,10 +110,12 @@ class _HomePageV2State extends State<HomePageV2> {
                 ),
               ),
               Positioned(
+                bottom: defaultPadding,
+                left: 0,
+                right: 0,
                 child: Offstage(
-                  offstage: isAdding,
+                  offstage: isAdding || isKeyboardOpen,
                   child: AddBtn(onTap: () {
-                    titleFocusNode.requestFocus();
                     setState(() {
                       isAdding = true;
                     });
@@ -123,19 +139,19 @@ class _HomePageV2State extends State<HomePageV2> {
           ? size.height * 0.5 - MediaQuery.of(context).viewInsets.bottom
           : size.height,
       child: ClipRRect(
-        borderRadius: BorderRadius.only(
+        borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(22), topRight: Radius.circular(22)),
         child: Container(
           height: size.height * 0.5,
-          padding: EdgeInsets.symmetric(
+          padding: const EdgeInsets.symmetric(
               horizontal: defaultPadding * 2, vertical: defaultPadding * 2),
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Colors.white,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Adding your own collection',
                 style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
               ),
@@ -149,10 +165,10 @@ class _HomePageV2State extends State<HomePageV2> {
                     }
                     _addingSuccessfully(collectionService);
                   },
-                  child: Text('Add'),
+                  child: const Text('Add'),
                 ),
               ),
-              SizedBox(height: defaultPadding * 2),
+              const SizedBox(height: defaultPadding * 2),
               TextField(
                 focusNode: titleFocusNode,
                 controller: titleController,
@@ -163,10 +179,10 @@ class _HomePageV2State extends State<HomePageV2> {
                   }
                   _addingSuccessfully(collectionService);
                 },
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18,
                 ),
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Your title',
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.black54, width: 1),
@@ -200,11 +216,9 @@ class _HomePageV2State extends State<HomePageV2> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.check),
-            SizedBox(
-              width: 12.0,
-            ),
-            Text("Successfully added the collection"),
+            const Icon(Icons.check),
+            const SizedBox(width: 12.0),
+            const Text("Successfully added the collection"),
           ],
         ),
       ),
@@ -218,42 +232,5 @@ class _HomePageV2State extends State<HomePageV2> {
 
   void _titleEmptyToast() {
     showToast(fToast, ErrorToast(errorText: 'Title must not be empty'), 1);
-  }
-
-  var _query = '';
-
-  Widget _buildColumn(CollectionService collectionService, size) {
-    final child = SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.all(defaultPadding),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxHeight: size.height),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SearchBox(filterFunc: (query) {
-                setState(() {
-                  _query = query;
-                });
-              }),
-              SizedBox(height: defaultPadding * 4),
-              Text(
-                'Collections',
-                style: TextStyle(fontSize: 26, fontWeight: FontWeight.w600),
-              ),
-              SizedBox(height: defaultPadding * 3),
-              Expanded(
-                child: CollectionList(
-                  data: collectionService.data,
-                  query: _query,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-
-    return child;
   }
 }
