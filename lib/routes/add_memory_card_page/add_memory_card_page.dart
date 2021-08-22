@@ -6,7 +6,7 @@ import 'package:lingua_eidetic/models/memory_card.dart';
 import 'package:lingua_eidetic/services/card_service.dart';
 
 class AddMemoryCardPage extends StatefulWidget {
-  AddMemoryCardPage({Key? key, required this.images}) : super(key: key);
+  const AddMemoryCardPage({Key? key, required this.images}) : super(key: key);
   final List<String>? images;
 
   @override
@@ -40,7 +40,7 @@ class _AddMemoryCardPageState extends State<AddMemoryCardPage> {
     final cardService = CardService();
 
     return Scaffold(
-      backgroundColor: Color(0xFFEDF2F5),
+      backgroundColor: const Color(0xFFEDF2F5),
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
@@ -51,15 +51,15 @@ class _AddMemoryCardPageState extends State<AddMemoryCardPage> {
                 children: [
                   IconButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    icon: Icon(Icons.west),
-                    color: Color(0xFF172853),
+                    icon: const Icon(Icons.west),
+                    color: const Color(0xFF172853),
                   ),
                   Text(
                     'Collection Title',
                     style: TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF172853),
+                      color: const Color(0xFF172853),
                     ),
                   ),
                   SizedBox(
@@ -79,15 +79,15 @@ class _AddMemoryCardPageState extends State<AddMemoryCardPage> {
                         }
                         Navigator.of(context).pop();
                       },
-                      icon: Icon(Icons.done),
-                      color: Color(0xFF172853),
+                      icon: const Icon(Icons.done),
+                      color: const Color(0xFF172853),
                     ),
                   ),
                 ],
               ),
               backgroundColor: Colors.transparent,
               toolbarHeight: 70,
-              leading: SizedBox(),
+              leading: const SizedBox(),
               leadingWidth: 0,
             ),
           ];
@@ -101,13 +101,13 @@ class _AddMemoryCardPageState extends State<AddMemoryCardPage> {
                 child: Container(
                   width: size.width,
                   decoration: BoxDecoration(
-                    color: Color(0xFFD9E4FF),
+                    color: const Color(0xFFD9E4FF),
                     borderRadius: BorderRadius.circular(22),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.25),
                         blurRadius: 4,
-                        offset: Offset(0, 4),
+                        offset: const Offset(0, 4),
                       ),
                     ],
                   ),
@@ -163,7 +163,7 @@ class _AddMemoryCardPageState extends State<AddMemoryCardPage> {
                           focusNode: focusNode,
                           controller: _captionController[_activeIndex],
                           maxLines: 5,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             border: InputBorder.none,
                             contentPadding: EdgeInsets.all(defaultPadding),
                           ),
@@ -180,7 +180,7 @@ class _AddMemoryCardPageState extends State<AddMemoryCardPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: defaultPadding),
+                    const SizedBox(height: defaultPadding),
                     Expanded(
                       child: Row(
                         children: [

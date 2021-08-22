@@ -11,7 +11,7 @@ class CollectionService extends ChangeNotifier {
   final CollectionRepository _collectionRepository = CollectionRepository();
   final CardRepository _cardRepository = CardRepository();
 
-  // final ImageService _imageService = ImageService();
+  final ImageService _imageService = ImageService();
   final Auth _auth = Auth();
 
   late String _currentCollection;

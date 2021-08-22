@@ -3,13 +3,16 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lingua_eidetic/constants.dart';
 import 'package:lingua_eidetic/services/auth_service.dart';
+import 'package:lingua_eidetic/widgets/search_box.dart';
 
 class Header extends StatelessWidget {
   const Header({
     Key? key,
     required this.height,
+    required this.onQuery,
   }) : super(key: key);
   final double height;
+  final ValueChanged<String> onQuery;
 
   @override
   Widget build(BuildContext context) {
@@ -23,31 +26,55 @@ class Header extends StatelessWidget {
       height: height,
       padding: const EdgeInsets.symmetric(
         vertical: defaultPadding * 2,
+        horizontal: defaultPadding,
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(
-            radius: 25,
-            // backgroundImage: NetworkImage(urlImage ?? 'https://github.com/hoangvu03081/Lingua-Eidetic/blob/main/assets/images/hacker.png?raw=true'),
-          ),
-          SizedBox(width: defaultPadding),
-          Expanded(
-            child: Text(
-              'Hi, $username!',
-              style: GoogleFonts.montserrat(
-                textStyle: TextStyle(
-                  fontSize: 32,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w700,
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 25,
+                backgroundImage: NetworkImage(urlImage ??
+                    'https://github.com/hoangvu03081/Lingua-Eidetic/blob/main/assets/images/hacker.png?raw=true'),
+              ),
+              const SizedBox(width: defaultPadding),
+              Expanded(
+                child: Text(
+                  'Hi, $username!',
+                  style: GoogleFonts.montserrat(
+                    textStyle: const TextStyle(
+                      fontSize: 32,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                 ),
               ),
-            ),
+              InkWell(
+                onTap: () {},
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                      height: 30,
+                      width: 30,
+                      child: SvgPicture.asset(
+                        'assets/images/community.svg',
+                        fit: BoxFit.contain,
+                      )),
+                ),
+              ),
+            ],
           ),
-          InkWell(
-            onTap: () {},
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SvgPicture.asset('assets/images/more2_vert.svg'),
+          const SizedBox(height: defaultPadding * 2),
+          SearchBox(filterFunc: onQuery),
+          const SizedBox(height: defaultPadding * 2),
+          const Text(
+            'Collections',
+            style: TextStyle(
+              fontSize: 26,
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
             ),
           ),
         ],

@@ -61,7 +61,8 @@ class _CollectionNavbarState extends State<CollectionNavbar> {
     Size size = MediaQuery.of(context).size;
     return GestureDetector(
         onTapUp: onTapListener,
-        child: SizedBox(
+        child: Container(
+          color: Colors.transparent,
           height: size.height * 0.1,
           child: RiveAnimation.asset(
             'assets/lingua_eidetic.riv',

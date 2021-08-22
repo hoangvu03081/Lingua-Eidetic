@@ -10,7 +10,7 @@ import 'package:lingua_eidetic/utilities/firestore_path.dart';
 import 'package:path_provider/path_provider.dart';
 
 class CardService {
-  // final ImageService _imageService = ImageService();
+  final ImageService _imageService = ImageService();
   final CollectionService _collectionService = CollectionService();
   final Auth _auth = Auth();
   final CardRepository _cardRepository = CardRepository();
@@ -59,7 +59,7 @@ class CardService {
         userId: _auth.currentUser!.uid,
         collectionId: collectionId,
         cardId: cardId);
-    // _imageService.removeImage(cardId);
+    _imageService.removeImage(cardId);
   }
 
   void updateCard(
@@ -82,7 +82,7 @@ class CardService {
       required String cardId,
       required String imagePath}) async {
     await File(imagePath).copy('${AppConstant.path}/$cardId.png');
-    // _imageService.addImageToQueue(collectionId, '$cardId.png');
+    _imageService.addImageToQueue(collectionId, '$cardId.png');
   }
 
   /// update card's image path on Cloud Firestore
@@ -99,7 +99,7 @@ class CardService {
   }
 
   void init() {
-    // _imageService.uploadQueueInit(_updateCardImagePath);
+    _imageService.uploadQueueInit(_updateCardImagePath);
   }
 
   ///return a singleton instance of [CardService]
