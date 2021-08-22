@@ -25,7 +25,7 @@ class _HomePageV2State extends State<HomePageV2> {
   FocusNode titleFocusNode = FocusNode();
   TextEditingController titleController = TextEditingController();
   late final FToast fToast;
-
+  double topOffset = 0;
   @override
   void initState() {
     super.initState();
@@ -37,6 +37,7 @@ class _HomePageV2State extends State<HomePageV2> {
   void dispose() {
     titleController.dispose();
     titleFocusNode.dispose();
+    scrollPosition.dispose();
     super.dispose();
   }
 
@@ -48,6 +49,7 @@ class _HomePageV2State extends State<HomePageV2> {
     });
   }
 
+  final scrollPosition = ScrollController();
   @override
   Widget build(BuildContext context) {
     final collectionService = CollectionService();
@@ -57,6 +59,8 @@ class _HomePageV2State extends State<HomePageV2> {
 
     return WillPopScope(
       onWillPop: () async {
+        // scrollPosition.animateTo(0,
+        // duration: Duration(milliseconds: 200), curve: Curves.ease);
         setState(() {
           isAdding = false;
         });
@@ -66,11 +70,26 @@ class _HomePageV2State extends State<HomePageV2> {
         backgroundColor: const Color(0xFFEDF2F5),
         body: SafeArea(
           child: NestedScrollView(
-            headerSliverBuilder: (context, innerBoxIsScrolled) {
+            // physics: isAdding ? const NeverScrollableScrollPhysics() : null,
+            controller: scrollPosition,
+            headerSliverBuilder:
+                (BuildContext context, bool innerBoxIsScrolled) {
               return [
                 SliverAppBar(
                   titleSpacing: 0,
-                  title: Header(height: 200, onQuery: onQuery),
+                  title: Stack(
+                    children: [
+                      Header(height: 200, onQuery: onQuery),
+                      Positioned(
+                        top: isAdding ? 0 : -200,
+                        child: Container(
+                          width: size.width,
+                          height: 200,
+                          color: isAdding ? Colors.black38 : Colors.transparent,
+                        ),
+                      ),
+                    ],
+                  ),
                   toolbarHeight: 200,
                   backgroundColor: Colors.transparent,
                   leading: const SizedBox(),
@@ -86,27 +105,25 @@ class _HomePageV2State extends State<HomePageV2> {
               ),
               Positioned(
                 top: isAdding ? 0 : size.height,
-                child: GestureDetector(
-                  onTapDown: (TapDownDetails details) {
-                    if (details.globalPosition.dy < size.height / 2) {
-                      titleFocusNode.unfocus();
-                      setState(() {
-                        isAdding = false;
-                      });
-                    }
-                  },
-                  child: Container(
-                    width: size.width,
-                    height: size.height,
-                    decoration: const BoxDecoration(
-                      color: Colors.black38,
+                child: Stack(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        titleFocusNode.unfocus();
+                        setState(() {
+                          isAdding = false;
+                        });
+                      },
+                      child: Container(
+                        width: size.width,
+                        height: size.height,
+                        decoration: const BoxDecoration(
+                          color: Colors.black38,
+                        ),
+                      ),
                     ),
-                    child: Stack(
-                      children: [
-                        _buildAddForm(size, context, collectionService),
-                      ],
-                    ),
-                  ),
+                    _buildAddForm(context, collectionService),
+                  ],
                 ),
               ),
               Positioned(
@@ -129,10 +146,15 @@ class _HomePageV2State extends State<HomePageV2> {
     );
   }
 
-  AnimatedPositioned _buildAddForm(
-      Size size, BuildContext context, CollectionService collectionService) {
+  Widget _buildAddForm(
+      BuildContext context, CollectionService collectionService) {
+    final size = MediaQuery.of(context).size;
+    if (isAdding) {
+      scrollPosition.animateTo(200,
+          duration: const Duration(milliseconds: 200), curve: Curves.ease);
+    }
     return AnimatedPositioned(
-      duration: Duration(milliseconds: 400),
+      duration: const Duration(milliseconds: 400),
       left: 0,
       right: 0,
       top: isAdding
