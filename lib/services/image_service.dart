@@ -94,10 +94,14 @@ class ImageService {
   }
 
   void removeImage(String cardId) async {
-    String fileName = cardId + '.png';
-    final cloudImage = _storage.ref(fileName);
-    await cloudImage.delete();
-    await File(AppConstant.path + '/' + fileName).delete();
+    try {
+      String fileName = cardId + '.png';
+      final cloudImage = _storage.ref(fileName);
+      await cloudImage.delete();
+      await File(AppConstant.path + '/' + fileName).delete();
+    } catch (e) {
+      print(e);
+    }
   }
 
   void printHive() {

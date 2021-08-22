@@ -66,10 +66,6 @@ class _ReviewPageState extends State<ReviewPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final reviewService = context.watch<ReviewService>();
     final size = MediaQuery.of(context).size;
-    //TODO:Test review service
-    final collectionService = CollectionService();
-    collectionService.current = '7F4T7vQ8cWjExB2t3rtA';
-    //
     return Scaffold(
       backgroundColor: const Color(0xFFEDF2F5),
       body: FutureBuilder<List<QueryDocumentSnapshot<Object?>>>(

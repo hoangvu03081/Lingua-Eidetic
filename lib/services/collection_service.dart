@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lingua_eidetic/models/collection.dart';
@@ -6,12 +8,13 @@ import 'package:lingua_eidetic/repositories/collection_repository.dart';
 import 'package:lingua_eidetic/services/auth_service.dart';
 import 'package:lingua_eidetic/services/card_service.dart';
 import 'package:lingua_eidetic/services/image_service.dart';
+import 'package:lingua_eidetic/utilities/firestore_path.dart';
 
 class CollectionService extends ChangeNotifier {
   final CollectionRepository _collectionRepository = CollectionRepository();
   final CardRepository _cardRepository = CardRepository();
 
-  // final ImageService _imageService = ImageService();
+  final ImageService _imageService = ImageService();
   final Auth _auth = Auth();
 
   late String _currentCollection;
@@ -55,8 +58,8 @@ class CollectionService extends ChangeNotifier {
   void deleteCollection({required String collectionId}) async {
     final cardIdList = await _cardRepository.getInstantCardIdList(
         _auth.currentUser!.uid, collectionId);
-    // if (cardIdList != null || cardIdList!.isNotEmpty)
-    //   cardIdList.forEach((id) => _imageService.removeImage(id));
+    if (cardIdList != null || cardIdList!.isNotEmpty)
+      cardIdList.forEach((id) => _imageService.removeImage(id));
     _collectionRepository.removeCollection(
         userId: _auth.currentUser!.uid, collectionId: collectionId);
     notifyListeners();
@@ -70,7 +73,7 @@ class CollectionService extends ChangeNotifier {
       int result = 0;
       final now = DateTime.now();
       for (var card in cardList) {
-        if (now.compareTo(card.available) >= 0) ++result;
+        if (now.compareTo(card.available) >= 0 && card.level < 6) ++result;
       }
       return result;
     } catch (e) {

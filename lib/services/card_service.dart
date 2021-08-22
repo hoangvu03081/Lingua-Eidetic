@@ -8,9 +8,10 @@ import 'package:lingua_eidetic/services/collection_service.dart';
 import 'package:lingua_eidetic/services/image_service.dart';
 import 'package:lingua_eidetic/utilities/firestore_path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:http/http.dart' as http;
 
 class CardService {
-  // final ImageService _imageService = ImageService();
+  final ImageService _imageService = ImageService();
   final CollectionService _collectionService = CollectionService();
   final Auth _auth = Auth();
   final CardRepository _cardRepository = CardRepository();
@@ -59,7 +60,7 @@ class CardService {
         userId: _auth.currentUser!.uid,
         collectionId: collectionId,
         cardId: cardId);
-    // _imageService.removeImage(cardId);
+    _imageService.removeImage(cardId);
   }
 
   void updateCard(
@@ -82,7 +83,7 @@ class CardService {
       required String cardId,
       required String imagePath}) async {
     await File(imagePath).copy('${AppConstant.path}/$cardId.png');
-    // _imageService.addImageToQueue(collectionId, '$cardId.png');
+    _imageService.addImageToQueue(collectionId, '$cardId.png');
   }
 
   /// update card's image path on Cloud Firestore
@@ -98,8 +99,35 @@ class CardService {
         imagePath: imagePath);
   }
 
+  Future<ImageType> getImage({required String cardId}) async {
+    File file = File(AppConstant.getImage(cardId));
+    if (await file.exists()) return ImageType.FILE;
+
+    return ImageType.NETWORK;
+  }
+
+  void downloadImage({required String cardId}) async {
+    final card = await _cardRepository.getCard(
+        userId: _auth.currentUser!.uid,
+        collectionId: _collectionService.current,
+        cardId: cardId);
+    if (card == null) throw ('');
+    final networkImage = await http.get(Uri.parse(card.imagePath));
+    final file = File(AppConstant.getImage(cardId));
+    file.writeAsBytesSync(networkImage.bodyBytes);
+  }
+
+  Stream<int> getAvailableCardCount() async* {
+    while (true) {
+      int count = await _collectionService.getAvailableCollectionCount(
+          collectionId: _collectionService.current);
+      yield count;
+      await Future.delayed(const Duration(seconds: 1));
+    }
+  }
+
   void init() {
-    // _imageService.uploadQueueInit(_updateCardImagePath);
+    _imageService.uploadQueueInit(_updateCardImagePath);
   }
 
   ///return a singleton instance of [CardService]

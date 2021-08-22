@@ -125,9 +125,7 @@ class WrongReviewPage extends StatelessWidget {
                       child: const Center(
                           child: Icon(Icons.menu, color: Color(0xFF172853)))),
                 ),
-                SizedBox(
-                  width: size.width * 0.04,
-                ),
+                SizedBox(width: size.width * 0.04),
                 ElevatedButton(
                   style: ButtonStyle(
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
