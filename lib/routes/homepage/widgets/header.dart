@@ -67,11 +67,7 @@ class Header extends StatelessWidget {
             ],
           ),
           const SizedBox(height: defaultPadding * 2),
-          GestureDetector(
-              onTap: () {
-                print(132);
-              },
-              child: SearchBox(filterFunc: onQuery)),
+          SearchBox(filterFunc: onQuery),
           const SizedBox(height: defaultPadding * 2),
           const Text(
             'Collections',

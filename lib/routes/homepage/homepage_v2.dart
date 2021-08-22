@@ -66,80 +66,86 @@ class _HomePageV2State extends State<HomePageV2> {
         });
         return false;
       },
-      child: Scaffold(
-        backgroundColor: const Color(0xFFEDF2F5),
-        body: SafeArea(
-          child: NestedScrollView(
-            // physics: isAdding ? const NeverScrollableScrollPhysics() : null,
-            controller: scrollPosition,
-            headerSliverBuilder:
-                (BuildContext context, bool innerBoxIsScrolled) {
-              return [
-                SliverAppBar(
-                  titleSpacing: 0,
-                  title: Stack(
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Scaffold(
+          backgroundColor: const Color(0xFFEDF2F5),
+          body: SafeArea(
+            child: NestedScrollView(
+              // physics: isAdding ? const NeverScrollableScrollPhysics() : null,
+              controller: scrollPosition,
+              headerSliverBuilder:
+                  (BuildContext context, bool innerBoxIsScrolled) {
+                return [
+                  SliverAppBar(
+                    titleSpacing: 0,
+                    title: Stack(
+                      children: [
+                        Header(height: 200, onQuery: onQuery),
+                        Positioned(
+                          top: isAdding ? 0 : -200,
+                          child: Container(
+                            width: size.width,
+                            height: 200,
+                            color:
+                                isAdding ? Colors.black38 : Colors.transparent,
+                          ),
+                        ),
+                      ],
+                    ),
+                    toolbarHeight: 200,
+                    backgroundColor: Colors.transparent,
+                    leading: const SizedBox(),
+                    leadingWidth: 0,
+                  )
+                ];
+              },
+              body: Stack(children: [
+                // TODO: provider for query
+                CollectionList(
+                  data: collectionService.data,
+                  query: _query,
+                ),
+                Positioned(
+                  top: isAdding ? 0 : size.height,
+                  child: Stack(
                     children: [
-                      Header(height: 200, onQuery: onQuery),
-                      Positioned(
-                        top: isAdding ? 0 : -200,
+                      GestureDetector(
+                        onTap: () {
+                          titleFocusNode.unfocus();
+                          setState(() {
+                            isAdding = false;
+                          });
+                        },
                         child: Container(
                           width: size.width,
-                          height: 200,
-                          color: isAdding ? Colors.black38 : Colors.transparent,
+                          height: size.height,
+                          decoration: const BoxDecoration(
+                            color: Colors.black38,
+                          ),
                         ),
                       ),
+                      _buildAddForm(context, collectionService),
                     ],
                   ),
-                  toolbarHeight: 200,
-                  backgroundColor: Colors.transparent,
-                  leading: const SizedBox(),
-                  leadingWidth: 0,
+                ),
+                Positioned(
+                  bottom: defaultPadding,
+                  left: 0,
+                  right: 0,
+                  child: Offstage(
+                    offstage: isAdding || isKeyboardOpen,
+                    child: AddBtn(onTap: () {
+                      setState(() {
+                        isAdding = true;
+                      });
+                    }),
+                  ),
                 )
-              ];
-            },
-            body: Stack(children: [
-              // TODO: provider for query
-              CollectionList(
-                data: collectionService.data,
-                query: _query,
-              ),
-              Positioned(
-                top: isAdding ? 0 : size.height,
-                child: Stack(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        titleFocusNode.unfocus();
-                        setState(() {
-                          isAdding = false;
-                        });
-                      },
-                      child: Container(
-                        width: size.width,
-                        height: size.height,
-                        decoration: const BoxDecoration(
-                          color: Colors.black38,
-                        ),
-                      ),
-                    ),
-                    _buildAddForm(context, collectionService),
-                  ],
-                ),
-              ),
-              Positioned(
-                bottom: defaultPadding,
-                left: 0,
-                right: 0,
-                child: Offstage(
-                  offstage: isAdding || isKeyboardOpen,
-                  child: AddBtn(onTap: () {
-                    setState(() {
-                      isAdding = true;
-                    });
-                  }),
-                ),
-              )
-            ]),
+              ]),
+            ),
           ),
         ),
       ),

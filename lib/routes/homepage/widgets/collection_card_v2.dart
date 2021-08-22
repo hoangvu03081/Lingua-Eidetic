@@ -39,6 +39,7 @@ class _CollectionCardV2State extends State<CollectionCardV2> {
         children: [
           GestureDetector(
             onTap: () {
+              FocusScope.of(context).unfocus();
               Navigator.of(context).pushNamed(RouteGenerator.COLLECTION_PAGE,
                   arguments: {
                     'id': (widget.key as ValueKey).value,
