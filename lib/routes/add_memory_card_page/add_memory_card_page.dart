@@ -54,12 +54,12 @@ class _AddMemoryCardPageState extends State<AddMemoryCardPage> {
                     icon: const Icon(Icons.west),
                     color: const Color(0xFF172853),
                   ),
-                  Text(
+                  const Text(
                     'Collection Title',
                     style: TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF172853),
+                      color: Color(0xFF172853),
                     ),
                   ),
                   SizedBox(

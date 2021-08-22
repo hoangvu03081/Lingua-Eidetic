@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:lingua_eidetic/models/memory_card.dart';
 import 'package:lingua_eidetic/repositories/card_repository.dart';
 import 'package:lingua_eidetic/services/auth_service.dart';
@@ -99,11 +100,23 @@ class CardService {
         imagePath: imagePath);
   }
 
-  Future<ImageType> getImage({required String cardId}) async {
-    File file = File(AppConstant.getImage(cardId));
-    if (await file.exists()) return ImageType.FILE;
-
-    return ImageType.NETWORK;
+  Future<Image> getImage({required String cardId}) async {
+    for (int i = 0; i < 5; ++i) {
+      File file = File(AppConstant.getImage(cardId));
+      if (await file.exists()) {
+        return Image.file(
+          file,
+          fit: BoxFit.contain,
+        );
+      }
+      await Future.delayed(const Duration(seconds: 2));
+    }
+    final card = await _cardRepository.getCard(
+        userId: _auth.currentUser!.uid,
+        collectionId: _collectionService.current,
+        cardId: cardId);
+    downloadImage(cardId: cardId);
+    return Image.network(card!.imagePath);
   }
 
   void downloadImage({required String cardId}) async {

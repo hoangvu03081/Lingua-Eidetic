@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lingua_eidetic/constants.dart';
+import 'package:lingua_eidetic/models/memory_card.dart';
 import 'package:lingua_eidetic/services/card_service.dart';
 import 'package:lingua_eidetic/routes/collection_page/collection_page.dart';
 import 'package:lingua_eidetic/utilities/firestore_path.dart';
@@ -50,14 +51,14 @@ class _CardGroupState extends State<CardGroup> {
 
               final data = snapshot.data!;
               final docs = data.docs;
-              final List<Map<String, dynamic>> gridItems = [];
+              final List<MemoryCard> gridItems = [];
 
               for (int i = 0; i < data.docs.length; i++) {
                 final item = docs[i].data() as Map<String, dynamic>;
 
                 if (widget.isExpand &&
                     widget.index + 1 == item['level'] as int) {
-                  gridItems.add({'id': docs[i].id, ...item});
+                  gridItems.add(MemoryCard.fromMap(item));
                 }
               }
 
@@ -70,8 +71,8 @@ class _CardGroupState extends State<CardGroup> {
                 ),
                 itemBuilder: (context, index) {
                   final memoryCard = gridItems[index];
-                  int level = memoryCard['level'] as int;
-                  final id = memoryCard['id'] as String;
+                  int level = memoryCard.level;
+                  final id = snapshot.data!.docs[index].id;
 
                   return Offstage(
                     offstage: !widget.isExpand,
@@ -82,9 +83,15 @@ class _CardGroupState extends State<CardGroup> {
                           color: Colors.blue,
                           borderRadius: BorderRadius.circular(22),
                         ),
-                        child: Image(
-                          image: FileImage(File(AppConstant.getImage(id))),
-                          fit: BoxFit.contain,
+                        child: FutureBuilder<Image>(
+                          future: cardService.getImage(cardId: id),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return snapshot.data!;
+                            }
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          },
                         ),
                       ),
                     ),
