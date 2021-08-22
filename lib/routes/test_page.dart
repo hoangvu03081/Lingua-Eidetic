@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,6 +10,7 @@ import 'package:lingua_eidetic/services/auth_service.dart';
 import 'package:lingua_eidetic/services/card_service.dart';
 import 'package:lingua_eidetic/services/collection_service.dart';
 import 'package:lingua_eidetic/services/image_service.dart';
+import 'package:lingua_eidetic/utilities/firestore_path.dart';
 import 'package:lingua_eidetic/widgets/collection_navbar.dart';
 
 class TestPage extends StatelessWidget {
@@ -114,13 +117,23 @@ class TestPage extends StatelessWidget {
             ),
             FutureBuilder(
               builder: (_, snapshot) {
-                if (snapshot.hasData) {
-                  return Text(snapshot.data.toString());
-                }
+                print(snapshot.data);
                 return Text('');
               },
-              future: collectionService.getAvailableCollectionCount(
-                  collectionId: collectionService.current),
+              future:
+                  File(AppConstant.getImage('19CdAud9KPFCV6q2MbYM')).exists(),
+            ),
+            StreamBuilder<int>(
+              builder: (_, snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data != 0) {
+                    print('not 0');
+                    return Text(snapshot.data.toString());
+                  }
+                }
+                return Text('Might be 0');
+              },
+              stream: cardService.getAvailableCardCount(),
             )
           ],
         ),

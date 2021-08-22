@@ -114,8 +114,8 @@ class ReviewService extends ChangeNotifier {
             .add(levelSystem[card.level]!.cooldown * (1 / 2))
             .millisecondsSinceEpoch);
   }
-  //TODO: Test review service
 
+  //TODO: Add caption wrong card
   void addCaptionWrongCard(
       {required QueryDocumentSnapshot memoryCard, required String text}) {}
 }

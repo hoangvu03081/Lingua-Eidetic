@@ -8,6 +8,7 @@ import 'package:lingua_eidetic/services/collection_service.dart';
 import 'package:lingua_eidetic/services/image_service.dart';
 import 'package:lingua_eidetic/utilities/firestore_path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:http/http.dart' as http;
 
 class CardService {
   final ImageService _imageService = ImageService();
@@ -96,6 +97,33 @@ class CardService {
         collectionId: collectionId,
         cardId: cardId,
         imagePath: imagePath);
+  }
+
+  Future<ImageType> getImage({required String cardId}) async {
+    File file = File(AppConstant.getImage(cardId));
+    if (await file.exists()) return ImageType.FILE;
+
+    return ImageType.NETWORK;
+  }
+
+  void downloadImage({required String cardId}) async {
+    final card = await _cardRepository.getCard(
+        userId: _auth.currentUser!.uid,
+        collectionId: _collectionService.current,
+        cardId: cardId);
+    if (card == null) throw ('');
+    final networkImage = await http.get(Uri.parse(card.imagePath));
+    final file = File(AppConstant.getImage(cardId));
+    file.writeAsBytesSync(networkImage.bodyBytes);
+  }
+
+  Stream<int> getAvailableCardCount() async* {
+    while (true) {
+      int count = await _collectionService.getAvailableCollectionCount(
+          collectionId: _collectionService.current);
+      yield count;
+      await Future.delayed(const Duration(seconds: 1));
+    }
   }
 
   void init() {

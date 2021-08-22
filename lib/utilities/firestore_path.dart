@@ -30,3 +30,5 @@ abstract class AppConstant {
 /// 2. **ADD**: this option adds the wrong inputted word to the card's caption
 /// 3. **IGNORE**: this option will do nothing (no lower exp!)
 enum ReviewStatus { ADD, CONTINUE, IGNORE }
+
+enum ImageType { FILE, NETWORK, NOT_AVAILABLE }

@@ -38,6 +38,17 @@ class CardRepository {
         .map((e) => MemoryCard.fromMap(e.data() as Map<String, dynamic>));
   }
 
+  /// return one time read of a card in a collection
+  Future<MemoryCard?> getCard(
+      {required String userId,
+      required String collectionId,
+      required String cardId}) async {
+    final DocumentReference docRef =
+        _firestore.doc(CloudPath.card(userId, collectionId) + '/$cardId');
+    final query = await docRef.get();
+    return MemoryCard.fromMap(query.data() as Map<String, dynamic>);
+  }
+
   /// return one time read of all card id in a collection
   Future<Iterable<String>?> getInstantCardIdList(
       String userId, String collectionId) async {
