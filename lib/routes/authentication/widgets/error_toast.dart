@@ -14,7 +14,7 @@ void showToast(FToast fToast, Widget child, int seconds,
 }
 
 class ErrorToast extends StatelessWidget {
-  ErrorToast({
+  const ErrorToast({
     Key? key,
     required this.errorText,
   }) : super(key: key);

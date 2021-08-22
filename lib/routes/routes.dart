@@ -45,15 +45,17 @@ class RouteGenerator {
                 final user = snapshot.data;
                 if (user == null) {
                   /// landing page has login and register button
-                  return ChangeNotifierProvider<CollectionService>.value(
-                      value: collectionService,
-                      builder: (_, __) => const AuthenticationPage());
+                  return Provider<Auth>.value(
+                    value: auth,
+                    builder: (context, child) => AuthenticationPage(),
+                  );
                 }
 
                 /// return homepage
-                return ChangeNotifierProvider<CollectionService>.value(
-                    value: collectionService,
-                    builder: (_, __) => const HomePageV2());
+                return Provider<Auth>.value(
+                  value: auth,
+                  builder: (_, __) => HomePageV2(),
+                );
               }
               return const CircularProgressIndicator();
             },

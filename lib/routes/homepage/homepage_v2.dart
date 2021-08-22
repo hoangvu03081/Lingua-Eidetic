@@ -83,19 +83,19 @@ class _HomePageV2State extends State<HomePageV2> {
                     titleSpacing: 0,
                     title: Stack(
                       children: [
-                        Header(height: 200, onQuery: onQuery),
+                        Header(height: size.height * 0.3, onQuery: onQuery),
                         Positioned(
-                          top: isAdding ? 0 : -200,
+                          top: isAdding ? 0 : -size.height * 0.3,
                           child: Container(
                             width: size.width,
-                            height: 200,
+                            height: size.height * 0.3,
                             color:
                                 isAdding ? Colors.black38 : Colors.transparent,
                           ),
                         ),
                       ],
                     ),
-                    toolbarHeight: 200,
+                    toolbarHeight: size.height * 0.3 - size.height * 0.005,
                     backgroundColor: Colors.transparent,
                     leading: const SizedBox(),
                     leadingWidth: 0,
