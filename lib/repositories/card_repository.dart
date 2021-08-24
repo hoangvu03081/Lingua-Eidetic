@@ -69,15 +69,15 @@ class CardRepository {
     collectionRef.doc(cardId).delete();
   }
 
-  Future<String> addCard({
+  void addCard({
     required String userId,
     required String collectionId,
+    required String cardId,
     required MemoryCard card,
   }) async {
-    CollectionReference collectionRef =
-        _firestore.collection(CloudPath.card(userId, collectionId));
-    DocumentReference returnValue = await collectionRef.add(card.toMap());
-    return returnValue.id;
+    final docRef =
+        _firestore.collection(CloudPath.card(userId, collectionId)).doc(cardId);
+    await docRef.set(card.toMap());
   }
 
   void setCard({

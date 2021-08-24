@@ -10,6 +10,7 @@ import 'package:lingua_eidetic/services/image_service.dart';
 import 'package:lingua_eidetic/utilities/firestore_path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:uuid/uuid.dart';
 
 class CardService {
   final ImageService _imageService = ImageService();
@@ -46,9 +47,11 @@ class CardService {
 
   ///add a new card to current collection. Use this when collection has a current id.
   void addCard(MemoryCard card, String imagePath) async {
-    String cardId = await _cardRepository.addCard(
+    String cardId = Uuid().v4();
+    _cardRepository.addCard(
         userId: _auth.currentUser!.uid,
         collectionId: _collectionService.current,
+        cardId: cardId,
         card: card);
     storeImage(
         collectionId: _collectionService.current,
@@ -100,26 +103,23 @@ class CardService {
         imagePath: imagePath);
   }
 
-  Future<Image> getImage({required String cardId}) async {
+  Future<String> getImage({required String cardId}) async {
     for (int i = 0; i < 5; ++i) {
       File file = File(AppConstant.getImage(cardId));
       if (await file.exists()) {
-        return Image.file(
-          file,
-          fit: BoxFit.contain,
-        );
+        return AppConstant.getImage(cardId);
       }
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 1));
     }
     final card = await _cardRepository.getCard(
         userId: _auth.currentUser!.uid,
         collectionId: _collectionService.current,
         cardId: cardId);
-    downloadImage(cardId: cardId);
-    return Image.network(card!.imagePath);
+    await downloadImage(cardId: cardId);
+    return AppConstant.getImage(cardId);
   }
 
-  void downloadImage({required String cardId}) async {
+  Future<void> downloadImage({required String cardId}) async {
     final card = await _cardRepository.getCard(
         userId: _auth.currentUser!.uid,
         collectionId: _collectionService.current,
@@ -127,7 +127,9 @@ class CardService {
     if (card == null) throw ('');
     final networkImage = await http.get(Uri.parse(card.imagePath));
     final file = File(AppConstant.getImage(cardId));
-    file.writeAsBytesSync(networkImage.bodyBytes);
+
+    await file.writeAsBytes(networkImage.bodyBytes);
+    return;
   }
 
   Stream<int> getAvailableCardCount() async* {
