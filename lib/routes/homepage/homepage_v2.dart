@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lingua_eidetic/constants.dart';
-import 'package:lingua_eidetic/routes/authentication/widgets/error_toast.dart';
+import 'package:lingua_eidetic/widgets/custom_toast.dart';
 import 'package:lingua_eidetic/routes/collection_page/collection_page.dart';
 import 'package:lingua_eidetic/routes/homepage/widgets/add_btn.dart';
 import 'package:lingua_eidetic/routes/homepage/widgets/collection_list.dart';
@@ -56,7 +56,6 @@ class _HomePageV2State extends State<HomePageV2> {
     final size = MediaQuery.of(context).size;
     final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
     if (!isAdding) titleFocusNode.unfocus();
-
     return WillPopScope(
       onWillPop: () async {
         // scrollPosition.animateTo(0,
@@ -83,19 +82,19 @@ class _HomePageV2State extends State<HomePageV2> {
                     titleSpacing: 0,
                     title: Stack(
                       children: [
-                        Header(height: size.height * 0.3, onQuery: onQuery),
+                        Header(height: 230, onQuery: onQuery),
                         Positioned(
-                          top: isAdding ? 0 : -size.height * 0.3,
+                          top: isAdding ? 0 : -230,
                           child: Container(
                             width: size.width,
-                            height: size.height * 0.3,
+                            height: 230,
                             color:
                                 isAdding ? Colors.black38 : Colors.transparent,
                           ),
                         ),
                       ],
                     ),
-                    toolbarHeight: size.height * 0.3 - size.height * 0.005,
+                    toolbarHeight: 200,
                     backgroundColor: Colors.transparent,
                     leading: const SizedBox(),
                     leadingWidth: 0,
@@ -103,7 +102,6 @@ class _HomePageV2State extends State<HomePageV2> {
                 ];
               },
               body: Stack(children: [
-                // TODO: provider for query
                 CollectionList(
                   data: collectionService.data,
                   query: _query,

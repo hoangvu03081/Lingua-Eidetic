@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive/hive.dart';
 import 'package:lingua_eidetic/constants.dart';
-import 'package:lingua_eidetic/routes/authentication/widgets/error_toast.dart';
+import 'package:lingua_eidetic/widgets/custom_toast.dart';
 import 'package:lingua_eidetic/routes/routes.dart';
 import 'package:lingua_eidetic/services/card_service.dart';
 

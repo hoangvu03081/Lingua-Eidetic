@@ -47,14 +47,16 @@ class _CollectionPageState extends State<CollectionPage> {
     return Scaffold(
       bottomNavigationBar: CollectionNavbar(galleryButtonFunction: () async {
         final List<String>? temp = await imageService.getMutlipleImages();
-        if (temp != null)
+        if (temp != null) {
           Navigator.of(context)
               .pushNamed(RouteGenerator.ADD_COLLECTION_PAGE, arguments: temp);
+        }
       }, cameraButtonFunction: () async {
         final String? temp = await imageService.getImageFromCamera();
-        if (temp != null)
+        if (temp != null) {
           Navigator.of(context)
               .pushNamed(RouteGenerator.ADD_COLLECTION_PAGE, arguments: [temp]);
+        }
       }),
       backgroundColor: Color(0xFFEDF2F5),
       body: SafeArea(

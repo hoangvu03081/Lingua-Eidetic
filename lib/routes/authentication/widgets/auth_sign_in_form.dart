@@ -7,7 +7,7 @@ import 'package:lingua_eidetic/routes/authentication/widgets/nav_button.dart';
 import 'package:lingua_eidetic/routes/routes.dart';
 import 'package:lingua_eidetic/services/auth_service.dart';
 import 'package:lingua_eidetic/routes/authentication/widgets/auth_with_google_facebook.dart';
-import 'package:lingua_eidetic/routes/authentication/widgets/error_toast.dart';
+import 'package:lingua_eidetic/widgets/custom_toast.dart';
 import 'package:lingua_eidetic/routes/authentication/widgets/gradient_button_with_grey_color.dart';
 import 'package:lingua_eidetic/routes/authentication/widgets/sign_in_text_field.dart';
 import 'package:lingua_eidetic/routes/authentication/widgets/welcome_text.dart';
@@ -88,6 +88,7 @@ class _AuthSignInFormState extends State<AuthSignInForm>
       setState(() {
         _loading = true;
       });
+      showOverlay(context);
       if (pageState == PageState.register) {
         rPasswordFocusNode.unfocus();
         await auth.createUserWithEmailAndPassword(_email, _password);
@@ -95,8 +96,6 @@ class _AuthSignInFormState extends State<AuthSignInForm>
         passwordFocusNode.unfocus();
         await auth.signInWithMailAndPassword(_email, _password);
       }
-
-      showOverlay(context, RouteGenerator.HOME_PAGE);
     } on FirebaseAuthException catch (e) {
       showToast(
         fToast,
@@ -106,10 +105,9 @@ class _AuthSignInFormState extends State<AuthSignInForm>
         right: 0,
         bottom: defaultPadding * 4 + MediaQuery.of(context).viewInsets.bottom,
       );
-    } finally {
+      clearText();
       validator.validateEmail('');
       validator.validatePassword('');
-      clearText();
       setState(() {
         _loading = false;
         _submitted = false;

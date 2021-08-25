@@ -131,10 +131,10 @@ class _AddMemoryCardPageState extends State<AddMemoryCardPage> {
                     itemHeight: size.height * 0.55,
                     itemWidth: size.width - defaultPadding * 4,
                     outer: true,
-                    pagination: SwiperPagination(
+                    pagination: const SwiperPagination(
                       builder: DotSwiperPaginationBuilder(),
                     ),
-                    control: SwiperControl(
+                    control: const SwiperControl(
                       iconPrevious: Icons.arrow_left,
                       iconNext: Icons.arrow_right,
                       size: 50,

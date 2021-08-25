@@ -24,7 +24,7 @@ class AuthCard extends StatelessWidget {
         ),
         child: ChangeNotifierProvider(
           create: (context) => AnimTriggerModel(trigger: true, duration: 800),
-          child: AuthSignInForm(),
+          child: const AuthSignInForm(),
         ),
       ),
     );

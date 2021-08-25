@@ -47,17 +47,17 @@ class RouteGenerator {
                   /// landing page has login and register button
                   return Provider<Auth>.value(
                     value: auth,
-                    builder: (context, child) => AuthenticationPage(),
+                    builder: (context, child) => const AuthenticationPage(),
                   );
                 }
 
                 /// return homepage
                 return Provider<Auth>.value(
                   value: auth,
-                  builder: (_, __) => HomePageV2(),
+                  builder: (_, __) => const HomePageV2(),
                 );
               }
-              return const CircularProgressIndicator();
+              return const SizedBox();
             },
           );
         });

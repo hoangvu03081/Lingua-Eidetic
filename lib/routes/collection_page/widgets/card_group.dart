@@ -83,14 +83,15 @@ class _CardGroupState extends State<CardGroup> {
                           color: Colors.blue,
                           borderRadius: BorderRadius.circular(22),
                         ),
-                        child: FutureBuilder<Image>(
+                        child: FutureBuilder<String>(
                           future: cardService.getImage(cardId: id),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
-                              return snapshot.data!;
+                              return Image.file(File(snapshot.data!));
                             }
                             return const Center(
-                                child: CircularProgressIndicator());
+                                child: CircularProgressIndicator(
+                                    color: Colors.white));
                           },
                         ),
                       ),
