@@ -59,9 +59,15 @@ Future<void> showOverlay(BuildContext context) async {
           ));
   overlayState?.insert(overlayEntry);
 
+  bool isRemoved = false;
+
   final userStreamListener = Auth().authStateChanges().take(2).listen((event) {
-    if (event != null) overlayEntry.remove();
+    if (event != null) {
+      overlayEntry.remove();
+      isRemoved = true;
+    }
   });
+  if (isRemoved) return;
   await Future.delayed(const Duration(seconds: 20));
   userStreamListener.cancel();
   overlayEntry.remove();
