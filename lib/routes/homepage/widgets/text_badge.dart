@@ -15,21 +15,21 @@ class TextBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(200),
         color: backColor,
       ),
-      padding: EdgeInsets.all(defaultPadding),
+      padding: const EdgeInsets.all(defaultPadding),
       child: Text(
         text,
         style: TextStyle(
           color: textColor,
           fontWeight: FontWeight.w600,
+          fontSize: 11,
         ),
       ),
     );
   }
 }
-
-

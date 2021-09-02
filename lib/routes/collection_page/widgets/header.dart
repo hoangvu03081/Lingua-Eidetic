@@ -35,6 +35,12 @@ class _HeaderState extends State<Header> {
     final cardService = CardService();
     final size = MediaQuery.of(context).size;
     return Container(
+      height: widget.height,
+      padding: const EdgeInsets.only(
+        left: defaultPadding,
+        right: defaultPadding,
+        bottom: defaultPadding,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -42,47 +48,39 @@ class _HeaderState extends State<Header> {
             onTap: widget.onPrevClicked,
             child: Icon(
               Icons.keyboard_arrow_left,
-              color: Color(0xFF172853),
-              size: 70,
+              color: const Color(0xFF172853),
+              size: size.height * 0.09,
             ),
           ),
           Text(
             widget.title,
             style: TextStyle(
-              color: Color(0xFF172853),
-              fontSize: 24,
+              color: const Color(0xFF172853),
+              fontSize: 32 > size.height * 0.07 ? size.height * 0.07 : 32,
               fontWeight: FontWeight.bold,
             ),
           ),
           StreamBuilder<int>(
               stream: cardService.getAvailableCardCount(),
               builder: (context, snapshot) {
-                return GestureDetector(
-                  onTap: () {
-                    if (snapshot.hasData && snapshot.data == 0) {
-                      showToast(
-                        fToast,
-                        ErrorToast(errorText: 'No available card'),
-                        3,
-                        left: 0,
-                        right: 0,
-                        bottom: defaultPadding * 4,
-                      );
-                      return;
-                    }
-
-                    Navigator.of(context).pushNamed(RouteGenerator.REVIEW_PAGE);
-                  },
-                  child: const Icon(
-                    Icons.keyboard_arrow_right,
-                    size: 70,
-                    color: Color(0xFF172853),
-                  ),
-                );
+                if (snapshot.hasData && snapshot.data == 0) {
+                  return const SizedBox();
+                } else {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.of(context)
+                          .pushNamed(RouteGenerator.REVIEW_PAGE);
+                    },
+                    child: Icon(
+                      Icons.keyboard_arrow_right,
+                      size: size.height * 0.09,
+                      color: const Color(0xFF172853),
+                    ),
+                  );
+                }
               })
         ],
       ),
-      height: widget.height,
     );
   }
 }

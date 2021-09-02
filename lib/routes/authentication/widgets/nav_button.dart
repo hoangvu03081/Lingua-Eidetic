@@ -18,19 +18,26 @@ class NavButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return TextButton(
       onPressed: transition ? onPressNavigate : null,
       child: RichText(
         textAlign: TextAlign.center,
         text: TextSpan(
           style: GoogleFonts.openSans(
-            textStyle: TextStyle(color: Colors.black54),
+            textStyle: TextStyle(
+              color: Colors.black54,
+              fontSize: size.height * 0.035,
+            ),
           ),
           children: [
             TextSpan(text: navigateSubtitle),
             TextSpan(
               text: navigateTitle,
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: size.height * 0.035,
+              ),
             ),
           ],
         ),

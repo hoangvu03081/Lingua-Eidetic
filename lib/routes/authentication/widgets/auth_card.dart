@@ -7,7 +7,9 @@ import 'package:provider/provider.dart';
 class AuthCard extends StatelessWidget {
   const AuthCard({
     Key? key,
+    required this.padding,
   }) : super(key: key);
+  final EdgeInsets padding;
 
   @override
   Widget build(BuildContext context) {
@@ -16,12 +18,7 @@ class AuthCard extends StatelessWidget {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       child: Padding(
-        padding: const EdgeInsets.only(
-          top: defaultPadding * 8,
-          bottom: defaultPadding * 4,
-          left: defaultPadding * 4,
-          right: defaultPadding * 4,
-        ),
+        padding: padding,
         child: ChangeNotifierProvider(
           create: (context) => AnimTriggerModel(trigger: true, duration: 800),
           child: const AuthSignInForm(),

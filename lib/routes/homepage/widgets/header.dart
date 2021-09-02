@@ -22,71 +22,117 @@ class _HeaderState extends State<Header> {
   bool _userActionsOffstage = true;
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     final auth = Auth();
     final String? urlImage = auth.currentUser?.photoURL;
     String? username = auth.currentUser?.displayName;
     if (username == null || username.trim().isEmpty) {
       username = 'User';
     }
-    return Container(
+    return SizedBox(
       height: widget.height,
-      padding: const EdgeInsets.only(
-        top: defaultPadding * 3,
-        left: defaultPadding,
-        right: defaultPadding,
-      ),
       child: Stack(
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _userActionsOffstage = !_userActionsOffstage;
-                      });
-                    },
-                    child: CircleAvatar(
-                      radius: 25,
-                      backgroundImage: NetworkImage(urlImage ??
-                          'https://github.com/hoangvu03081/Lingua-Eidetic/blob/main/assets/images/hacker.png?raw=true'),
+              SizedBox(
+                height: size.height * 0.1,
+                child: Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _userActionsOffstage = !_userActionsOffstage;
+                        });
+                      },
+                      child: CircleAvatar(
+                        radius: 20,
+                        backgroundImage: NetworkImage(urlImage ??
+                            'https://github.com/hoangvu03081/Lingua-Eidetic/blob/main/assets/images/hacker.png?raw=true'),
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: defaultPadding),
-                  Expanded(
-                    child: Text(
-                      'Hi, $username!',
-                      style: GoogleFonts.montserrat(
-                        textStyle: const TextStyle(
-                          fontSize: 32,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w700,
+                    const SizedBox(width: defaultPadding),
+                    Expanded(
+                      child: Text(
+                        'Hi, $username!',
+                        style: GoogleFonts.montserrat(
+                          textStyle: const TextStyle(
+                            fontSize: 20,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: SizedBox(
-                      height: 40,
-                      width: 40,
-                      child: SvgPicture.asset('assets/images/community.svg',
-                          fit: BoxFit.contain),
-                    ),
-                  ),
-                ],
+                    PopupMenuButton<int>(
+                        child: const Icon(
+                          Icons.more_horiz,
+                          color: Colors.black,
+                        ),
+                        itemBuilder: (BuildContext context) =>
+                            <PopupMenuItem<int>>[
+                              PopupMenuItem<int>(
+                                value: 1,
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                      height: 28,
+                                      width: 28,
+                                      child: SvgPicture.asset(
+                                          'assets/images/community.svg',
+                                          fit: BoxFit.contain),
+                                    ),
+                                    const SizedBox(width: defaultPadding),
+                                    const Text('Community'),
+                                  ],
+                                ),
+                              ),
+                              PopupMenuItem<int>(
+                                value: 2,
+                                child: Row(
+                                  children: const [
+                                    Icon(
+                                      Icons.logout,
+                                      size: 28,
+                                      color: Colors.black,
+                                    ),
+                                    SizedBox(width: defaultPadding),
+                                    Text('Sign out'),
+                                  ],
+                                ),
+                              ),
+                            ],
+                        onSelected: (int value) {
+                          switch (value) {
+                            case 1:
+
+                              /// TODO: COMMUNITY HERE
+                              break;
+                            case 2:
+                              auth.signOut();
+                              break;
+                            default:
+                          }
+                        }),
+                  ],
+                ),
               ),
               const SizedBox(height: defaultPadding * 2),
-              SearchBox(filterFunc: widget.onQuery),
+              SizedBox(
+                height: size.height * 0.04 + defaultPadding * 3,
+                child: SearchBox(filterFunc: widget.onQuery),
+              ),
               const SizedBox(height: defaultPadding * 2),
-              const Text(
-                'Collections',
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
+              SizedBox(
+                height: size.height * 0.08,
+                child: const Text(
+                  'Collections',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ],
@@ -101,9 +147,12 @@ class _HeaderState extends State<Header> {
                     onPressed: () {
                       Auth().signOut();
                     },
-                    child: const Text(
+                    child: Text(
                       'Sign Out',
-                      style: TextStyle(fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: size.height * 0.04,
+                      ),
                     ),
                   ),
                 ],

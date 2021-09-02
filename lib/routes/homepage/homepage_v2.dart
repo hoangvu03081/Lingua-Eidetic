@@ -2,15 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lingua_eidetic/constants.dart';
-import 'package:lingua_eidetic/widgets/custom_toast.dart';
-import 'package:lingua_eidetic/routes/collection_page/collection_page.dart';
 import 'package:lingua_eidetic/routes/homepage/widgets/add_btn.dart';
+import 'package:lingua_eidetic/widgets/custom_toast.dart';
 import 'package:lingua_eidetic/routes/homepage/widgets/collection_list.dart';
 import 'package:lingua_eidetic/routes/homepage/widgets/header.dart';
-import 'package:lingua_eidetic/services/auth_service.dart';
 import 'package:lingua_eidetic/services/collection_service.dart';
-import 'package:lingua_eidetic/widgets/collection_navbar.dart';
-import 'package:lingua_eidetic/widgets/search_box.dart';
 
 class HomePageV2 extends StatefulWidget {
   const HomePageV2({Key? key}) : super(key: key);
@@ -26,6 +22,7 @@ class _HomePageV2State extends State<HomePageV2> {
   TextEditingController titleController = TextEditingController();
   late final FToast fToast;
   double topOffset = 0;
+
   @override
   void initState() {
     super.initState();
@@ -37,7 +34,6 @@ class _HomePageV2State extends State<HomePageV2> {
   void dispose() {
     titleController.dispose();
     titleFocusNode.dispose();
-    scrollPosition.dispose();
     super.dispose();
   }
 
@@ -49,17 +45,15 @@ class _HomePageV2State extends State<HomePageV2> {
     });
   }
 
-  final scrollPosition = ScrollController();
   @override
   Widget build(BuildContext context) {
     final collectionService = CollectionService();
     final size = MediaQuery.of(context).size;
-    final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
+    final headerHeight = size.height * 0.23 + defaultPadding * 8;
     if (!isAdding) titleFocusNode.unfocus();
+
     return WillPopScope(
       onWillPop: () async {
-        // scrollPosition.animateTo(0,
-        // duration: Duration(milliseconds: 200), curve: Curves.ease);
         setState(() {
           isAdding = false;
         });
@@ -71,30 +65,49 @@ class _HomePageV2State extends State<HomePageV2> {
         },
         child: Scaffold(
           backgroundColor: const Color(0xFFEDF2F5),
+          bottomNavigationBar: !isAdding
+              ? AddBtn(
+                  openAddForm: () {
+                    setState(() {
+                      isAdding = true;
+                    });
+                  },
+                )
+              : null,
           body: SafeArea(
             child: NestedScrollView(
-              // physics: isAdding ? const NeverScrollableScrollPhysics() : null,
-              controller: scrollPosition,
               headerSliverBuilder:
                   (BuildContext context, bool innerBoxIsScrolled) {
                 return [
                   SliverAppBar(
                     titleSpacing: 0,
-                    title: Stack(
-                      children: [
-                        Header(height: 230, onQuery: onQuery),
-                        Positioned(
-                          top: isAdding ? 0 : -230,
-                          child: Container(
-                            width: size.width,
-                            height: 230,
-                            color:
-                                isAdding ? Colors.black38 : Colors.transparent,
+                    title: SizedBox(
+                      height: headerHeight + defaultPadding * 2,
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            top: isAdding ? 0 : -headerHeight,
+                            bottom: 0,
+                            child: Container(
+                              width: size.width,
+                              height: headerHeight,
+                              color: isAdding
+                                  ? Colors.black38
+                                  : Colors.transparent,
+                            ),
                           ),
-                        ),
-                      ],
+                          Positioned(
+                            top: defaultPadding * 2,
+                            left: defaultPadding,
+                            right: defaultPadding,
+                            child:
+                                Header(height: headerHeight, onQuery: onQuery),
+                          ),
+                        ],
+                      ),
                     ),
-                    toolbarHeight: 200,
+                    toolbarHeight:
+                        isAdding ? 0 : headerHeight + defaultPadding * 2,
                     backgroundColor: Colors.transparent,
                     leading: const SizedBox(),
                     leadingWidth: 0,
@@ -125,23 +138,10 @@ class _HomePageV2State extends State<HomePageV2> {
                           ),
                         ),
                       ),
-                      _buildAddForm(context, collectionService),
+                      _buildAddForm(context, collectionService, headerHeight),
                     ],
                   ),
                 ),
-                Positioned(
-                  bottom: defaultPadding,
-                  left: 0,
-                  right: 0,
-                  child: Offstage(
-                    offstage: isAdding || isKeyboardOpen,
-                    child: AddBtn(onTap: () {
-                      setState(() {
-                        isAdding = true;
-                      });
-                    }),
-                  ),
-                )
               ]),
             ),
           ),
@@ -150,13 +150,9 @@ class _HomePageV2State extends State<HomePageV2> {
     );
   }
 
-  Widget _buildAddForm(
-      BuildContext context, CollectionService collectionService) {
+  Widget _buildAddForm(BuildContext context,
+      CollectionService collectionService, double headerHeight) {
     final size = MediaQuery.of(context).size;
-    if (isAdding) {
-      scrollPosition.animateTo(200,
-          duration: const Duration(milliseconds: 200), curve: Curves.ease);
-    }
     return AnimatedPositioned(
       duration: const Duration(milliseconds: 400),
       left: 0,
@@ -177,44 +173,55 @@ class _HomePageV2State extends State<HomePageV2> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Adding your own collection',
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Adding your own collection',
+                      style: TextStyle(
+                          fontSize: size.width * 0.07,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (titleController.text.isEmpty) {
+                          _titleEmptyToast();
+                          return;
+                        }
+                        _addingSuccessfully(collectionService);
+                      },
+                      child: const Text('Add'),
+                    ),
+                  ),
+                ],
               ),
-              Align(
-                alignment: Alignment.topRight,
-                child: ElevatedButton(
-                  onPressed: () {
+              const SizedBox(height: defaultPadding * 2),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 80, minHeight: 40),
+                child: TextField(
+                  focusNode: titleFocusNode,
+                  controller: titleController,
+                  onEditingComplete: () {
                     if (titleController.text.isEmpty) {
                       _titleEmptyToast();
                       return;
                     }
                     _addingSuccessfully(collectionService);
                   },
-                  child: const Text('Add'),
-                ),
-              ),
-              const SizedBox(height: defaultPadding * 2),
-              TextField(
-                focusNode: titleFocusNode,
-                controller: titleController,
-                onEditingComplete: () {
-                  if (titleController.text.isEmpty) {
-                    _titleEmptyToast();
-                    return;
-                  }
-                  _addingSuccessfully(collectionService);
-                },
-                style: const TextStyle(
-                  fontSize: 18,
-                ),
-                decoration: const InputDecoration(
-                  labelText: 'Your title',
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black54, width: 1),
+                  style: TextStyle(
+                    fontSize: size.height * 0.05,
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black38, width: 1),
+                  decoration: const InputDecoration(
+                    labelText: 'Your title',
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black54, width: 1),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black38, width: 1),
+                    ),
                   ),
                 ),
               ),
@@ -241,10 +248,10 @@ class _HomePageV2State extends State<HomePageV2> {
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.check),
-            const SizedBox(width: 12.0),
-            const Text("Successfully added the collection"),
+          children: const [
+            Icon(Icons.check),
+            SizedBox(width: 12.0),
+            Text("Successfully added the collection"),
           ],
         ),
       ),
@@ -257,6 +264,7 @@ class _HomePageV2State extends State<HomePageV2> {
   }
 
   void _titleEmptyToast() {
-    showToast(fToast, ErrorToast(errorText: 'Title must not be empty'), 1);
+    showToast(
+        fToast, const ErrorToast(errorText: 'Title must not be empty'), 1);
   }
 }

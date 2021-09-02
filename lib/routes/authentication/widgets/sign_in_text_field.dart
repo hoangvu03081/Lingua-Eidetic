@@ -26,6 +26,7 @@ class SignInTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return TextField(
       controller: controller,
       focusNode: focusNode,
@@ -33,33 +34,34 @@ class SignInTextField extends StatelessWidget {
       onChanged: onChanged,
       textInputAction: textInputAction,
       obscureText: obscureText,
+      style: const TextStyle(fontSize: 14),
       decoration: InputDecoration(
         errorText: errorText,
-        contentPadding: EdgeInsets.symmetric(
-            vertical: defaultPadding * 2.5, horizontal: defaultPadding * 3),
+        contentPadding: const EdgeInsets.symmetric(
+            vertical: defaultPadding, horizontal: defaultPadding * 2),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: Color(0xFFE4E4E4),
             width: 2,
           ),
           borderRadius: BorderRadius.circular(15),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: Color(0xFFFF2358),
             width: 1,
           ),
           borderRadius: BorderRadius.circular(15),
         ),
         errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: Color(0xFFFF2358),
             width: 1,
           ),
           borderRadius: BorderRadius.circular(15),
         ),
         border: OutlineInputBorder(
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: Color(0xFFFF2358),
             width: 1,
           ),
@@ -68,7 +70,7 @@ class SignInTextField extends StatelessWidget {
         errorMaxLines: 2,
         labelText: label,
         labelStyle: GoogleFonts.openSans(
-          textStyle: TextStyle(
+          textStyle: const TextStyle(
             color: Color(0xFFBDBCBC),
             fontWeight: FontWeight.w500,
           ),
