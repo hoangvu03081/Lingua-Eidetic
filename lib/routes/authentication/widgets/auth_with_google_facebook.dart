@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lingua_eidetic/constants.dart';
-import 'package:lingua_eidetic/routes/routes.dart';
 import 'package:lingua_eidetic/services/auth_service.dart';
-import 'package:lingua_eidetic/routes/authentication/widgets/error_toast.dart';
-import 'package:lingua_eidetic/widgets/custom_overlay.dart';
+import 'package:lingua_eidetic/widgets/custom_toast.dart';
 import 'package:provider/provider.dart';
 
 typedef SignInMethod = Future<User?> Function();
@@ -34,7 +32,6 @@ class _AuthWithGoogleFacebookState extends State<AuthWithGoogleFacebook> {
     try {
       widget.onLogin();
       final user = await signInMethod();
-      showOverlay(context, RouteGenerator.HOME_PAGE);
       return user;
     } on FirebaseAuthException catch (e) {
       showToast(
@@ -53,12 +50,12 @@ class _AuthWithGoogleFacebookState extends State<AuthWithGoogleFacebook> {
 
   Future<void> _signInWithGoogle() async {
     final auth = Provider.of<Auth>(context, listen: false);
-    final user = await _signIn(auth.signInWithGoogle);
+    await _signIn(auth.signInWithGoogle);
   }
 
   void _signInWithFacebook() async {
     final auth = Provider.of<Auth>(context, listen: false);
-    final user = await _signIn(auth.signInWithFacebook);
+    await _signIn(auth.signInWithFacebook);
   }
 
   @override
@@ -70,60 +67,64 @@ class _AuthWithGoogleFacebookState extends State<AuthWithGoogleFacebook> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: InkWell(
-            onTap: widget.enable ? _signInWithFacebook : null,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color(0xFF0C3A7E),
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(
-                  width: 1,
-                  color: Color(0xFF0C3A7E),
+    final size = MediaQuery.of(context).size;
+    return SizedBox(
+      height: size.height * 0.07 + defaultPadding * 2.7,
+      child: Row(
+        children: [
+          Expanded(
+            child: InkWell(
+              onTap: widget.enable ? _signInWithFacebook : null,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xFF0C3A7E),
+                  borderRadius: BorderRadius.circular(size.height * 0.02),
+                  border: Border.all(
+                    width: 1,
+                    color: const Color(0xFF0C3A7E),
+                  ),
                 ),
-              ),
-              padding: EdgeInsets.only(
-                left: defaultPadding * 2,
-                right: defaultPadding * 2,
-                bottom: defaultPadding * 1.5,
-                top: defaultPadding * 1.2,
-              ),
-              child: SvgPicture.asset(
-                'assets/images/facebook-square-brands.svg',
-                height: 25,
+                padding: const EdgeInsets.only(
+                  left: defaultPadding * 2,
+                  right: defaultPadding * 2,
+                  bottom: defaultPadding * 1.5,
+                  top: defaultPadding * 1.2,
+                ),
+                child: SvgPicture.asset(
+                  'assets/images/facebook-square-brands.svg',
+                  height: size.height * 0.07,
+                ),
               ),
             ),
           ),
-        ),
-        SizedBox(width: defaultPadding * 3),
-        Expanded(
-          child: InkWell(
-            onTap: widget.enable ? _signInWithGoogle : null,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(
-                  width: 1,
-                  color: Color(0x66000000),
+          SizedBox(width: size.width * 0.05),
+          Expanded(
+            child: InkWell(
+              onTap: widget.enable ? _signInWithGoogle : null,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(size.height * 0.02),
+                  border: Border.all(
+                    width: 1,
+                    color: const Color(0x66000000),
+                  ),
                 ),
-              ),
-              padding: EdgeInsets.only(
-                left: defaultPadding * 2,
-                right: defaultPadding * 2,
-                bottom: defaultPadding * 1.5,
-                top: defaultPadding * 1.2,
-              ),
-              child: SvgPicture.asset(
-                'assets/images/google.svg',
-                height: 25,
+                padding: const EdgeInsets.only(
+                  left: defaultPadding * 2,
+                  right: defaultPadding * 2,
+                  bottom: defaultPadding * 1.5,
+                  top: defaultPadding * 1.2,
+                ),
+                child: SvgPicture.asset(
+                  'assets/images/google.svg',
+                  height: size.height * 0.07,
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

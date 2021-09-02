@@ -4,7 +4,6 @@ import 'package:lingua_eidetic/constants.dart';
 import 'package:lingua_eidetic/models/memory_card.dart';
 import 'package:lingua_eidetic/routes/collection_page/widgets/card_group.dart';
 import 'package:lingua_eidetic/routes/collection_page/widgets/header.dart';
-import 'package:lingua_eidetic/routes/homepage/widgets/add_btn.dart';
 import 'package:lingua_eidetic/routes/routes.dart';
 import 'package:lingua_eidetic/services/card_service.dart';
 import 'package:lingua_eidetic/services/collection_service.dart';
@@ -40,23 +39,24 @@ class _CollectionPageState extends State<CollectionPage> {
     collectionService.current = widget.id;
 
     final ImageService imageService = ImageService();
-
     // final cardService = CardService();
-    // final size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       bottomNavigationBar: CollectionNavbar(galleryButtonFunction: () async {
         final List<String>? temp = await imageService.getMutlipleImages();
-        if (temp != null)
+        if (temp != null) {
           Navigator.of(context)
               .pushNamed(RouteGenerator.ADD_COLLECTION_PAGE, arguments: temp);
+        }
       }, cameraButtonFunction: () async {
         final String? temp = await imageService.getImageFromCamera();
-        if (temp != null)
+        if (temp != null) {
           Navigator.of(context)
               .pushNamed(RouteGenerator.ADD_COLLECTION_PAGE, arguments: [temp]);
+        }
       }),
-      backgroundColor: Color(0xFFEDF2F5),
+      backgroundColor: const Color(0xFFEDF2F5),
       body: SafeArea(
         child: NestedScrollView(
           headerSliverBuilder: (context, innerBoxIsScrolled) {
@@ -68,12 +68,12 @@ class _CollectionPageState extends State<CollectionPage> {
                   onPrevClicked: () {
                     Navigator.of(context).pop();
                   },
-                  height: 70,
+                  height: size.height * 0.15,
                   title: widget.title,
                 ),
                 backgroundColor: Colors.transparent,
-                toolbarHeight: 70,
-                leading: SizedBox(),
+                toolbarHeight: size.height * 0.15,
+                leading: const SizedBox(),
                 leadingWidth: 0,
               )
             ];
@@ -97,9 +97,13 @@ class _CollectionPageState extends State<CollectionPage> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          expandArr[prevActive] = false;
-          expandArr[index] = true;
-          prevActive = index;
+          if (prevActive == index && expandArr[prevActive]) {
+            expandArr[prevActive] = false;
+          } else {
+            expandArr[prevActive] = false;
+            expandArr[index] = true;
+            prevActive = index;
+          }
         });
       },
       child: CardGroup(

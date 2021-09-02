@@ -7,12 +7,11 @@ import 'package:lingua_eidetic/routes/authentication/widgets/nav_button.dart';
 import 'package:lingua_eidetic/routes/routes.dart';
 import 'package:lingua_eidetic/services/auth_service.dart';
 import 'package:lingua_eidetic/routes/authentication/widgets/auth_with_google_facebook.dart';
-import 'package:lingua_eidetic/routes/authentication/widgets/error_toast.dart';
+import 'package:lingua_eidetic/widgets/custom_toast.dart';
 import 'package:lingua_eidetic/routes/authentication/widgets/gradient_button_with_grey_color.dart';
 import 'package:lingua_eidetic/routes/authentication/widgets/sign_in_text_field.dart';
 import 'package:lingua_eidetic/routes/authentication/widgets/welcome_text.dart';
 import 'package:lingua_eidetic/utilities/validator.dart';
-import 'package:lingua_eidetic/widgets/custom_overlay.dart';
 import 'package:provider/provider.dart';
 
 enum PageState {
@@ -91,12 +90,11 @@ class _AuthSignInFormState extends State<AuthSignInForm>
       if (pageState == PageState.register) {
         rPasswordFocusNode.unfocus();
         await auth.createUserWithEmailAndPassword(_email, _password);
+        Navigator.of(context).pushReplacementNamed(RouteGenerator.LANDING_PAGE);
       } else {
         passwordFocusNode.unfocus();
         await auth.signInWithMailAndPassword(_email, _password);
       }
-
-      showOverlay(context, RouteGenerator.HOME_PAGE);
     } on FirebaseAuthException catch (e) {
       showToast(
         fToast,
@@ -106,10 +104,9 @@ class _AuthSignInFormState extends State<AuthSignInForm>
         right: 0,
         bottom: defaultPadding * 4 + MediaQuery.of(context).viewInsets.bottom,
       );
-    } finally {
+      clearText();
       validator.validateEmail('');
       validator.validatePassword('');
-      clearText();
       setState(() {
         _loading = false;
         _submitted = false;
@@ -174,6 +171,7 @@ class _AuthSignInFormState extends State<AuthSignInForm>
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     final errors = validator.errors;
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -183,7 +181,7 @@ class _AuthSignInFormState extends State<AuthSignInForm>
           title: title,
           subtitle: subtitle,
         ),
-        SizedBox(height: defaultPadding * 6),
+        const SizedBox(height: defaultPadding * 2),
         SignInTextField(
           label: 'Email ID',
           controller: emailController,
@@ -194,7 +192,7 @@ class _AuthSignInFormState extends State<AuthSignInForm>
               ? errors.emailError
               : null,
         ),
-        SizedBox(height: defaultPadding * 2),
+        const SizedBox(height: defaultPadding),
         SignInTextField(
           label: 'Password',
           obscureText: true,
@@ -208,16 +206,16 @@ class _AuthSignInFormState extends State<AuthSignInForm>
               ? errors.passwordError
               : null,
         ),
-        SizedBox(height: defaultPadding * 2),
+        const SizedBox(height: defaultPadding * 1.5),
         AnimatedContainer(
           duration: Duration(milliseconds: anim.duration),
           curve: Curves.ease,
-          height: removeRPassword ? 192 : 280,
+          height: removeRPassword ? 180 : 240,
           child: Stack(
             fit: StackFit.loose,
             children: [
               AnimatedPositioned(
-                top: removeRPassword ? -72 : 0,
+                top: removeRPassword ? -60 : 0,
                 left: 0,
                 right: 0,
                 duration: Duration(milliseconds: anim.duration),
@@ -242,7 +240,7 @@ class _AuthSignInFormState extends State<AuthSignInForm>
                             : null,
                       ),
                     ),
-                    SizedBox(height: defaultPadding * 2),
+                    const SizedBox(height: defaultPadding * 2),
                     GradientButtonWithGreyBorder(
                       text: buttonText,
                       loading: _loading,
@@ -256,7 +254,7 @@ class _AuthSignInFormState extends State<AuthSignInForm>
                             }
                           : null,
                     ),
-                    SizedBox(height: defaultPadding * 2),
+                    const SizedBox(height: defaultPadding * 2),
                     AuthWithGoogleFacebook(
                         enable: !_loading,
                         onLogin: () {
@@ -270,7 +268,7 @@ class _AuthSignInFormState extends State<AuthSignInForm>
                           });
                         }),
                     Container(
-                      margin: EdgeInsets.only(top: defaultPadding * 2),
+                      margin: const EdgeInsets.only(top: defaultPadding * 2),
                       width: double.infinity,
                       child: NavButton(
                         navigateTitle: navigateTitle,

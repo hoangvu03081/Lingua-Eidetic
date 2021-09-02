@@ -45,8 +45,8 @@ class _CollectionListState extends State<CollectionList> {
                 return CollectionCardV2(
                   key: Key(_ids[index]),
                   title: _cached[index].name,
-                  avail: 5,
-                  total: 27,
+                  avail: 0,
+                  total: 0,
                   remove: () {
                     collectionService.deleteCollection(
                         collectionId: _ids[index]);
@@ -74,14 +74,21 @@ class _CollectionListState extends State<CollectionList> {
               _ids.add(id);
             }
             if (item.name.toLowerCase().contains(widget.query.toLowerCase())) {
-              return CollectionCardV2(
-                key: Key(id),
-                title: item.name,
-                avail: 5,
-                total: 27,
-                remove: () {
-                  collectionService.deleteCollection(collectionId: id);
+              return FutureBuilder(
+                builder: (BuildContext context, AsyncSnapshot<int> avail) {
+                  return CollectionCardV2(
+                    key: Key(id),
+                    title: item.name,
+                    avail: avail.data!,
+                    total: 27,
+                    remove: () {
+                      collectionService.deleteCollection(collectionId: id);
+                    },
+                  );
                 },
+                future: collectionService.getAvailableCollectionCount(
+                    collectionId: id),
+                initialData: 0,
               );
             }
             return const SizedBox();

@@ -91,7 +91,7 @@ class _CollectionCardV2State extends State<CollectionCardV2> {
                 boxShadow: [
                   BoxShadow(
                     blurRadius: 4,
-                    offset: Offset(0, 4),
+                    offset: const Offset(0, 4),
                     color: Colors.black.withOpacity(0.25),
                   ),
                 ],
@@ -106,13 +106,13 @@ class _CollectionCardV2State extends State<CollectionCardV2> {
                       widget.title,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
-                        fontSize: 32,
+                        fontSize: 26,
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
                       ),
                     ),
                   ),
-                  const SizedBox(height: defaultPadding * 4),
+                  const SizedBox(height: defaultPadding),
                   Row(
                     children: [
                       // text badge
@@ -129,25 +129,32 @@ class _CollectionCardV2State extends State<CollectionCardV2> {
               ),
             ),
           ),
-          Positioned(
-            right: defaultPadding * 4 - dx,
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-                color: const Color(0xFFFFFFFF),
-                border: Border.all(
-                  color: const Color(0xFF638FFF),
-                  width: 1,
+
+          // percent balloon
+          Positioned.fill(
+            right: defaultPadding * 4,
+            bottom: defaultPadding * 2,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(14),
+                  color: const Color(0xFFFFFFFF),
+                  border: Border.all(
+                    color: const Color(0xFF638FFF),
+                    width: 1,
+                  ),
                 ),
-              ),
-              width: 50,
-              height: 50,
-              child: Center(
-                child: Text(
-                  '${(widget.avail / widget.total * 100).toStringAsFixed(1)}%',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF333D61),
+                width: 28,
+                height: 28,
+                child: Center(
+                  child: Text(
+                    '${(widget.avail / (widget.total == 0 ? widget.avail : widget.total) * 100).toStringAsFixed(1)}%',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 10,
+                      color: Color(0xFF333D61),
+                    ),
                   ),
                 ),
               ),
@@ -157,9 +164,9 @@ class _CollectionCardV2State extends State<CollectionCardV2> {
           Positioned(
             top: 0,
             right: 16 - dx,
+            bottom: defaultPadding * 2,
             child: SizedBox(
               width: 1.5,
-              height: 134,
               child: Container(
                 color: const Color(0xFF253F81),
               ),
@@ -168,6 +175,7 @@ class _CollectionCardV2State extends State<CollectionCardV2> {
           Positioned(
             top: 0,
             right: 20 - dx,
+            bottom: defaultPadding * 2,
             child: SizedBox(
               width: 2,
               height: 134,

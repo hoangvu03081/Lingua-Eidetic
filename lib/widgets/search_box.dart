@@ -7,6 +7,7 @@ class SearchBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return TextField(
       onChanged: (value) {
         filterFunc(value);
@@ -20,15 +21,18 @@ class SearchBox extends StatelessWidget {
           borderRadius: BorderRadius.circular(100),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.transparent),
+          borderSide: const BorderSide(color: Colors.transparent),
           borderRadius: BorderRadius.circular(100),
         ),
-        contentPadding: EdgeInsets.symmetric(
-          horizontal: defaultPadding * 3,
-          vertical: defaultPadding * 2,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: defaultPadding * 2,
+          vertical: defaultPadding * 1.5,
         ),
         hintText: 'Search',
-        hintStyle: TextStyle(color: Colors.black54),
+        hintStyle: const TextStyle(
+          color: Colors.black54,
+          fontSize: 14,
+        ),
       ),
     );
   }

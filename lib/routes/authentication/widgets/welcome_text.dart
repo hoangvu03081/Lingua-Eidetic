@@ -31,6 +31,8 @@ class _WelcomeTextState extends State<WelcomeText> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Consumer<AnimTriggerModel>(
       builder: (context, anim, child) {
         return OpacityAnimation(
@@ -51,9 +53,9 @@ class _WelcomeTextState extends State<WelcomeText> {
             TextSpan(
               text: title,
               style: GoogleFonts.openSans(
-                textStyle: TextStyle(
+                textStyle: const TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 40,
+                  fontSize: 34,
                   color: Colors.black,
                 ),
               ),
@@ -61,9 +63,9 @@ class _WelcomeTextState extends State<WelcomeText> {
             TextSpan(
               text: subtitle,
               style: GoogleFonts.openSans(
-                textStyle: TextStyle(
+                textStyle: const TextStyle(
                   fontWeight: FontWeight.w500,
-                  fontSize: 20,
+                  fontSize: 18,
                   color: Color(0xFFC6C6C6),
                 ),
               ),

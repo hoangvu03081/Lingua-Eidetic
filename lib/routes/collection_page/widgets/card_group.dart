@@ -22,6 +22,8 @@ class CardGroup extends StatefulWidget {
 }
 
 class _CardGroupState extends State<CardGroup> {
+  final List<MemoryCard> gridItems = [];
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -29,9 +31,9 @@ class _CardGroupState extends State<CardGroup> {
 
     return Column(
       children: [
-        _buildHeading(CollectionPage.titles[widget.index]),
+        _buildHeading(context, CollectionPage.titles[widget.index]!),
         AnimatedContainer(
-          duration: Duration(milliseconds: 600),
+          duration: const Duration(milliseconds: 600),
           height: widget.isExpand ? size.height * 0.5 : 0,
           margin: EdgeInsets.all(widget.isExpand ? defaultPadding * 2 : 0),
           decoration: BoxDecoration(
@@ -51,7 +53,7 @@ class _CardGroupState extends State<CardGroup> {
 
               final data = snapshot.data!;
               final docs = data.docs;
-              final List<MemoryCard> gridItems = [];
+              gridItems.clear();
 
               for (int i = 0; i < data.docs.length; i++) {
                 final item = docs[i].data() as Map<String, dynamic>;
@@ -61,17 +63,16 @@ class _CardGroupState extends State<CardGroup> {
                   gridItems.add(MemoryCard.fromMap(item));
                 }
               }
-
               return GridView.builder(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 300,
+                  maxCrossAxisExtent: 200,
                   childAspectRatio: 1 / 1,
-                  mainAxisSpacing: defaultPadding * 2,
-                  crossAxisSpacing: defaultPadding * 2,
+                  mainAxisSpacing: defaultPadding,
+                  crossAxisSpacing: defaultPadding / 2,
                 ),
                 itemBuilder: (context, index) {
-                  final memoryCard = gridItems[index];
-                  int level = memoryCard.level;
+                  // final memoryCard = gridItems[index];
+                  // int level = memoryCard.level;
                   final id = snapshot.data!.docs[index].id;
 
                   return Offstage(
@@ -80,17 +81,23 @@ class _CardGroupState extends State<CardGroup> {
                       padding: const EdgeInsets.all(defaultPadding),
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(22),
-                        ),
-                        child: FutureBuilder<Image>(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(22),
+                            boxShadow: [
+                              BoxShadow(
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 4),
+                                  color: Colors.black.withOpacity(0.25))
+                            ]),
+                        child: FutureBuilder<String>(
                           future: cardService.getImage(cardId: id),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
-                              return snapshot.data!;
+                              return Image.file(File(snapshot.data!));
                             }
                             return const Center(
-                                child: CircularProgressIndicator());
+                                child: CircularProgressIndicator(
+                                    color: Colors.white));
                           },
                         ),
                       ),
@@ -102,16 +109,19 @@ class _CardGroupState extends State<CardGroup> {
             },
           ),
         ),
-        SizedBox(height: defaultPadding * 2),
+        const SizedBox(height: defaultPadding * 2),
       ],
     );
   }
 
-  Widget _buildHeading(title) {
+  Widget _buildHeading(BuildContext context, String title) {
+    final size = MediaQuery.of(context).size;
     return Stack(
       children: [
         Positioned.fill(
-          child: Divider(
+          left: size.width / 8,
+          right: size.width / 8,
+          child: const Divider(
             color: Color(0xFFB2CDFF),
           ),
         ),
@@ -119,20 +129,20 @@ class _CardGroupState extends State<CardGroup> {
           child: Align(
             alignment: Alignment.center,
             child: Container(
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 vertical: defaultPadding,
                 horizontal: defaultPadding * 2,
               ),
               decoration: BoxDecoration(
-                color: Color(0xFF8FA6FA),
+                color: const Color(0xFF8FA6FA),
                 borderRadius: BorderRadius.circular(200),
               ),
               child: Text(
                 title,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  fontSize: 20,
+                  fontSize: 16,
                 ),
               ),
             ),

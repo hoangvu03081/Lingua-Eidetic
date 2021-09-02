@@ -29,7 +29,7 @@ class ErrorToast extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(25.0),
         color: Colors.redAccent,
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(blurRadius: 6, color: Colors.white),
           BoxShadow(blurRadius: 4, color: Colors.black38),
         ],
@@ -40,13 +40,13 @@ class ErrorToast extends StatelessWidget {
           Icon(
             Icons.close,
             color: Colors.white,
-            size: 30,
+            size: size.height * 0.1,
           ),
-          SizedBox(
+          const SizedBox(
             width: 12.0,
           ),
-          Container(
-            width: size.width * 0.6,
+          SizedBox(
+            width: size.width * 0.85 - size.height * 0.1 - 60,
             child: Text(
               errorText.toUpperCase().replaceAll(
                   RegExp(
@@ -55,7 +55,7 @@ class ErrorToast extends StatelessWidget {
                   ' '),
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 20,
+                fontSize: size.height * 0.05,
                 fontWeight: FontWeight.bold,
               ),
             ),

@@ -33,26 +33,27 @@ class _GradientButtonWithGreyBorderState
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return InkWell(
       borderRadius: BorderRadius.circular(15),
       onTap: widget.press,
-      overlayColor: MaterialStateProperty.all(Color(0xFF891212)),
+      overlayColor: MaterialStateProperty.all(const Color(0xFF891212)),
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.only(
+        padding: const EdgeInsets.only(
           left: defaultPadding * 2,
           right: defaultPadding * 2,
-          bottom: defaultPadding * 1.5,
-          top: defaultPadding * 1.2,
+          bottom: defaultPadding * 1.2,
+          top: defaultPadding,
         ),
         decoration: BoxDecoration(
           border: Border.all(
-            color: Color(0xFFE4E4E4),
+            color: const Color(0xFFE4E4E4),
             width: 3,
           ),
           borderRadius: BorderRadius.circular(15),
           gradient: widget.press != null
-              ? LinearGradient(
+              ? const LinearGradient(
                   begin: Alignment.bottomLeft,
                   end: Alignment.topRight,
                   stops: [0, 0.6],
@@ -61,7 +62,7 @@ class _GradientButtonWithGreyBorderState
                     Color(0xDAFF5B27),
                   ],
                 )
-              : LinearGradient(
+              : const LinearGradient(
                   begin: Alignment.bottomLeft,
                   end: Alignment.topRight,
                   stops: [0, 0.6],
@@ -83,17 +84,21 @@ class _GradientButtonWithGreyBorderState
             child: child!,
           ),
           child: widget.loading
-              ? Center(
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
+              ? const Center(
+                  child: SizedBox(
+                    width: 26,
+                    height: 26,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
                   ),
                 )
               : Text(
                   text,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 24,
+                    fontSize: 22,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
