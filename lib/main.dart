@@ -30,7 +30,6 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-
     return MaterialApp(
       title: 'Lingua Eidetic',
       debugShowCheckedModeBanner: false,
@@ -38,7 +37,7 @@ class MyApp extends StatelessWidget {
       supportedLocales: context.supportedLocales,
       locale: context.locale,
       onGenerateRoute: routeGenerator.generateRoute,
-      initialRoute: RouteGenerator.LANDING_PAGE,
+      initialRoute: RouteGenerator.TEST,
     );
   }
 }

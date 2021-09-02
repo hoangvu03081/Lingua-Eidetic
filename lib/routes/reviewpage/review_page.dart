@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lingua_eidetic/routes/routes.dart';
+import 'package:lingua_eidetic/services/card_service.dart';
 import 'package:lingua_eidetic/services/collection_service.dart';
 import 'package:lingua_eidetic/services/review_service.dart';
 import 'package:lingua_eidetic/utilities/firestore_path.dart';
@@ -64,6 +65,7 @@ class _ReviewPageState extends State<ReviewPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final cardService = CardService();
     final reviewService = context.watch<ReviewService>();
     final size = MediaQuery.of(context).size;
     return Scaffold(
@@ -133,11 +135,19 @@ class _ReviewPageState extends State<ReviewPage> with TickerProviderStateMixin {
                         width: size.width * 0.75,
                         height: size.height * 0.6,
                         child: Card(
-                          child: Image(
-                            image: FileImage(File(
-                                AppConstant.getImage(cardList[current].id))),
-                            fit: BoxFit.contain,
-                          ),
+                          child: FutureBuilder<String>(
+                              future: cardService.getImage(
+                                  cardId: cardList[current].id),
+                              builder: (_, snapshot) {
+                                if (snapshot.hasData) {
+                                  return Image(
+                                    image: FileImage(File(snapshot.data!)),
+                                    fit: BoxFit.contain,
+                                  );
+                                }
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              }),
                         ),
                       ),
                       SizedBox(height: size.height * 0.05),
@@ -185,7 +195,6 @@ class _ReviewPageState extends State<ReviewPage> with TickerProviderStateMixin {
                                     case ReviewStatus.CONTINUE:
                                       reviewService.updateWrongCard(
                                           memoryCard: cardList[current]);
-
                                       break;
                                     case ReviewStatus.ADD:
                                       reviewService.addCaptionWrongCard(

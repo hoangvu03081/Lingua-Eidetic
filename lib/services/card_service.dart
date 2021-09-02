@@ -30,9 +30,18 @@ class CardService {
 
   Future<Iterable<MemoryCard>> getCardList(
       String userId, String collectionId) async {
-    final result =
+    final query =
         await _cardRepository.getInstantCardList(userId, collectionId);
+    final result =
+        query.map((e) => MemoryCard.fromMap(e.data() as Map<String, dynamic>));
     return result;
+  }
+
+  Future<List<QueryDocumentSnapshot>> getCardQuery(
+      String userId, String collectionId) async {
+    final query =
+        await _cardRepository.getInstantCardList(userId, collectionId);
+    return query;
   }
 
   Future<List<QueryDocumentSnapshot<Object?>>> get availableCard {
@@ -67,7 +76,7 @@ class CardService {
     _imageService.removeImage(cardId);
   }
 
-  void updateCard(
+  void updateCardStatus(
       {required String cardId,
       required int level,
       required int exp,
@@ -103,6 +112,13 @@ class CardService {
         imagePath: imagePath);
   }
 
+  /// return an image using [cardId],\
+  /// this function will first try to find the image on local storage, if the image exists, it return a path to
+  /// the image
+  /// - if the image does not exist, it will continue to check for next 5 seconds\
+  /// - if there still no image on local storage, this function will download the
+  /// image from firebase cloud storage\, then wait for the download to finish,
+  /// then return the path to the image
   Future<String> getImage({required String cardId}) async {
     for (int i = 0; i < 5; ++i) {
       File file = File(AppConstant.getImage(cardId));
@@ -137,7 +153,7 @@ class CardService {
       int count = await _collectionService.getAvailableCollectionCount(
           collectionId: _collectionService.current);
       yield count;
-      await Future.delayed(const Duration(seconds: 1));
+      await Future.delayed(const Duration(milliseconds: 500));
     }
   }
 
@@ -150,5 +166,14 @@ class CardService {
   static final CardService _cardService = CardService._();
   factory CardService() {
     return _cardService;
+  }
+
+  void addCardCaption(
+      {required String cardId, required List<String> captions}) {
+    _cardRepository.updateCardCaption(
+        userId: _auth.currentUser!.uid,
+        collectionId: _collectionService.current,
+        cardId: cardId,
+        caption: captions);
   }
 }

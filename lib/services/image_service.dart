@@ -71,7 +71,7 @@ class ImageService {
     while (_box.isNotEmpty) {
       String filePath = AppConstant.path;
       String cloudImagePath =
-          await _uploadFile(filePath, _box.values.first.elementAt(0));
+          await uploadFile(filePath, _box.values.first.elementAt(0));
       editCard(
           collectionId: _box.values.first.elementAt(1),
           cardId: _box.values.first.elementAt(0),
@@ -82,8 +82,20 @@ class ImageService {
   }
 
   /// upload general file to cloud storage
-  Future<String> _uploadFile(String filePath, String fileName) async {
+  Future<String> uploadFile(String filePath, String fileName) async {
     File file = File(filePath + '/' + fileName);
+    try {
+      final cloudImage = await _storage.ref(fileName).putFile(file);
+      return cloudImage.ref.getDownloadURL();
+    } on FirebaseException catch (e) {
+      log('fail to upload to cloud storage: ${e.code}/${e.message}');
+    }
+    return '';
+  }
+
+  Future<String> uploadAbsoluteFilePath(
+      String filePath, String fileName) async {
+    File file = File(filePath);
     try {
       final cloudImage = await _storage.ref(fileName).putFile(file);
       return cloudImage.ref.getDownloadURL();

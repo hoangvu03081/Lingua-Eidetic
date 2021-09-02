@@ -25,12 +25,10 @@ class CollectionRepository {
         .snapshots();
   }
 
+  ///return a singleton instance of [CollectionRepository]
   CollectionRepository._();
-
   static final CollectionRepository _collectionRepository =
       CollectionRepository._();
-
-  ///return a singleton instance of [CollectionRepository]
   factory CollectionRepository() {
     return _collectionRepository;
   }

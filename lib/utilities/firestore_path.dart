@@ -4,12 +4,18 @@ import 'package:path_provider/path_provider.dart';
 
 /// Provide frequently used path for Cloud Firestore.
 abstract class CloudPath {
-  ///'user/$[userId]/collection'
+  ///'user/$userId/collection'
   static String collection(String userId) => 'user/$userId/collection';
 
-  ///'user/$[userId]/collection/$[collectionId]'
+  ///'user/$userId/collection/$collectionId'
   static String card(String userId, String collectionId) =>
       'user/$userId/collection/$collectionId/card';
+
+  static get sharedCollection => 'shared_collection';
+
+  ///'shared_collection/$collectionId/cards';
+  static String sharedCards(String collectionId) =>
+      'shared_collection/$collectionId/cards';
 }
 
 abstract class AppConstant {

@@ -84,38 +84,50 @@ class ReviewService extends ChangeNotifier {
 
   void updateCorrectCard(
       {required String id, required MemoryCard memoryCard}) async {
-    if (memoryCard.exp == levelSystem[memoryCard.level]!.maxExp - 1) {
-      _cardService.updateCard(
-          cardId: id,
-          level: memoryCard.level + 1,
-          exp: 0,
-          available: DateTime.now()
-              .add(levelSystem[memoryCard.level]!.cooldown * 2)
-              .millisecondsSinceEpoch);
-    } else {
-      _cardService.updateCard(
-          cardId: id,
-          level: memoryCard.level,
-          exp: memoryCard.exp + 1,
-          available: DateTime.now()
-              .add(levelSystem[memoryCard.level]!.cooldown)
-              .millisecondsSinceEpoch);
-    }
+    bool isLevelUp =
+        (memoryCard.exp == (levelSystem[memoryCard.level]!.maxExp - 1));
+    _cardService.updateCardStatus(
+        cardId: id,
+        level: isLevelUp ? memoryCard.level + 1 : memoryCard.level,
+        exp: isLevelUp ? 0 : memoryCard.exp + 1,
+        available: calculateAvailable(memoryCard: memoryCard, isCorrect: true)
+            .millisecondsSinceEpoch);
   }
 
   void updateWrongCard({required QueryDocumentSnapshot memoryCard}) {
     MemoryCard card =
         MemoryCard.fromMap(memoryCard.data() as Map<String, dynamic>);
-    _cardService.updateCard(
+    _cardService.updateCardStatus(
         cardId: memoryCard.id,
         level: card.level,
         exp: 0,
-        available: DateTime.now()
-            .add(levelSystem[card.level]!.cooldown * (1 / 2))
+        available: calculateAvailable(memoryCard: card, isCorrect: false)
             .millisecondsSinceEpoch);
   }
 
-  //TODO: Add caption wrong card
   void addCaptionWrongCard(
-      {required QueryDocumentSnapshot memoryCard, required String text}) {}
+      {required QueryDocumentSnapshot memoryCard, required String text}) {
+    final String cardId = memoryCard.id;
+    final MemoryCard card =
+        MemoryCard.fromMap(memoryCard.data() as Map<String, dynamic>);
+    final List<String> caption = card.caption..add(text);
+    _cardService.addCardCaption(cardId: memoryCard.id, captions: caption);
+    _cardService.updateCardStatus(
+        cardId: cardId,
+        level: card.level,
+        exp: card.exp,
+        available: calculateAvailable(memoryCard: card, isCorrect: true)
+            .millisecondsSinceEpoch);
+  }
+
+  DateTime calculateAvailable(
+      {required MemoryCard memoryCard, required bool isCorrect}) {
+    if (isCorrect) {
+      return (memoryCard.exp == (levelSystem[memoryCard.level]!.maxExp - 1))
+          ? DateTime.now().add(levelSystem[memoryCard.level]!.cooldown * 2)
+          : DateTime.now().add(levelSystem[memoryCard.level]!.cooldown);
+    }
+    return DateTime.now()
+        .add(levelSystem[memoryCard.level]!.cooldown * (1 / 2));
+  }
 }
