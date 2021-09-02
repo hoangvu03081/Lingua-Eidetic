@@ -29,13 +29,12 @@ class CardRepository {
   }
 
   /// return one time read of all card id in a collection
-  Future<Iterable<MemoryCard>> getInstantCardList(
+  Future<List<QueryDocumentSnapshot>> getInstantCardList(
       String userId, String collectionId) async {
     CollectionReference collectionRef =
         _firestore.collection(CloudPath.card(userId, collectionId));
     final query = await collectionRef.get();
-    return query.docs
-        .map((e) => MemoryCard.fromMap(e.data() as Map<String, dynamic>));
+    return query.docs;
   }
 
   /// return one time read of a card in a collection
@@ -101,6 +100,16 @@ class CardRepository {
     final docRef =
         _firestore.collection(CloudPath.card(userId, collectionId)).doc(cardId);
     docRef.update({'level': level, 'exp': exp, 'available': available});
+  }
+
+  void updateCardCaption(
+      {required String userId,
+      required String collectionId,
+      required String cardId,
+      required List<String> caption}) {
+    final docRef =
+        _firestore.collection(CloudPath.card(userId, collectionId)).doc(cardId);
+    docRef.update({'caption': caption});
   }
 
   void updateImagePath(

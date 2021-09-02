@@ -1,8 +1,10 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lingua_eidetic/models/collection.dart';
+import 'package:lingua_eidetic/models/memory_card.dart';
 import 'package:lingua_eidetic/repositories/card_repository.dart';
 import 'package:lingua_eidetic/repositories/collection_repository.dart';
 import 'package:lingua_eidetic/services/auth_service.dart';
@@ -68,8 +70,10 @@ class CollectionService extends ChangeNotifier {
   Future<int> getAvailableCollectionCount(
       {required String collectionId}) async {
     try {
-      final cardList = await _cardRepository.getInstantCardList(
+      final temp = await _cardRepository.getInstantCardList(
           _auth.currentUser!.uid, collectionId);
+      final cardList =
+          temp.map((e) => MemoryCard.fromMap(e.data() as Map<String, dynamic>));
       int result = 0;
       final now = DateTime.now();
       for (var card in cardList) {
@@ -77,9 +81,26 @@ class CollectionService extends ChangeNotifier {
       }
       return result;
     } catch (e) {
-      print(e.toString());
+      log(e.toString());
+      return 0;
     }
-    return 0;
+  }
+
+  Future<int> getCollectionTotalCount({required String collectionId}) async {
+    try {
+      final cardList = await _cardRepository.getInstantCardList(
+          _auth.currentUser!.uid, collectionId);
+      return cardList.length;
+    } catch (e) {
+      log(e.toString());
+      return 0;
+    }
+  }
+
+  Future<Iterable<String>> getAllCardId() async {
+    final idList = await _cardRepository.getInstantCardIdList(
+        _auth.currentUser!.uid, current);
+    return idList ?? [];
   }
 
   CollectionService._();
