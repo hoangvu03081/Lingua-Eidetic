@@ -38,6 +38,8 @@ dependencies:
   google_fonts: ^2.1.0
   dotted_border: ^2.0.0
   adaptive_dialog: ^1.1.0
+  # flutter_tags: ^0.4.9+1
+  textfield_tags: ^1.4.2
   card_swiper: ^1.0.4
 
   #Business Logic

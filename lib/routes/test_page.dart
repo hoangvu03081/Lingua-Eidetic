@@ -25,6 +25,7 @@ class TestPage extends StatelessWidget {
     collectionService.current = 'fXXxLFHUMEwP984OnM4L';
     final UploadService uploadService = UploadService();
     final CommunityService communityService = CommunityService();
+    communityService.current = 'fXXxLFHUMEwP984OnM4L';
     return Scaffold(
       appBar: AppBar(),
       bottomNavigationBar: CollectionNavbar(galleryButtonFunction: () {
@@ -69,10 +70,42 @@ class TestPage extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () async {
-                await communityService.search('An');
+                final temp = await communityService.getCollection();
+                temp.forEach((element) {
+                  print(element);
+                });
               },
               child: Text('Search!'),
-            )
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                communityService.downloadCollection();
+              },
+              child: Text('Test download'),
+            ),
+            ElevatedButton(
+                onPressed: () async {
+                  communityService.love();
+                },
+                child: Text('love')),
+            Container(
+              width: 300,
+              height: 300,
+              color: Colors.blue,
+              child: Stack(
+                children: [
+                  Text(
+                    'hello',
+                    style: TextStyle(
+                      fontSize: 50,
+                    ),
+                  ),
+                  Image.network(
+                    'https://www.lunapic.com/editor/premade/transparent.gif',
+                  )
+                ],
+              ),
+            ),
           ],
         ),
       ),

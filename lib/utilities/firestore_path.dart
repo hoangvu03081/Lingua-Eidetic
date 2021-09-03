@@ -11,6 +11,7 @@ abstract class CloudPath {
   static String card(String userId, String collectionId) =>
       'user/$userId/collection/$collectionId/card';
 
+  ///'shared_collection'
   static get sharedCollection => 'shared_collection';
 
   ///'shared_collection/$collectionId/cards';
@@ -20,6 +21,9 @@ abstract class CloudPath {
   ///'shared_collection/$collectionId/comment'
   static String comment(String collectionId) =>
       'shared_collection/$collectionId/comment';
+
+  static String love(String collectionId, String userId) =>
+      'shared_collection/$collectionId/love/$userId';
 }
 
 abstract class AppConstant {

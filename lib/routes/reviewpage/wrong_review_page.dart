@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:lingua_eidetic/models/memory_card.dart';
 import 'package:lingua_eidetic/services/card_service.dart';
 import 'package:lingua_eidetic/utilities/firestore_path.dart';
+import 'package:textfield_tags/textfield_tags.dart';
 
 //TODO: Add captions to box
 class WrongReviewPage extends StatelessWidget {
@@ -79,7 +80,7 @@ class WrongReviewPage extends StatelessWidget {
                     if (snapshot.hasData) {
                       return Image(
                         image: FileImage(File(snapshot.data!)),
-                        fit: BoxFit.contain,
+                        fit: BoxFit.cover,
                       );
                     }
                     return const Center(child: CircularProgressIndicator());
@@ -115,6 +116,29 @@ class WrongReviewPage extends StatelessWidget {
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.all(Radius.circular(21)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: TextFieldTags(
+                    initialTags: card.caption,
+                    tagsStyler: TagsStyler(
+                      tagTextPadding: EdgeInsets.symmetric(horizontal: 8),
+                      tagCancelIcon: const SizedBox(),
+                      tagDecoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      ),
+                      tagTextStyle: const TextStyle(
+                        color: Color(0xFF465FB8),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    textFieldStyler: TextFieldStyler(
+                      textFieldEnabled: false,
+                      textFieldBorder: InputBorder.none,
+                    ),
+                    onTag: (_) {},
+                    onDelete: (_) {}),
               ),
             ),
             SizedBox(height: size.height * 0.05),

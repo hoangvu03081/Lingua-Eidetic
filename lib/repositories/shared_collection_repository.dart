@@ -32,13 +32,6 @@ class SharedCollectionRepository {
     return query.docs;
   }
 
-  SharedCollectionRepository._();
-  static final SharedCollectionRepository _sharedCollectionRepository =
-      SharedCollectionRepository._();
-  factory SharedCollectionRepository() {
-    return _sharedCollectionRepository;
-  }
-
   Future<void> addCards(
       {required List<MemoryCard> cardList,
       required String collectionId}) async {
@@ -47,5 +40,31 @@ class SharedCollectionRepository {
     for (int i = 0; i < cardList.length; ++i) {
       collectionRef.add(cardList[i].toMap());
     }
+  }
+
+  Future<List<QueryDocumentSnapshot>> getLoveList(
+      {required String collectionId}) async {
+    final collectionRef = _firestore
+        .collection(CloudPath.sharedCollection)
+        .doc(collectionId)
+        .collection('love');
+
+    final query = await collectionRef.get();
+    return query.docs;
+  }
+
+  Future<void> changeLoveList(
+      {required String collectionId,
+      required String userId,
+      required bool loveStatus}) async {
+    final docRef = _firestore.doc(CloudPath.love(collectionId, userId));
+    loveStatus ? docRef.set({}) : docRef.delete();
+  }
+
+  SharedCollectionRepository._();
+  static final SharedCollectionRepository _sharedCollectionRepository =
+      SharedCollectionRepository._();
+  factory SharedCollectionRepository() {
+    return _sharedCollectionRepository;
   }
 }
