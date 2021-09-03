@@ -75,15 +75,12 @@ class _CollectionPageState extends State<CollectionPage> {
               )
             ];
           },
-          body: Stack(
-            children: [
-              SingleChildScrollView(
-                child: Column(
-                  children: List.generate(
-                      expandArr.length, (index) => _buildCard(index)).toList(),
-                ),
-              ),
-            ],
+          body: SingleChildScrollView(
+            child: Column(
+              children:
+                  List.generate(expandArr.length, (index) => _buildCard(index))
+                      .toList(),
+            ),
           ),
         ),
       ),
@@ -106,6 +103,7 @@ class _CollectionPageState extends State<CollectionPage> {
       child: CardGroup(
         index: index,
         isExpand: expandArr[index],
+        collectionTitle: widget.title,
       ),
     );
   }

@@ -4,9 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lingua_eidetic/constants.dart';
 import 'package:lingua_eidetic/models/memory_card.dart';
+import 'package:lingua_eidetic/routes/collection_page/widgets/title_header.dart';
+import 'package:lingua_eidetic/routes/routes.dart';
 import 'package:lingua_eidetic/services/card_service.dart';
 import 'package:lingua_eidetic/routes/collection_page/collection_page.dart';
-import 'package:lingua_eidetic/utilities/firestore_path.dart';
 import 'package:lingua_eidetic/widgets/outer_box_shadow.dart';
 
 class CardGroup extends StatefulWidget {
@@ -14,9 +15,11 @@ class CardGroup extends StatefulWidget {
     Key? key,
     required this.index,
     required this.isExpand,
+    required this.collectionTitle,
   }) : super(key: key);
   final int index;
   final bool isExpand;
+  final String collectionTitle;
 
   @override
   _CardGroupState createState() => _CardGroupState();
@@ -32,7 +35,7 @@ class _CardGroupState extends State<CardGroup> {
 
     return Column(
       children: [
-        _buildHeading(context, CollectionPage.titles[widget.index]!),
+        TitleHeader(title: CollectionPage.titles[widget.index]!),
         AnimatedContainer(
           duration: const Duration(milliseconds: 600),
           height: widget.isExpand ? size.height * 0.5 : 0,
@@ -59,7 +62,6 @@ class _CardGroupState extends State<CardGroup> {
 
               for (int i = 0; i < data.docs.length; i++) {
                 final item = docs[i].data() as Map<String, dynamic>;
-
                 if (widget.isExpand &&
                     widget.index + 1 == item['level'] as int) {
                   gridItems.add(MemoryCard.fromMap(item));
@@ -94,9 +96,22 @@ class _CardGroupState extends State<CardGroup> {
                             future: cardService.getImage(cardId: id),
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
-                                return Image.file(
-                                  File(snapshot.data!),
-                                  fit: BoxFit.cover,
+                                return GestureDetector(
+                                  onTap: () {
+                                    /// TODO: edit page
+                                    Navigator.of(context).pushNamed(
+                                        RouteGenerator.EDITING_COLLECTION_PAGE,
+                                        arguments: {
+                                          'collectionTitle':
+                                              widget.collectionTitle,
+                                          'item': gridItems[index],
+                                          'localPath': snapshot.data!,
+                                        });
+                                  },
+                                  child: Image.file(
+                                    File(snapshot.data!),
+                                    fit: BoxFit.cover,
+                                  ),
                                 );
                               }
                               return const Center(
@@ -114,44 +129,6 @@ class _CardGroupState extends State<CardGroup> {
           ),
         ),
         const SizedBox(height: defaultPadding * 2),
-      ],
-    );
-  }
-
-  Widget _buildHeading(BuildContext context, String title) {
-    final size = MediaQuery.of(context).size;
-    return Stack(
-      children: [
-        Positioned.fill(
-          left: size.width / 8,
-          right: size.width / 8,
-          child: const Divider(
-            color: Color(0xFFB2CDFF),
-          ),
-        ),
-        Positioned(
-          child: Align(
-            alignment: Alignment.center,
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                vertical: defaultPadding,
-                horizontal: defaultPadding * 2,
-              ),
-              decoration: BoxDecoration(
-                color: const Color(0xFF8FA6FA),
-                borderRadius: BorderRadius.circular(200),
-              ),
-              child: Text(
-                title,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-          ),
-        ),
       ],
     );
   }
