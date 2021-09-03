@@ -11,6 +11,14 @@ class CollectionRepository {
     collectionRef.add(collection.toMap());
   }
 
+  Future<void> setCollection(
+      {required String userId,
+      required Collection collection,
+      required String id}) async {
+    final docRef = _firestore.collection(CloudPath.collection(userId)).doc(id);
+    await docRef.set(collection.toMap());
+  }
+
   void removeCollection(
       {required String userId, required String collectionId}) {
     CollectionReference collectionRef =
