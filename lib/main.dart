@@ -31,13 +31,12 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitDown,
     ]);
     return MaterialApp(
-      title: 'Lingua Eidetic',
-      debugShowCheckedModeBanner: false,
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
-      locale: context.locale,
-      onGenerateRoute: routeGenerator.generateRoute,
-      initialRoute: RouteGenerator.TEST,
-    );
+        title: 'Lingua Eidetic',
+        debugShowCheckedModeBanner: false,
+        localizationsDelegates: context.localizationDelegates,
+        supportedLocales: context.supportedLocales,
+        locale: context.locale,
+        onGenerateRoute: routeGenerator.generateRoute,
+        initialRoute: RouteGenerator.LANDING_PAGE);
   }
 }

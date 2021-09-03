@@ -7,6 +7,7 @@ import 'package:lingua_eidetic/models/memory_card.dart';
 import 'package:lingua_eidetic/services/card_service.dart';
 import 'package:lingua_eidetic/routes/collection_page/collection_page.dart';
 import 'package:lingua_eidetic/utilities/firestore_path.dart';
+import 'package:lingua_eidetic/widgets/outer_box_shadow.dart';
 
 class CardGroup extends StatefulWidget {
   const CardGroup({
@@ -47,7 +48,8 @@ class _CardGroupState extends State<CardGroup> {
                 return const Text('Something went wrong');
               }
 
-              if (snapshot.connectionState == ConnectionState.waiting) {
+              if (snapshot.connectionState == ConnectionState.waiting ||
+                  !snapshot.hasData) {
                 return const SizedBox();
               }
 
@@ -68,37 +70,39 @@ class _CardGroupState extends State<CardGroup> {
                   maxCrossAxisExtent: 200,
                   childAspectRatio: 1 / 1,
                   mainAxisSpacing: defaultPadding,
-                  crossAxisSpacing: defaultPadding / 2,
+                  crossAxisSpacing: defaultPadding,
                 ),
                 itemBuilder: (context, index) {
                   // final memoryCard = gridItems[index];
                   // int level = memoryCard.level;
-                  final id = snapshot.data!.docs[index].id;
+                  final id = docs[index].id;
 
                   return Offstage(
                     offstage: !widget.isExpand,
                     child: Padding(
                       padding: const EdgeInsets.all(defaultPadding),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(22),
-                            boxShadow: [
-                              BoxShadow(
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 4),
-                                  color: Colors.black.withOpacity(0.25))
-                            ]),
-                        child: FutureBuilder<String>(
-                          future: cardService.getImage(cardId: id),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              return Image.file(File(snapshot.data!));
-                            }
-                            return const Center(
-                                child: CircularProgressIndicator(
-                                    color: Colors.white));
-                          },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Container(
+                          decoration: BoxDecoration(boxShadow: [
+                            OuterBoxShadow(
+                                blurRadius: 4,
+                                offset: const Offset(0, 4),
+                                color: Colors.black.withOpacity(0.25))
+                          ]),
+                          child: FutureBuilder<String>(
+                            future: cardService.getImage(cardId: id),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return Image.file(
+                                  File(snapshot.data!),
+                                  fit: BoxFit.cover,
+                                );
+                              }
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            },
+                          ),
                         ),
                       ),
                     ),

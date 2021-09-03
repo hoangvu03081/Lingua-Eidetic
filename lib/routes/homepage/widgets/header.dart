@@ -5,7 +5,7 @@ import 'package:lingua_eidetic/constants.dart';
 import 'package:lingua_eidetic/services/auth_service.dart';
 import 'package:lingua_eidetic/widgets/search_box.dart';
 
-class Header extends StatefulWidget {
+class Header extends StatelessWidget {
   const Header({
     Key? key,
     required this.height,
@@ -14,12 +14,6 @@ class Header extends StatefulWidget {
   final double height;
   final ValueChanged<String> onQuery;
 
-  @override
-  _HeaderState createState() => _HeaderState();
-}
-
-class _HeaderState extends State<Header> {
-  bool _userActionsOffstage = true;
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -30,27 +24,21 @@ class _HeaderState extends State<Header> {
       username = 'User';
     }
     return SizedBox(
-      height: widget.height,
+      height: height,
       child: Stack(
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              //  114 + defaultPadding * 4
               SizedBox(
-                height: size.height * 0.1,
+                height: 50,
                 child: Row(
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _userActionsOffstage = !_userActionsOffstage;
-                        });
-                      },
-                      child: CircleAvatar(
-                        radius: 20,
-                        backgroundImage: NetworkImage(urlImage ??
-                            'https://github.com/hoangvu03081/Lingua-Eidetic/blob/main/assets/images/hacker.png?raw=true'),
-                      ),
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundImage: NetworkImage(urlImage ??
+                          'https://github.com/hoangvu03081/Lingua-Eidetic/blob/main/assets/images/hacker.png?raw=true'),
                     ),
                     const SizedBox(width: defaultPadding),
                     Expanded(
@@ -77,8 +65,8 @@ class _HeaderState extends State<Header> {
                                 child: Row(
                                   children: [
                                     SizedBox(
-                                      height: 28,
-                                      width: 28,
+                                      height: 20,
+                                      width: 20,
                                       child: SvgPicture.asset(
                                           'assets/images/community.svg',
                                           fit: BoxFit.contain),
@@ -94,7 +82,7 @@ class _HeaderState extends State<Header> {
                                   children: const [
                                     Icon(
                                       Icons.logout,
-                                      size: 28,
+                                      size: 20,
                                       color: Colors.black,
                                     ),
                                     SizedBox(width: defaultPadding),
@@ -120,13 +108,13 @@ class _HeaderState extends State<Header> {
               ),
               const SizedBox(height: defaultPadding * 2),
               SizedBox(
-                height: size.height * 0.04 + defaultPadding * 3,
-                child: SearchBox(filterFunc: widget.onQuery),
+                height: 40,
+                child: SearchBox(filterFunc: onQuery),
               ),
               const SizedBox(height: defaultPadding * 2),
-              SizedBox(
-                height: size.height * 0.08,
-                child: const Text(
+              const SizedBox(
+                height: 24,
+                child: Text(
                   'Collections',
                   style: TextStyle(
                     fontSize: 20,
@@ -136,28 +124,6 @@ class _HeaderState extends State<Header> {
                 ),
               ),
             ],
-          ),
-          Positioned(
-            top: 40,
-            child: Offstage(
-              offstage: _userActionsOffstage,
-              child: Column(
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Auth().signOut();
-                    },
-                    child: Text(
-                      'Sign Out',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: size.height * 0.04,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
           ),
         ],
       ),
