@@ -40,16 +40,19 @@ class _HeaderState extends State<Header> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          InkWell(
+          GestureDetector(
             onTap: () {
               Navigator.of(context).pop();
             },
             child: const SizedBox(
               width: 60 + defaultPadding,
-              child: Icon(
-                Icons.keyboard_arrow_left,
-                color: Color(0xFF172853),
-                size: 30,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Icon(
+                  Icons.keyboard_arrow_left,
+                  color: Color(0xFF172853),
+                  size: 30,
+                ),
               ),
             ),
           ),

@@ -32,16 +32,13 @@ class _ShareCollectionPageState extends State<ShareCollectionPage> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        floatingActionButton: ElevatedButton(
-          onPressed: () {},
-          child: const Icon(Icons.arrow_right_alt),
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(const Color(0xFF172853)),
-            padding: MaterialStateProperty.all(
-              const EdgeInsets.all(defaultPadding),
-            ),
-            shape:
-                MaterialStateProperty.all<CircleBorder>(const CircleBorder()),
+        floatingActionButton: CircleAvatar(
+          backgroundColor: const Color(0xFF172853),
+          child: IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.arrow_right_alt),
+            color: Colors.white,
+            padding: const EdgeInsets.all(defaultPadding),
           ),
         ),
         appBar: getCustomAppBar(context, 'Anatomy'),
