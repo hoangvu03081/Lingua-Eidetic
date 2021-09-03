@@ -25,18 +25,16 @@ class NavButton extends StatelessWidget {
         textAlign: TextAlign.center,
         text: TextSpan(
           style: GoogleFonts.openSans(
-            textStyle: TextStyle(
+            textStyle: const TextStyle(
               color: Colors.black54,
-              fontSize: size.height * 0.035,
             ),
           ),
           children: [
             TextSpan(text: navigateSubtitle),
             TextSpan(
               text: navigateTitle,
-              style: TextStyle(
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: size.height * 0.035,
               ),
             ),
           ],
