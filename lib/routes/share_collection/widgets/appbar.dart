@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lingua_eidetic/constants.dart';
 
 PreferredSizeWidget getCustomAppBar(BuildContext context, String title,
     {List<Widget>? actions}) {

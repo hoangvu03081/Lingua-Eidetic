@@ -43,13 +43,8 @@ class _ImageGridState extends State<ImageGrid> {
           if (imageModel.imagePaths[i].index == index) isSelected = true;
         }
         return GestureDetector(
-          onLongPress: () {
-            selectIndex(imageModel, index);
-          },
           onTap: () {
-            if (imageModel.imagePaths.isNotEmpty) {
-              selectIndex(imageModel, index);
-            }
+            selectIndex(imageModel, index);
           },
           child: ClipRRect(
             borderRadius: BorderRadius.circular(12),

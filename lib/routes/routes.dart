@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lingua_eidetic/models/memory_card.dart';
 import 'package:lingua_eidetic/repositories/card_repository.dart';
 import 'package:lingua_eidetic/repositories/collection_repository.dart';
+import 'package:lingua_eidetic/routes/collection_page/editing_collection_page.dart';
 import 'package:lingua_eidetic/routes/community/community_page.dart';
 import 'package:lingua_eidetic/routes/reviewpage/review_page.dart';
 import 'package:lingua_eidetic/routes/reviewpage/wrong_review_page.dart';
@@ -35,6 +37,7 @@ class RouteGenerator {
   static const String SHARE_COLLECTION_PAGE = "/share-collection";
   static const String DESCRIPTION_IMAGES_PAGE = "/description-images";
   static const String PREVIEW_SHARE_PAGE = "/preview-share";
+  static const String EDITING_COLLECTION_PAGE = "/edit-collection";
 
   final Auth auth = Auth();
   final CollectionRepository collectionRepository = CollectionRepository();
@@ -103,7 +106,8 @@ class RouteGenerator {
       case REVIEW_PAGE:
         return MaterialPageRoute(
           builder: (context) => ChangeNotifierProvider<ReviewService>(
-              create: (_) => ReviewService(), builder: (_, __) => ReviewPage()),
+              create: (_) => ReviewService(),
+              builder: (_, __) => const ReviewPage()),
         );
       case WRONG_REVIEW_PAGE:
         return MaterialPageRoute(
@@ -135,6 +139,21 @@ class RouteGenerator {
           builder: (context) => Provider<Auth>.value(
             value: auth,
             builder: (_, __) => const PreviewSharePage(),
+          ),
+        );
+      case EDITING_COLLECTION_PAGE:
+        final arguments = settings.arguments as Map<String, dynamic>;
+        final item = arguments['item'] as MemoryCard;
+        final title = arguments['collectionTitle'] as String;
+        final imagePath = arguments['localPath'] as String;
+        return MaterialPageRoute(
+          builder: (context) => Provider<Auth>.value(
+            value: auth,
+            builder: (_, __) => EditingCollectionPage(
+              title: title,
+              card: item,
+              imagePath: imagePath,
+            ),
           ),
         );
 
