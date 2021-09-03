@@ -32,13 +32,12 @@ class MyApp extends StatelessWidget {
     ]);
 
     return MaterialApp(
-      title: 'Lingua Eidetic',
-      debugShowCheckedModeBanner: false,
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
-      locale: context.locale,
-      onGenerateRoute: routeGenerator.generateRoute,
-      initialRoute: RouteGenerator.LANDING_PAGE,
-    );
+        title: 'Lingua Eidetic',
+        debugShowCheckedModeBanner: false,
+        localizationsDelegates: context.localizationDelegates,
+        supportedLocales: context.supportedLocales,
+        locale: context.locale,
+        onGenerateRoute: routeGenerator.generateRoute,
+        initialRoute: RouteGenerator.LANDING_PAGE);
   }
 }

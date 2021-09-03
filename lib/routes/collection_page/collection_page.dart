@@ -65,14 +65,11 @@ class _CollectionPageState extends State<CollectionPage> {
                 floating: true,
                 titleSpacing: 0,
                 title: Header(
-                  onPrevClicked: () {
-                    Navigator.of(context).pop();
-                  },
-                  height: size.height * 0.15,
+                  height: 75,
                   title: widget.title,
                 ),
                 backgroundColor: Colors.transparent,
-                toolbarHeight: size.height * 0.15,
+                toolbarHeight: 75,
                 leading: const SizedBox(),
                 leadingWidth: 0,
               )
