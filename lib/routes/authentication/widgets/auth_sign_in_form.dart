@@ -210,12 +210,12 @@ class _AuthSignInFormState extends State<AuthSignInForm>
         AnimatedContainer(
           duration: Duration(milliseconds: anim.duration),
           curve: Curves.ease,
-          height: removeRPassword ? 180 : 240,
+          height: removeRPassword ? 170 : 230,
           child: Stack(
             fit: StackFit.loose,
             children: [
               AnimatedPositioned(
-                top: removeRPassword ? -60 : 0,
+                top: removeRPassword ? -63 : 0,
                 left: 0,
                 right: 0,
                 duration: Duration(milliseconds: anim.duration),
@@ -234,6 +234,7 @@ class _AuthSignInFormState extends State<AuthSignInForm>
                         textInputAction: TextInputAction.done,
                         onEditingComplete: onRPasswordEditingComplete,
                         errorText: (_submitted &&
+                                pageState == PageState.register &&
                                 passwordController.text !=
                                     rPasswordController.text)
                             ? 'Password must be the same'
@@ -254,7 +255,7 @@ class _AuthSignInFormState extends State<AuthSignInForm>
                             }
                           : null,
                     ),
-                    const SizedBox(height: defaultPadding * 2),
+                    const SizedBox(height: defaultPadding),
                     AuthWithGoogleFacebook(
                         enable: !_loading,
                         onLogin: () {
@@ -268,7 +269,7 @@ class _AuthSignInFormState extends State<AuthSignInForm>
                           });
                         }),
                     Container(
-                      margin: const EdgeInsets.only(top: defaultPadding * 2),
+                      margin: const EdgeInsets.only(top: defaultPadding),
                       width: double.infinity,
                       child: NavButton(
                         navigateTitle: navigateTitle,

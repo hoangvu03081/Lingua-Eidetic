@@ -87,6 +87,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   focusedBorder: UnderlineInputBorder(),
                   contentPadding: EdgeInsets.zero,
                 ),
+                onEditingComplete: () {},
                 onSubmitted: (String value) {
                   setState(() {
                     _items.add(value);

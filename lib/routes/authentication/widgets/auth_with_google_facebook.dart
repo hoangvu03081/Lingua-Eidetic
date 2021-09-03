@@ -69,7 +69,7 @@ class _AuthWithGoogleFacebookState extends State<AuthWithGoogleFacebook> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return SizedBox(
-      height: size.height * 0.07 + defaultPadding * 2.7,
+      height: 50,
       child: Row(
         children: [
           Expanded(
@@ -92,7 +92,7 @@ class _AuthWithGoogleFacebookState extends State<AuthWithGoogleFacebook> {
                 ),
                 child: SvgPicture.asset(
                   'assets/images/facebook-square-brands.svg',
-                  height: size.height * 0.07,
+                  height: 20,
                 ),
               ),
             ),
@@ -118,7 +118,7 @@ class _AuthWithGoogleFacebookState extends State<AuthWithGoogleFacebook> {
                 ),
                 child: SvgPicture.asset(
                   'assets/images/google.svg',
-                  height: size.height * 0.07,
+                  height: 20,
                 ),
               ),
             ),
