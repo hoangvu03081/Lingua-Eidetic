@@ -14,6 +14,24 @@ class SharedCollectionRepository {
     await sharedCollectionRef.set(sharedCollection.toMap());
   }
 
+  Future<DocumentSnapshot<Map<String, dynamic>>> getInstantCollection(
+      {required String collectionId}) async {
+    final sharedCollectionRef =
+        _firestore.collection(CloudPath.sharedCollection).doc(collectionId);
+    return await sharedCollectionRef.get();
+  }
+
+  Future<List<QueryDocumentSnapshot>> getInstantCard(
+      {required String collectionId}) async {
+    final cardCollection = _firestore
+        .collection(CloudPath.sharedCollection)
+        .doc(collectionId)
+        .collection('cards');
+
+    final query = await cardCollection.get();
+    return query.docs;
+  }
+
   SharedCollectionRepository._();
   static final SharedCollectionRepository _sharedCollectionRepository =
       SharedCollectionRepository._();

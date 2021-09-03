@@ -1,39 +1,40 @@
 import 'dart:convert';
 
 class Comment {
-  String userId;
-  String description;
+  String? userId;
+  String? avatar;
+  String content;
   DateTime commentDate;
   Comment({
-    required this.userId,
-    required this.description,
+    required this.avatar,
+    required this.content,
     required this.commentDate,
   });
 
   Comment copyWith({
-    String? userId,
-    String? description,
+    String? avatar,
+    String? content,
     DateTime? commentDate,
   }) {
     return Comment(
-      userId: userId ?? this.userId,
-      description: description ?? this.description,
+      avatar: avatar ?? this.avatar,
+      content: content ?? this.content,
       commentDate: commentDate ?? this.commentDate,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'userId': userId,
-      'description': description,
+      'avatar': avatar,
+      'content': content,
       'commentDate': commentDate.millisecondsSinceEpoch,
     };
   }
 
   factory Comment.fromMap(Map<String, dynamic> map) {
     return Comment(
-      userId: map['userId'],
-      description: map['description'],
+      avatar: map['avatar'],
+      content: map['content'],
       commentDate: DateTime.fromMillisecondsSinceEpoch(map['commentDate']),
     );
   }
@@ -45,19 +46,18 @@ class Comment {
 
   @override
   String toString() =>
-      'Comment(userId: $userId, description: $description, commentDate: $commentDate)';
+      'Comment(avatar: $avatar, content: $content, commentDate: $commentDate)';
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
     return other is Comment &&
-        other.userId == userId &&
-        other.description == description &&
+        other.avatar == avatar &&
+        other.content == content &&
         other.commentDate == commentDate;
   }
 
   @override
-  int get hashCode =>
-      userId.hashCode ^ description.hashCode ^ commentDate.hashCode;
+  int get hashCode => avatar.hashCode ^ content.hashCode ^ commentDate.hashCode;
 }
