@@ -9,7 +9,9 @@ import 'package:lingua_eidetic/repositories/collection_repository.dart';
 import 'package:lingua_eidetic/services/auth_service.dart';
 import 'package:lingua_eidetic/services/card_service.dart';
 import 'package:lingua_eidetic/services/collection_service.dart';
+import 'package:lingua_eidetic/services/community_service.dart';
 import 'package:lingua_eidetic/services/image_service.dart';
+import 'package:lingua_eidetic/services/upload_service.dart';
 import 'package:lingua_eidetic/utilities/firestore_path.dart';
 import 'package:lingua_eidetic/widgets/collection_navbar.dart';
 
@@ -20,7 +22,9 @@ class TestPage extends StatelessWidget {
     final CollectionService collectionService = CollectionService();
     final ImageService imageService = ImageService();
     final CardService cardService = CardService();
-    collectionService.current = '7F4T7vQ8cWjExB2t3rtA';
+    collectionService.current = 'fXXxLFHUMEwP984OnM4L';
+    final UploadService uploadService = UploadService();
+    final CommunityService communityService = CommunityService();
     return Scaffold(
       appBar: AppBar(),
       bottomNavigationBar: CollectionNavbar(galleryButtonFunction: () {
@@ -33,107 +37,41 @@ class TestPage extends StatelessWidget {
         child: Column(
           children: [
             ElevatedButton(
-              onPressed: () {
-                print(collectionService.data);
-              },
-              child: Icon(Icons.ac_unit),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                print('pressed');
-                collectionService.addCollection(name: 'Anatomy');
-              },
-              child: Text('Add anatomy'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                print('pressed');
-                collectionService.deleteCollection(
-                    collectionId: '7F4T7vQ8cWjExB2t3rtA');
-              },
-              child: Text('Delete anatomy'),
-            ),
-            ElevatedButton(
               onPressed: () async {
-                final String? temp = await imageService.getImageFromCamera();
+                final imgPath1 = await cardService.getImage(
+                    cardId: '112e9878-c9b9-4921-b744-bdc829deca26');
+                final imgPath2 = await cardService.getImage(
+                    cardId: '6ce1172d-ef7a-45af-adfc-4c082e8e52b1');
+                await uploadService.uploadCollection(
+                  name: 'Easy Anatomy',
+                  description: 'An Anatomy Collection targeted for beginners',
+                  imagePath: [imgPath1, imgPath2],
+                );
                 // print(temp);
               },
-              child: Text('Get image'),
+              child: Text('Upload Collection!!!'),
+            ),
+            ElevatedButton(
+                onPressed: () async {
+                  final temp = await collectionService.getAllCardId();
+                  for (final id in temp) {
+                    print(id);
+                  }
+                },
+                child: Text('Print some image path!')),
+            ElevatedButton(
+              onPressed: () async {
+                final imgPath1 = await cardService.getImage(
+                    cardId: '6ce1172d-ef7a-45af-adfc-4c082e8e52b1');
+                print(imgPath1);
+              },
+              child: Text('Test some image'),
             ),
             ElevatedButton(
               onPressed: () async {
-                imageService.printHive();
+                await communityService.search('An');
               },
-              child: Text('Print hive'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                List<String>? temp = await imageService.getMutlipleImages();
-                collectionService.current = '7F4T7vQ8cWjExB2t3rtA';
-                temp!.first;
-                cardService.addCard(
-                    MemoryCard(
-                        imagePath: '',
-                        caption: ['nothing', 'something'],
-                        available: DateTime.now()),
-                    temp.first);
-              },
-              child: Text('Test upload image'),
-            ),
-            ElevatedButton(
-                onPressed: () {
-                  cardService.removeCard(
-                      "19gV4DwE7T1nLaW2kgU9", CollectionService().current);
-                },
-                child: Text('Test delete card')),
-            SizedBox(
-              width: 400,
-              height: 400,
-              child: StreamBuilder<QuerySnapshot>(
-                stream: collectionService.data,
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Text('Something went wrong');
-                  }
-
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Text("Loading");
-                  }
-
-                  return ListView.builder(
-                    itemBuilder: (context, index) {
-                      String id = snapshot.data!.docs[index].id;
-                      Collection item = Collection.fromMap(
-                          snapshot.data!.docs[index].data()
-                              as Map<String, dynamic>);
-                      return Container(
-                        child: Text(id),
-                      );
-                    },
-                    itemCount: snapshot.data!.docs.length,
-                  );
-                },
-              ),
-            ),
-            FutureBuilder(
-              builder: (_, snapshot) {
-                print(snapshot.data);
-                return Text('');
-              },
-              future:
-                  File(AppConstant.getImage('19CdAud9KPFCV6q2MbYM')).exists(),
-            ),
-            StreamBuilder<int>(
-              builder: (_, snapshot) {
-                if (snapshot.hasData) {
-                  if (snapshot.data != 0) {
-                    print('not 0');
-                    return Text(snapshot.data.toString());
-                  }
-                }
-                return Text('Might be 0');
-              },
-              stream: cardService.getAvailableCardCount(),
+              child: Text('Search!'),
             )
           ],
         ),
