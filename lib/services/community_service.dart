@@ -60,6 +60,8 @@ class CommunityService {
 
   void increaseDownloadCount(SharedCollection collection) async {
     ++collection.download;
+    _sharedRepository.addSharedCollection(
+        sharedCollection: collection, collectionId: collection.id!);
     _indexCollection(collection);
   }
 
@@ -72,11 +74,24 @@ class CommunityService {
         SharedCollection.fromMap(query.data() as Map<String, dynamic>);
     sharedCollection.id = query.id;
 
-    ++sharedCollection.love;
+    bool isLoved = await isAlreadyLoved(id);
+
+    isLoved ? --sharedCollection.love : ++sharedCollection.love;
     _sharedRepository.addSharedCollection(
         sharedCollection: sharedCollection, collectionId: query.id);
-
     _indexCollection(sharedCollection);
+
+    _sharedRepository.changeLoveList(
+        collectionId: id, userId: _auth.currentUser!.uid, loveStatus: !isLoved);
+  }
+
+  Future<bool> isAlreadyLoved(String collectionId) async {
+    final loveQuery =
+        await _sharedRepository.getLoveList(collectionId: collectionId);
+    for (int i = 0; i < loveQuery.length; ++i) {
+      if (_auth.currentUser!.uid == loveQuery[i].id) return true;
+    }
+    return false;
   }
 
   Future<void> _indexCollection(SharedCollection sharedCollection) async {
@@ -115,6 +130,32 @@ class CommunityService {
             'https://search-lingua-eidetic-test-asbydmnbxrzlkjcm3ljfetwrd4.ap-southeast-1.es.amazonaws.com/lingua_collection/_search'));
     request.body =
         '{"query": {"multi_match": {"query": "$query","fields": ["name^2","author","description"]}}}';
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      return _convertElasticSearchQuery(await response.stream.bytesToString());
+    } else {
+      print(response.reasonPhrase);
+      print(response.statusCode);
+    }
+    return [];
+  }
+
+  Future<List<SharedCollection>> getCollection() async {
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization':
+          'Basic Zmx1dHRlcl9jbGllbnQ6aVhMJWdpWnVQISNpYzFVMXlsaDdPc0xxRjJKSSUyJTdTa1ZNa3JoeW9uSkQlJiNJQVhQKmNeUCNaOUFO'
+    };
+
+    final request = http.Request(
+        'GET',
+        Uri.parse(
+            'https://search-lingua-eidetic-test-asbydmnbxrzlkjcm3ljfetwrd4.ap-southeast-1.es.amazonaws.com/lingua_collection/_search'));
+    request.body = '{"sort": [{"download": "desc"},{"love": "desc"}]}';
 
     request.headers.addAll(headers);
 
