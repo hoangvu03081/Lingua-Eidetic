@@ -49,7 +49,7 @@ class _HomePageV2State extends State<HomePageV2> {
   Widget build(BuildContext context) {
     final collectionService = CollectionService();
     final size = MediaQuery.of(context).size;
-    final headerHeight = size.height * 0.23 + defaultPadding * 8;
+    const headerHeight = 114 + defaultPadding * 6;
     if (!isAdding) titleFocusNode.unfocus();
 
     return WillPopScope(

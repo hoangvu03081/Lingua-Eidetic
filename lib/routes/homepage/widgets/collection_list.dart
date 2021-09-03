@@ -31,10 +31,12 @@ class _CollectionListState extends State<CollectionList> {
           return const Text('Something went wrong');
         }
 
-        if (snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot.connectionState == ConnectionState.waiting ||
+            !snapshot.hasData) {
           if (_cached.isEmpty) {
             return const Center(child: CircularProgressIndicator());
           }
+
           return ListView.builder(
             itemBuilder: (context, index) {
               if (index < _cached.length &&
@@ -45,8 +47,8 @@ class _CollectionListState extends State<CollectionList> {
                 return CollectionCardV2(
                   key: Key(_ids[index]),
                   title: _cached[index].name,
-                  avail: 0,
-                  total: 0,
+                  avail: 5,
+                  total: 27,
                   remove: () {
                     collectionService.deleteCollection(
                         collectionId: _ids[index]);
@@ -65,6 +67,7 @@ class _CollectionListState extends State<CollectionList> {
 
             Collection item = Collection.fromMap(
                 snapshot.data!.docs[index].data() as Map<String, dynamic>);
+
             if (index == 0) {
               _cached.clear();
               _ids.clear();
