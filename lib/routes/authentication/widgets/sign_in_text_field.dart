@@ -34,7 +34,7 @@ class SignInTextField extends StatelessWidget {
       onChanged: onChanged,
       textInputAction: textInputAction,
       obscureText: obscureText,
-      style: const TextStyle(fontSize: 14),
+      style: const TextStyle(fontSize: 16),
       decoration: InputDecoration(
         errorText: errorText,
         contentPadding: const EdgeInsets.symmetric(

@@ -1,10 +1,14 @@
 import 'dart:io';
 
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lingua_eidetic/models/memory_card.dart';
+import 'package:lingua_eidetic/services/card_service.dart';
 import 'package:lingua_eidetic/utilities/firestore_path.dart';
+import 'package:textfield_tags/textfield_tags.dart';
 
+//TODO: Add captions to box
 class WrongReviewPage extends StatelessWidget {
   const WrongReviewPage({Key? key, required this.wrong}) : super(key: key);
 
@@ -12,6 +16,7 @@ class WrongReviewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cardService = CardService();
     final size = MediaQuery.of(context).size;
     final text = wrong['text'];
     final temp = wrong['card'] as QueryDocumentSnapshot<Object?>;
@@ -69,10 +74,17 @@ class WrongReviewPage extends StatelessWidget {
                   offset: const Offset(0, 2), // changes position of shadow
                 ),
               ]),
-              child: Image.file(
-                File(AppConstant.getImage(cardId)),
-                fit: BoxFit.fitWidth,
-              ),
+              child: FutureBuilder<String>(
+                  future: cardService.getImage(cardId: cardId),
+                  builder: (_, snapshot) {
+                    if (snapshot.hasData) {
+                      return Image(
+                        image: FileImage(File(snapshot.data!)),
+                        fit: BoxFit.cover,
+                      );
+                    }
+                    return const Center(child: CircularProgressIndicator());
+                  }),
             ),
             SizedBox(height: size.height * 0.04),
             Row(
@@ -105,6 +117,29 @@ class WrongReviewPage extends StatelessWidget {
                 ),
                 borderRadius: BorderRadius.all(Radius.circular(21)),
               ),
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: TextFieldTags(
+                    initialTags: card.caption,
+                    tagsStyler: TagsStyler(
+                      tagTextPadding: EdgeInsets.symmetric(horizontal: 8),
+                      tagCancelIcon: const SizedBox(),
+                      tagDecoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      ),
+                      tagTextStyle: const TextStyle(
+                        color: Color(0xFF465FB8),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    textFieldStyler: TextFieldStyler(
+                      textFieldEnabled: false,
+                      textFieldBorder: InputBorder.none,
+                    ),
+                    onTag: (_) {},
+                    onDelete: (_) {}),
+              ),
             ),
             SizedBox(height: size.height * 0.05),
             Row(
@@ -118,7 +153,28 @@ class WrongReviewPage extends StatelessWidget {
                             side: const BorderSide(color: Color(0xFF172853)))),
                     backgroundColor: MaterialStateProperty.all(Colors.white),
                   ),
-                  onPressed: () {},
+                  onPressed: () async {
+                    final result = await showModalActionSheet<ReviewStatus>(
+                        context: context,
+                        title: 'Other options for your incorrect answer?',
+                        message:
+                            'Please don\'t use these options as a way to cheat.',
+                        isDismissible: true,
+                        cancelLabel: 'Cancel',
+                        actions: [
+                          const SheetAction(
+                            key: ReviewStatus.ADD,
+                            icon: Icons.add,
+                            label: 'Add synonym',
+                          ),
+                          const SheetAction(
+                            key: ReviewStatus.CONTINUE,
+                            icon: Icons.remove,
+                            label: 'Ignore this answer',
+                          )
+                        ]);
+                    Navigator.of(context).pop(result);
+                  },
                   child: SizedBox(
                       height: size.height * 0.042,
                       width: size.width * 0.22,

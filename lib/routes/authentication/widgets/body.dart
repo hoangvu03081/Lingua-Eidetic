@@ -10,6 +10,7 @@ class AuthenticationPageBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final bottom = MediaQuery.of(context).viewInsets.bottom;
 
     return GestureDetector(
       onTap: () {
@@ -25,7 +26,7 @@ class AuthenticationPageBody extends StatelessWidget {
                 top: 0,
                 left: 0,
                 right: 0,
-                bottom: size.height * 0.4,
+                bottom: size.height * 0.4 - bottom,
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.red,

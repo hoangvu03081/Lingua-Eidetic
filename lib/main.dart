@@ -30,7 +30,6 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-
     return MaterialApp(
       title: 'Lingua Eidetic',
       debugShowCheckedModeBanner: false,

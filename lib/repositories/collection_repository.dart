@@ -11,6 +11,21 @@ class CollectionRepository {
     collectionRef.add(collection.toMap());
   }
 
+  Future<DocumentSnapshot> getCollection(
+      {required String userId, required String collectionId}) async {
+    final docRef =
+        _firestore.collection(CloudPath.collection(userId)).doc(collectionId);
+    return await docRef.get();
+  }
+
+  Future<void> setCollection(
+      {required String userId,
+      required Collection collection,
+      required String id}) async {
+    final docRef = _firestore.collection(CloudPath.collection(userId)).doc(id);
+    await docRef.set(collection.toMap());
+  }
+
   void removeCollection(
       {required String userId, required String collectionId}) {
     CollectionReference collectionRef =
@@ -25,12 +40,10 @@ class CollectionRepository {
         .snapshots();
   }
 
+  ///return a singleton instance of [CollectionRepository]
   CollectionRepository._();
-
   static final CollectionRepository _collectionRepository =
       CollectionRepository._();
-
-  ///return a singleton instance of [CollectionRepository]
   factory CollectionRepository() {
     return _collectionRepository;
   }

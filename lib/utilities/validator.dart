@@ -57,6 +57,11 @@ class ValidatorError {
   void setPasswordError(String passwordError) {
     _passwordError = passwordError;
   }
+
+  @override
+  String toString() {
+    return 'errors: { \n\temail: $_emailError, \n\tpassword: $_passwordError\n}';
+  }
 }
 
 class EmailPasswordValidator {
@@ -72,6 +77,7 @@ class EmailPasswordValidator {
   void validateEmail(String mail) {
     errors.setEmailError(this.mail.isValid(mail));
   }
+
   void validatePassword(String password) {
     errors.setPasswordError(this.password.isValid(password));
   }

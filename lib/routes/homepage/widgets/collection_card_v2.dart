@@ -132,7 +132,7 @@ class _CollectionCardV2State extends State<CollectionCardV2> {
 
           // percent balloon
           Positioned.fill(
-            right: defaultPadding * 4,
+            right: defaultPadding * 4 - dx,
             bottom: defaultPadding * 2,
             child: Align(
               alignment: Alignment.centerRight,

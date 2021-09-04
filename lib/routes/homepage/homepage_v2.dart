@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -15,9 +17,11 @@ class HomePageV2 extends StatefulWidget {
   _HomePageV2State createState() => _HomePageV2State();
 }
 
-class _HomePageV2State extends State<HomePageV2> {
+class _HomePageV2State extends State<HomePageV2>
+    with SingleTickerProviderStateMixin {
+  late final controller = AnimationController(
+      duration: const Duration(milliseconds: 400), vsync: this);
   bool isAdding = false;
-
   FocusNode titleFocusNode = FocusNode();
   TextEditingController titleController = TextEditingController();
   late final FToast fToast;
@@ -28,12 +32,16 @@ class _HomePageV2State extends State<HomePageV2> {
     super.initState();
     fToast = FToast();
     fToast.init(context);
+    controller.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
   void dispose() {
     titleController.dispose();
     titleFocusNode.dispose();
+    controller.dispose();
     super.dispose();
   }
 
@@ -49,13 +57,14 @@ class _HomePageV2State extends State<HomePageV2> {
   Widget build(BuildContext context) {
     final collectionService = CollectionService();
     final size = MediaQuery.of(context).size;
-    final headerHeight = size.height * 0.23 + defaultPadding * 8;
+    const headerHeight = 114 + defaultPadding * 6;
     if (!isAdding) titleFocusNode.unfocus();
 
     return WillPopScope(
       onWillPop: () async {
         setState(() {
           isAdding = false;
+          controller.reverse();
         });
         return false;
       },
@@ -69,6 +78,7 @@ class _HomePageV2State extends State<HomePageV2> {
               ? AddBtn(
                   openAddForm: () {
                     setState(() {
+                      controller.forward();
                       isAdding = true;
                     });
                   },
@@ -106,8 +116,8 @@ class _HomePageV2State extends State<HomePageV2> {
                         ],
                       ),
                     ),
-                    toolbarHeight:
-                        isAdding ? 0 : headerHeight + defaultPadding * 2,
+                    toolbarHeight: (1 - controller.value) *
+                        (headerHeight + defaultPadding * 2),
                     backgroundColor: Colors.transparent,
                     leading: const SizedBox(),
                     leadingWidth: 0,
@@ -127,6 +137,7 @@ class _HomePageV2State extends State<HomePageV2> {
                         onTap: () {
                           titleFocusNode.unfocus();
                           setState(() {
+                            controller.reverse();
                             isAdding = false;
                           });
                         },
@@ -153,18 +164,18 @@ class _HomePageV2State extends State<HomePageV2> {
   Widget _buildAddForm(BuildContext context,
       CollectionService collectionService, double headerHeight) {
     final size = MediaQuery.of(context).size;
+    double top = size.height * 0.4 - MediaQuery.of(context).viewInsets.bottom;
+
     return AnimatedPositioned(
       duration: const Duration(milliseconds: 400),
       left: 0,
       right: 0,
-      top: isAdding
-          ? size.height * 0.5 - MediaQuery.of(context).viewInsets.bottom
-          : size.height,
+      top: isAdding ? top : size.height,
       child: ClipRRect(
         borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(22), topRight: Radius.circular(22)),
         child: Container(
-          height: size.height * 0.5,
+          height: size.height,
           padding: const EdgeInsets.symmetric(
               horizontal: defaultPadding * 2, vertical: defaultPadding * 2),
           decoration: const BoxDecoration(
@@ -173,57 +184,60 @@ class _HomePageV2State extends State<HomePageV2> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const Text(
+                'Adding your own collection',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: defaultPadding * 2),
               Row(
                 children: [
                   Expanded(
-                    child: Text(
-                      'Adding your own collection',
-                      style: TextStyle(
-                          fontSize: size.width * 0.07,
-                          fontWeight: FontWeight.w600),
+                    child: SizedBox(
+                      height: 38,
+                      child: TextField(
+                        focusNode: titleFocusNode,
+                        controller: titleController,
+                        onEditingComplete: () {
+                          if (titleController.text.isEmpty) {
+                            _titleEmptyToast();
+                            return;
+                          }
+                          _addingSuccessfully(collectionService);
+                        },
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ),
+                        decoration: const InputDecoration(
+                          labelText: 'Your title',
+                          focusedBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.black54, width: 1),
+                          ),
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: defaultPadding),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.black38, width: 1),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (titleController.text.isEmpty) {
-                          _titleEmptyToast();
-                          return;
-                        }
-                        _addingSuccessfully(collectionService);
-                      },
-                      child: const Text('Add'),
-                    ),
+                  const SizedBox(width: defaultPadding),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (titleController.text.isEmpty) {
+                        _titleEmptyToast();
+                        return;
+                      }
+                      _addingSuccessfully(collectionService);
+                    },
+                    child: const Text('Add'),
                   ),
                 ],
-              ),
-              const SizedBox(height: defaultPadding * 2),
-              ConstrainedBox(
-                constraints: const BoxConstraints(maxHeight: 80, minHeight: 40),
-                child: TextField(
-                  focusNode: titleFocusNode,
-                  controller: titleController,
-                  onEditingComplete: () {
-                    if (titleController.text.isEmpty) {
-                      _titleEmptyToast();
-                      return;
-                    }
-                    _addingSuccessfully(collectionService);
-                  },
-                  style: TextStyle(
-                    fontSize: size.height * 0.05,
-                  ),
-                  decoration: const InputDecoration(
-                    labelText: 'Your title',
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black54, width: 1),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black38, width: 1),
-                    ),
-                  ),
-                ),
               ),
             ],
           ),
@@ -236,6 +250,7 @@ class _HomePageV2State extends State<HomePageV2> {
     collectionService.addCollection(name: titleController.text);
     titleFocusNode.unfocus();
     setState(() {
+      controller.reverse();
       isAdding = false;
     });
     showToast(
