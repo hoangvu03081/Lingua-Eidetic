@@ -35,7 +35,7 @@ class _CardGroupState extends State<CardGroup> {
 
     return Column(
       children: [
-        TitleHeader(title: CollectionPage.titles[widget.index]!),
+        TitleHeader(title: CollectionPage.titles[widget.index + 1]!),
         AnimatedContainer(
           duration: const Duration(milliseconds: 600),
           height: widget.isExpand ? size.height * 0.5 : 0,

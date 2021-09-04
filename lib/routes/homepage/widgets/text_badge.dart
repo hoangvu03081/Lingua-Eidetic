@@ -7,11 +7,17 @@ class TextBadge extends StatelessWidget {
     required this.text,
     this.textColor = Colors.white,
     this.backColor = const Color(0xFF4E7FFF),
+    this.fontSize = 11,
+    this.padding = const EdgeInsets.all(defaultPadding),
+    this.fontWeight = FontWeight.w600,
   }) : super(key: key);
 
   final Color backColor;
   final Color textColor;
   final String text;
+  final double fontSize;
+  final EdgeInsets padding;
+  final FontWeight fontWeight;
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +27,13 @@ class TextBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(200),
         color: backColor,
       ),
-      padding: const EdgeInsets.all(defaultPadding),
+      padding: padding,
       child: Text(
         text,
         style: TextStyle(
           color: textColor,
-          fontWeight: FontWeight.w600,
-          fontSize: 11,
+          fontWeight: fontWeight,
+          fontSize: fontSize,
         ),
       ),
     );

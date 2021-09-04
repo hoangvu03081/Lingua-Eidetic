@@ -50,12 +50,12 @@ class ReviewService extends ChangeNotifier {
   late Future<List<QueryDocumentSnapshot<Object?>>> data =
       _cardService.availableCard;
 
-  final Map<int, LevelSystem> levelSystem = {
-    1: const LevelSystem(level: 1, cooldown: Duration(hours: 3), maxExp: 5),
-    2: const LevelSystem(level: 2, cooldown: Duration(hours: 6), maxExp: 4),
-    3: const LevelSystem(level: 3, cooldown: Duration(hours: 12), maxExp: 3),
-    4: const LevelSystem(level: 4, cooldown: Duration(hours: 24), maxExp: 2),
-    5: const LevelSystem(level: 5, cooldown: Duration(hours: 48), maxExp: 1),
+  static const Map<int, LevelSystem> levelSystem = {
+    1: LevelSystem(level: 1, cooldown: Duration(hours: 3), maxExp: 5),
+    2: LevelSystem(level: 2, cooldown: Duration(hours: 6), maxExp: 4),
+    3: LevelSystem(level: 3, cooldown: Duration(hours: 12), maxExp: 3),
+    4: LevelSystem(level: 4, cooldown: Duration(hours: 24), maxExp: 2),
+    5: LevelSystem(level: 5, cooldown: Duration(hours: 48), maxExp: 1),
   };
 
   late int size;

@@ -3,9 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:lingua_eidetic/constants.dart';
 import 'package:lingua_eidetic/models/memory_card.dart';
+import 'package:lingua_eidetic/routes/collection_page/collection_page.dart';
 import 'package:lingua_eidetic/routes/collection_page/widgets/caption_textfield.dart';
 import 'package:lingua_eidetic/routes/collection_page/widgets/title_header.dart';
+import 'package:lingua_eidetic/routes/homepage/widgets/text_badge.dart';
 import 'package:lingua_eidetic/routes/share_collection/widgets/appbar.dart';
+import 'package:lingua_eidetic/services/review_service.dart';
 
 class EditingCollectionPage extends StatelessWidget {
   const EditingCollectionPage({
@@ -23,6 +26,7 @@ class EditingCollectionPage extends StatelessWidget {
     final availIn = card.available.difference(DateTime.now());
     final hours = availIn.inHours;
     final minutes = availIn.inMinutes;
+    final size = MediaQuery.of(context).size;
 
     return GestureDetector(
       onTap: () {
@@ -61,14 +65,42 @@ class EditingCollectionPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: defaultPadding * 2),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextBadge(
+                      text: 'Level: ${CollectionPage.titles[card.level]}',
+                      fontSize: 16,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: defaultPadding,
+                        horizontal: defaultPadding * 1.5,
+                      ),
+                      backColor: const Color(0xFF75A4FF),
+                      fontWeight: FontWeight.bold,
+                    ),
+                    const SizedBox(width: defaultPadding * 2),
+                    TextBadge(
+                      text:
+                          'Exp: ${card.exp}/${ReviewService.levelSystem[card.level]?.maxExp}',
+                      fontSize: 16,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: defaultPadding,
+                        horizontal: defaultPadding * 1.5,
+                      ),
+                      backColor: const Color(0xFF75A4FF),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: defaultPadding * 2),
                 TitleHeader(
                   title: hours < 0
                       ? 'Available'
                       : hours == 0
                           ? minutes < 0
                               ? 'Available'
-                              : 'Cooldown: $minutes'
-                          : 'Cooldown: $hours',
+                              : 'Cooldown: $minutes minutes'
+                          : 'Cooldown: $hours hours',
                   backColor: const Color(0xFF2A3387),
                 ),
                 const SizedBox(height: defaultPadding * 2),

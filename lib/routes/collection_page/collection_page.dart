@@ -17,11 +17,11 @@ class CollectionPage extends StatefulWidget {
   final String id;
   final String title;
   static const Map<int, String> titles = {
-    0: 'Newcomer',
-    1: 'Spirited',
-    2: 'Seasoned',
-    3: 'Sage',
-    4: 'Onii chan'
+    1: 'Newcomer',
+    2: 'Spirited',
+    3: 'Seasoned',
+    4: 'Sage',
+    5: 'Onii chan'
   };
 
   @override
