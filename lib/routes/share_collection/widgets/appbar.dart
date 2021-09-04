@@ -5,6 +5,7 @@ PreferredSizeWidget getCustomAppBar(BuildContext context, String title,
   return AppBar(
     backgroundColor: Colors.transparent,
     elevation: 0,
+    titleSpacing: 0,
     leading: GestureDetector(
       onTap: () {
         Navigator.of(context).pop();

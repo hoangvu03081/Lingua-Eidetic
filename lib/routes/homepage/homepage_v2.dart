@@ -193,27 +193,7 @@ class _HomePageV2State extends State<HomePageV2> {
     titleFocusNode.unfocus();
     showToast(
       fToast,
-      Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25.0),
-          color: Colors.greenAccent,
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: const [
-            Icon(Icons.check),
-            SizedBox(width: 12.0),
-            Text(
-              "Successfully added the collection",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-      ),
+      const SuccessToast(successText: 'Successfully added the collection'),
       3,
       bottom: defaultPadding * 4,
       left: 0,

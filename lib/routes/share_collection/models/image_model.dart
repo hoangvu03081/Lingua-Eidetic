@@ -11,6 +11,9 @@ class ItemModel {
   String toString() {
     return '$index: $path';
   }
+
+  @override
+  int get hashCode => index ^ path.length;
 }
 
 class ImageModel extends ChangeNotifier {

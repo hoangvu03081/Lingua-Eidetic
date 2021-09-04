@@ -56,12 +56,16 @@ class _HeaderState extends State<Header> {
               ),
             ),
           ),
-          Text(
-            widget.title,
-            style: const TextStyle(
-              color: Color(0xFF172853),
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
+          Expanded(
+            child: Text(
+              widget.title,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Color(0xFF172853),
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           StreamBuilder<int>(
