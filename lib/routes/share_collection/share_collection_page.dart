@@ -7,6 +7,7 @@ import 'package:lingua_eidetic/constants.dart';
 import 'package:lingua_eidetic/routes/routes.dart';
 import 'package:lingua_eidetic/routes/share_collection/models/image_model.dart';
 import 'package:lingua_eidetic/routes/share_collection/widgets/appbar.dart';
+import 'package:lingua_eidetic/services/upload_service.dart';
 
 class ShareCollectionPage extends StatefulWidget {
   const ShareCollectionPage({Key? key}) : super(key: key);
@@ -27,6 +28,8 @@ class _ShareCollectionPageState extends State<ShareCollectionPage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final uploadService = UploadService();
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -35,7 +38,10 @@ class _ShareCollectionPageState extends State<ShareCollectionPage> {
         floatingActionButton: CircleAvatar(
           backgroundColor: const Color(0xFF172853),
           child: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              // TODO: Upload
+              // uploadService.uploadCollection(name: name, description: description, imagePath: imagePath)
+            },
             icon: const Icon(Icons.arrow_right_alt),
             color: Colors.white,
             padding: const EdgeInsets.all(defaultPadding),

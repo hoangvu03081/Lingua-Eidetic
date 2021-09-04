@@ -11,7 +11,12 @@ class AuthenticationPageBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final bottom = MediaQuery.of(context).viewInsets.bottom;
-
+    const padding = EdgeInsets.only(
+      top: defaultPadding * 2.5,
+      bottom: defaultPadding * 2,
+      left: defaultPadding * 2,
+      right: defaultPadding * 2,
+    );
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -40,46 +45,22 @@ class AuthenticationPageBody extends StatelessWidget {
               // background
 
               SingleChildScrollView(
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    double marginHorizontal = 0;
-                    var padding = const EdgeInsets.only(
-                      top: defaultPadding * 2.5,
-                      bottom: defaultPadding * 2,
-                      left: defaultPadding * 2,
-                      right: defaultPadding * 2,
-                    );
-
-                    if (constraints.maxWidth >= 576 &&
-                        constraints.maxWidth < 768) {
-                      marginHorizontal = size.width * 0.05;
-                      padding = const EdgeInsets.only(
-                        top: defaultPadding * 4,
-                        bottom: defaultPadding * 2,
-                        left: defaultPadding * 2,
-                        right: defaultPadding * 2,
-                      );
-                    } else if (constraints.maxWidth >= 768) {
-                      marginHorizontal = size.width * 0.1;
-                      padding = const EdgeInsets.only(
-                        top: defaultPadding * 8,
-                        bottom: defaultPadding * 6.4,
-                        left: defaultPadding * 6.4,
-                        right: defaultPadding * 6.4,
-                      );
-                    }
-                    return Container(
-                      margin: EdgeInsets.only(
-                        top: size.height * 0.1,
-                        bottom: defaultPadding * 2,
-                        left: marginHorizontal,
-                        right: marginHorizontal,
+                child: Container(
+                  width: double.infinity,
+                  margin: EdgeInsets.only(
+                    top: size.height * 0.1,
+                    bottom: defaultPadding * 2,
+                  ),
+                  child: Column(
+                    children: [
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 330),
+                        child: const AuthCard(
+                          padding: padding,
+                        ),
                       ),
-                      child: AuthCard(
-                        padding: padding,
-                      ),
-                    );
-                  },
+                    ],
+                  ),
                 ),
               ),
             ],

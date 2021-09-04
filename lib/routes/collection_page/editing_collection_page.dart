@@ -24,64 +24,69 @@ class EditingCollectionPage extends StatelessWidget {
     final hours = availIn.inHours;
     final minutes = availIn.inMinutes;
 
-    return Scaffold(
-      appBar: getCustomAppBar(context, 'Collection name'),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: defaultPadding * 2,
-            vertical: defaultPadding * 2,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(22),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.25),
-                      offset: const Offset(0, 4),
-                      blurRadius: 4,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: getCustomAppBar(context, 'Collection name'),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: defaultPadding * 2,
+              vertical: defaultPadding * 2,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(22),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.25),
+                        offset: const Offset(0, 4),
+                        blurRadius: 4,
+                      ),
+                    ],
+                  ),
+                  height: 300,
+                  width: double.infinity,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(22),
+                    child: Image.file(
+                      File(imagePath),
+                      fit: BoxFit.cover,
                     ),
-                  ],
-                ),
-                height: 300,
-                width: double.infinity,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(22),
-                  child: Image.file(
-                    File(imagePath),
-                    fit: BoxFit.cover,
                   ),
                 ),
-              ),
-              const SizedBox(height: defaultPadding * 2),
-              TitleHeader(
-                title: hours < 0
-                    ? 'Available'
-                    : hours == 0
-                        ? minutes < 0
-                            ? 'Available'
-                            : 'Cooldown: $minutes'
-                        : 'Cooldown: $hours',
-                backColor: const Color(0xFF2A3387),
-              ),
-              const SizedBox(height: defaultPadding * 2),
-              const Padding(
-                padding: EdgeInsets.only(left: defaultPadding),
-                child: Text(
-                  'Captions',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF172853),
+                const SizedBox(height: defaultPadding * 2),
+                TitleHeader(
+                  title: hours < 0
+                      ? 'Available'
+                      : hours == 0
+                          ? minutes < 0
+                              ? 'Available'
+                              : 'Cooldown: $minutes'
+                          : 'Cooldown: $hours',
+                  backColor: const Color(0xFF2A3387),
+                ),
+                const SizedBox(height: defaultPadding * 2),
+                const Padding(
+                  padding: EdgeInsets.only(left: defaultPadding),
+                  child: Text(
+                    'Captions',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF172853),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: defaultPadding),
-              const CaptionTextField(),
-            ],
+                const SizedBox(height: defaultPadding),
+                CaptionTextField(card: card),
+              ],
+            ),
           ),
         ),
       ),

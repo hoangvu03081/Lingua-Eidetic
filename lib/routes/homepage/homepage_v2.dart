@@ -17,11 +17,7 @@ class HomePageV2 extends StatefulWidget {
   _HomePageV2State createState() => _HomePageV2State();
 }
 
-class _HomePageV2State extends State<HomePageV2>
-    with SingleTickerProviderStateMixin {
-  late final controller = AnimationController(
-      duration: const Duration(milliseconds: 400), vsync: this);
-  bool isAdding = false;
+class _HomePageV2State extends State<HomePageV2> {
   FocusNode titleFocusNode = FocusNode();
   TextEditingController titleController = TextEditingController();
   late final FToast fToast;
@@ -32,16 +28,12 @@ class _HomePageV2State extends State<HomePageV2>
     super.initState();
     fToast = FToast();
     fToast.init(context);
-    controller.addListener(() {
-      setState(() {});
-    });
   }
 
   @override
   void dispose() {
     titleController.dispose();
     titleFocusNode.dispose();
-    controller.dispose();
     super.dispose();
   }
 
@@ -53,19 +45,15 @@ class _HomePageV2State extends State<HomePageV2>
     });
   }
 
+  final collectionService = CollectionService();
   @override
   Widget build(BuildContext context) {
-    final collectionService = CollectionService();
     final size = MediaQuery.of(context).size;
     const headerHeight = 114 + defaultPadding * 6;
-    if (!isAdding) titleFocusNode.unfocus();
 
     return WillPopScope(
       onWillPop: () async {
-        setState(() {
-          isAdding = false;
-          controller.reverse();
-        });
+        removeOverlay();
         return false;
       },
       child: GestureDetector(
@@ -74,16 +62,11 @@ class _HomePageV2State extends State<HomePageV2>
         },
         child: Scaffold(
           backgroundColor: const Color(0xFFEDF2F5),
-          bottomNavigationBar: !isAdding
-              ? AddBtn(
-                  openAddForm: () {
-                    setState(() {
-                      controller.forward();
-                      isAdding = true;
-                    });
-                  },
-                )
-              : null,
+          bottomNavigationBar: AddBtn(
+            openAddForm: () {
+              _buildAddFormV2(context);
+            },
+          ),
           body: SafeArea(
             child: NestedScrollView(
               headerSliverBuilder:
@@ -93,67 +76,26 @@ class _HomePageV2State extends State<HomePageV2>
                     titleSpacing: 0,
                     title: SizedBox(
                       height: headerHeight + defaultPadding * 2,
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            top: isAdding ? 0 : -headerHeight,
-                            bottom: 0,
-                            child: Container(
-                              width: size.width,
-                              height: headerHeight,
-                              color: isAdding
-                                  ? Colors.black38
-                                  : Colors.transparent,
-                            ),
-                          ),
-                          Positioned(
-                            top: defaultPadding * 2,
-                            left: defaultPadding,
-                            right: defaultPadding,
-                            child:
-                                Header(height: headerHeight, onQuery: onQuery),
-                          ),
-                        ],
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          top: defaultPadding * 2,
+                          left: defaultPadding,
+                          right: defaultPadding,
+                        ),
+                        child: Header(height: headerHeight, onQuery: onQuery),
                       ),
                     ),
-                    toolbarHeight: (1 - controller.value) *
-                        (headerHeight + defaultPadding * 2),
+                    toolbarHeight: headerHeight + defaultPadding * 2,
                     backgroundColor: Colors.transparent,
                     leading: const SizedBox(),
                     leadingWidth: 0,
                   )
                 ];
               },
-              body: Stack(children: [
-                CollectionList(
-                  data: collectionService.data,
-                  query: _query,
-                ),
-                Positioned(
-                  top: isAdding ? 0 : size.height,
-                  child: Stack(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          titleFocusNode.unfocus();
-                          setState(() {
-                            controller.reverse();
-                            isAdding = false;
-                          });
-                        },
-                        child: Container(
-                          width: size.width,
-                          height: size.height,
-                          decoration: const BoxDecoration(
-                            color: Colors.black38,
-                          ),
-                        ),
-                      ),
-                      _buildAddForm(context, collectionService, headerHeight),
-                    ],
-                  ),
-                ),
-              ]),
+              body: CollectionList(
+                data: collectionService.data,
+                query: _query,
+              ),
             ),
           ),
         ),
@@ -161,98 +103,94 @@ class _HomePageV2State extends State<HomePageV2>
     );
   }
 
-  Widget _buildAddForm(BuildContext context,
-      CollectionService collectionService, double headerHeight) {
-    final size = MediaQuery.of(context).size;
-    double top = size.height * 0.4 - MediaQuery.of(context).viewInsets.bottom;
+  // Widget _buildAddForm(BuildContext context,
+  //     CollectionService collectionService, double headerHeight) {
+  //   final size = MediaQuery.of(context).size;
+  //   double top = size.height * 0.4 - MediaQuery.of(context).viewInsets.bottom;
 
-    return AnimatedPositioned(
-      duration: const Duration(milliseconds: 400),
-      left: 0,
-      right: 0,
-      top: isAdding ? top : size.height,
-      child: ClipRRect(
-        borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(22), topRight: Radius.circular(22)),
-        child: Container(
-          height: size.height,
-          padding: const EdgeInsets.symmetric(
-              horizontal: defaultPadding * 2, vertical: defaultPadding * 2),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Adding your own collection',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: defaultPadding * 2),
-              Row(
-                children: [
-                  Expanded(
-                    child: SizedBox(
-                      height: 38,
-                      child: TextField(
-                        focusNode: titleFocusNode,
-                        controller: titleController,
-                        onEditingComplete: () {
-                          if (titleController.text.isEmpty) {
-                            _titleEmptyToast();
-                            return;
-                          }
-                          _addingSuccessfully(collectionService);
-                        },
-                        style: const TextStyle(
-                          fontSize: 16,
-                        ),
-                        decoration: const InputDecoration(
-                          labelText: 'Your title',
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.black54, width: 1),
-                          ),
-                          contentPadding:
-                              EdgeInsets.symmetric(horizontal: defaultPadding),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.black38, width: 1),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: defaultPadding),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (titleController.text.isEmpty) {
-                        _titleEmptyToast();
-                        return;
-                      }
-                      _addingSuccessfully(collectionService);
-                    },
-                    child: const Text('Add'),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  //   return AnimatedPositioned(
+  //     duration: const Duration(milliseconds: 400),
+  //     left: 0,
+  //     right: 0,
+  //     top: isAdding ? top : size.height,
+  //     child: ClipRRect(
+  //       borderRadius: const BorderRadius.only(
+  //           topLeft: Radius.circular(22), topRight: Radius.circular(22)),
+  //       child: Container(
+  //         height: size.height,
+  //         padding: const EdgeInsets.symmetric(
+  //             horizontal: defaultPadding * 2, vertical: defaultPadding * 2),
+  //         decoration: const BoxDecoration(
+  //           color: Colors.white,
+  //         ),
+  //         child: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: [
+  //             const Text(
+  //               'Adding your own collection',
+  //               style: TextStyle(
+  //                 fontSize: 24,
+  //                 fontWeight: FontWeight.w600,
+  //               ),
+  //             ),
+  //             const SizedBox(height: defaultPadding * 2),
+  //             Row(
+  //               children: [
+  //                 Expanded(
+  //                   child: SizedBox(
+  //                     height: 38,
+  //                     child: TextField(
+  //                       focusNode: titleFocusNode,
+  //                       controller: titleController,
+  //                       onEditingComplete: () {
+  //                         if (titleController.text.isEmpty) {
+  //                           _titleEmptyToast();
+  //                           return;
+  //                         }
+  //                         _addingSuccessfully(collectionService);
+  //                       },
+  //                       style: const TextStyle(
+  //                         fontSize: 16,
+  //                       ),
+  //                       decoration: const InputDecoration(
+  //                         labelText: 'Your title',
+  //                         focusedBorder: OutlineInputBorder(
+  //                           borderSide:
+  //                               BorderSide(color: Colors.black54, width: 1),
+  //                         ),
+  //                         contentPadding:
+  //                             EdgeInsets.symmetric(horizontal: defaultPadding),
+  //                         enabledBorder: OutlineInputBorder(
+  //                           borderSide:
+  //                               BorderSide(color: Colors.black38, width: 1),
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ),
+  //                 const SizedBox(width: defaultPadding),
+  //                 ElevatedButton(
+  //                   onPressed: () {
+  //                     if (titleController.text.isEmpty) {
+  //                       _titleEmptyToast();
+  //                       return;
+  //                     }
+  //                     _addingSuccessfully(collectionService);
+  //                   },
+  //                   child: const Text('Add'),
+  //                 ),
+  //               ],
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
-  void _addingSuccessfully(CollectionService collectionService) {
+  void _addingSuccessfully() {
     collectionService.addCollection(name: titleController.text);
     titleFocusNode.unfocus();
-    setState(() {
-      controller.reverse();
-      isAdding = false;
-    });
     showToast(
       fToast,
       Container(
@@ -266,7 +204,13 @@ class _HomePageV2State extends State<HomePageV2>
           children: const [
             Icon(Icons.check),
             SizedBox(width: 12.0),
-            Text("Successfully added the collection"),
+            Text(
+              "Successfully added the collection",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ],
         ),
       ),
@@ -280,6 +224,81 @@ class _HomePageV2State extends State<HomePageV2>
 
   void _titleEmptyToast() {
     showToast(
-        fToast, const ErrorToast(errorText: 'Title must not be empty'), 1);
+      fToast,
+      const ErrorToast(errorText: 'Title must not be empty'),
+      2,
+      bottom: defaultPadding * 4,
+      left: 0,
+      right: 0,
+    );
+  }
+
+  OverlayEntry? overlayEntry;
+  void removeOverlay() {
+    if (overlayEntry != null) {
+      overlayEntry!.remove();
+      overlayEntry = null;
+    }
+  }
+
+  Future<void> _buildAddFormV2(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Input your collection name below:'),
+          titlePadding: const EdgeInsets.only(
+            top: defaultPadding * 2,
+            left: defaultPadding * 2,
+            right: defaultPadding * 2,
+            bottom: 0,
+          ),
+          contentPadding: const EdgeInsets.only(
+            left: defaultPadding * 2,
+            right: defaultPadding * 2,
+            bottom: defaultPadding * 2,
+            top: defaultPadding,
+          ),
+          content: SingleChildScrollView(
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: TextField(
+                    controller: titleController,
+                    onSubmitted: (String value) {
+                      _addCollection();
+                    },
+                    style: const TextStyle(fontSize: 16),
+                    decoration: const InputDecoration(
+                      hintText: 'Collection name',
+                      isDense: true,
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: defaultPadding,
+                        vertical: defaultPadding / 2,
+                      ),
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    _addCollection();
+                  },
+                  child: const Text('Add'),
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _addCollection() {
+    if (titleController.text.isEmpty) {
+      _titleEmptyToast();
+      return;
+    }
+    _addingSuccessfully();
+    Navigator.of(context).pop();
   }
 }

@@ -38,13 +38,14 @@ class _CollectionCardV2State extends State<CollectionCardV2> {
         alignment: Alignment.centerRight,
         children: [
           GestureDetector(
-            onTap: () {
+            onTap: () async {
               FocusScope.of(context).unfocus();
-              Navigator.of(context).pushNamed(RouteGenerator.COLLECTION_PAGE,
-                  arguments: {
-                    'id': (widget.key as ValueKey).value,
-                    'title': widget.title
-                  });
+              await Navigator.of(context)
+                  .pushNamed(RouteGenerator.COLLECTION_PAGE, arguments: {
+                'id': (widget.key as ValueKey).value,
+                'title': widget.title
+              });
+              if (mounted) setState(() {});
             },
             onHorizontalDragStart: (details) {
               startX = details.globalPosition.dx;
@@ -149,7 +150,8 @@ class _CollectionCardV2State extends State<CollectionCardV2> {
                 height: 28,
                 child: Center(
                   child: Text(
-                    '${(widget.avail / (widget.total == 0 ? widget.avail : widget.total) * 100).toStringAsFixed(1)}%',
+                    '${getPercentage(widget.avail, widget.total)}%',
+                    // '${}%',
                     style: const TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 10,
@@ -187,5 +189,12 @@ class _CollectionCardV2State extends State<CollectionCardV2> {
         ],
       ),
     );
+  }
+
+  int getPercentage(int avail, int total) {
+    if (widget.total != 0) {
+      return ((widget.avail / widget.total) * 100).toInt();
+    }
+    return 0;
   }
 }

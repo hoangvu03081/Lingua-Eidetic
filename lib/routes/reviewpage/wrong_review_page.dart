@@ -4,6 +4,7 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lingua_eidetic/models/memory_card.dart';
+import 'package:lingua_eidetic/routes/collection_page/widgets/caption_textfield.dart';
 import 'package:lingua_eidetic/services/card_service.dart';
 import 'package:lingua_eidetic/utilities/firestore_path.dart';
 import 'package:textfield_tags/textfield_tags.dart';
@@ -103,44 +104,52 @@ class WrongReviewPage extends StatelessWidget {
             SizedBox(
               height: size.height * 0.01,
             ),
-            Container(
+            // TODO: Check caption tags
+            SizedBox(
               width: size.width * 0.84,
-              height: size.height * 0.19,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xFFA1C4FD),
-                    Color(0xFFC2E9FB),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.all(Radius.circular(21)),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: TextFieldTags(
-                    initialTags: card.caption,
-                    tagsStyler: TagsStyler(
-                      tagTextPadding: EdgeInsets.symmetric(horizontal: 8),
-                      tagCancelIcon: const SizedBox(),
-                      tagDecoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                      ),
-                      tagTextStyle: const TextStyle(
-                        color: Color(0xFF465FB8),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    textFieldStyler: TextFieldStyler(
-                      textFieldEnabled: false,
-                      textFieldBorder: InputBorder.none,
-                    ),
-                    onTag: (_) {},
-                    onDelete: (_) {}),
+              child: CaptionTextField(
+                card: card,
+                canDelete: false,
               ),
             ),
+            // Container(
+            //   width: size.width * 0.84,
+            //   height: size.height * 0.19,
+            //   decoration: const BoxDecoration(
+            //     gradient: LinearGradient(
+            //       colors: [
+            //         Color(0xFFA1C4FD),
+            //         Color(0xFFC2E9FB),
+            //       ],
+            //       begin: Alignment.topLeft,
+            //       end: Alignment.bottomRight,
+            //     ),
+            //     borderRadius: BorderRadius.all(Radius.circular(21)),
+            //   ),
+            //   child: Padding(
+            //     padding: const EdgeInsets.all(5.0),
+            //     // child: TextFieldTags(
+            //     //     initialTags: card.caption,
+            //     //     tagsStyler: TagsStyler(
+            //     //       tagTextPadding: const EdgeInsets.symmetric(horizontal: 8),
+            //     //       tagCancelIcon: const SizedBox(),
+            //     //       tagDecoration: const BoxDecoration(
+            //     //         color: Colors.white,
+            //     //         borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            //     //       ),
+            //     //       tagTextStyle: const TextStyle(
+            //     //         color: Color(0xFF465FB8),
+            //     //         fontWeight: FontWeight.bold,
+            //     //       ),
+            //     //     ),
+            //     //     textFieldStyler: TextFieldStyler(
+            //     //       textFieldEnabled: false,
+            //     //       textFieldBorder: InputBorder.none,
+            //     //     ),
+            //     //     onTag: (_) {},
+            //     //     onDelete: (_) {}),
+            //   ),
+            // ),
             SizedBox(height: size.height * 0.05),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

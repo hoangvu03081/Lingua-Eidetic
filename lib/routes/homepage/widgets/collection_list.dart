@@ -31,72 +31,55 @@ class _CollectionListState extends State<CollectionList> {
           return const Text('Something went wrong');
         }
 
-        if (snapshot.connectionState == ConnectionState.waiting ||
-            !snapshot.hasData) {
-          if (_cached.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
-          }
+        if (snapshot.hasData) {
+          _cached.clear();
+          _ids.clear();
 
+          for (int i = 0; i < snapshot.data!.docs.length; i++) {
+            Collection item = Collection.fromMap(
+                snapshot.data!.docs[i].data() as Map<String, dynamic>);
+
+            if (item.name.toLowerCase().contains(widget.query.toLowerCase())) {
+              _cached.add(item);
+              _ids.add(snapshot.data!.docs[i].id);
+            }
+          }
           return ListView.builder(
             itemBuilder: (context, index) {
-              if (index < _cached.length &&
-                  _cached[index]
-                      .name
-                      .toLowerCase()
-                      .contains(widget.query.toLowerCase())) {
-                return CollectionCardV2(
-                  key: Key(_ids[index]),
-                  title: _cached[index].name,
-                  avail: 5,
-                  total: 27,
-                  remove: () {
-                    collectionService.deleteCollection(
-                        collectionId: _ids[index]);
-                  },
-                );
-              }
-              return const SizedBox();
+              String id = _ids[index];
+              Collection item = _cached[index];
+
+              return FutureBuilder<List<int>>(
+                builder:
+                    (BuildContext context, AsyncSnapshot<List<int>> avail) {
+                  if (avail.hasError) {
+                    return const Text('Something went wrong');
+                  }
+                  if (avail.hasData) {
+                    return CollectionCardV2(
+                      key: Key(id),
+                      title: item.name,
+                      avail: avail.data![0],
+                      total: avail.data![1],
+                      remove: () {
+                        collectionService.deleteCollection(collectionId: id);
+                      },
+                    );
+                  }
+                  return const SizedBox();
+                },
+                future: Future.wait([
+                  collectionService.getAvailableCollectionCount(
+                      collectionId: id),
+                  collectionService.getCollectionTotalCount(collectionId: id),
+                ]),
+              );
             },
-            itemCount: snapshot.data!.docs.length,
+            itemCount: _cached.length,
           );
         }
-
-        return ListView.builder(
-          itemBuilder: (context, index) {
-            String id = snapshot.data!.docs[index].id;
-
-            Collection item = Collection.fromMap(
-                snapshot.data!.docs[index].data() as Map<String, dynamic>);
-
-            if (index == 0) {
-              _cached.clear();
-              _ids.clear();
-            }
-            if (!_cached.contains(item)) {
-              _cached.add(item);
-              _ids.add(id);
-            }
-            if (item.name.toLowerCase().contains(widget.query.toLowerCase())) {
-              return FutureBuilder(
-                builder: (BuildContext context, AsyncSnapshot<int> avail) {
-                  return CollectionCardV2(
-                    key: Key(id),
-                    title: item.name,
-                    avail: avail.data!,
-                    total: 27,
-                    remove: () {
-                      collectionService.deleteCollection(collectionId: id);
-                    },
-                  );
-                },
-                future: collectionService.getAvailableCollectionCount(
-                    collectionId: id),
-                initialData: 0,
-              );
-            }
-            return const SizedBox();
-          },
-          itemCount: snapshot.data!.docs.length,
+        return const Center(
+          child: CircularProgressIndicator(),
         );
       },
     );

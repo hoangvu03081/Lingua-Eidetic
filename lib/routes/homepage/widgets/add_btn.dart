@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lingua_eidetic/widgets/collection_navbar.dart';
 import 'package:rive/rive.dart';
 
 class AddBtn extends StatefulWidget {
@@ -28,16 +29,13 @@ class _AddBtnState extends State<AddBtn> {
     return GestureDetector(
         onTapUp: onTapListener,
         child: SizedBox(
-          height: size.height * 0.12,
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
-            child: RiveAnimation.asset(
-              'assets/lingua_eidetic.riv',
-              fit: BoxFit.contain,
-              onInit: _onRiveInit,
-              artboard: 'navbar',
-              antialiasing: true,
-            ),
+          height: 50,
+          child: RiveAnimation.asset(
+            'assets/lingua_eidetic.riv',
+            fit: BoxFit.contain,
+            onInit: _onRiveInit,
+            artboard: 'navbar',
+            antialiasing: true,
           ),
         ));
   }
@@ -45,12 +43,8 @@ class _AddBtnState extends State<AddBtn> {
   void onTapListener(TapUpDetails details) {
     Size size = MediaQuery.of(context).size;
     final double x = details.localPosition.dx;
-    final double y = details.globalPosition.dy;
-
-    if (size.width * 0.45 <= x &&
-        x <= size.width * 0.55 &&
-        y >= size.height * 0.9 &&
-        y <= size.height * 0.97) {
+    final double y = details.localPosition.dy;
+    if (size.width * 0.45 <= x && x <= size.width * 0.55 && y >= 5 && y <= 40) {
       widget.openAddForm();
     }
   }

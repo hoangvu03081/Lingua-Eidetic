@@ -24,40 +24,31 @@ class ErrorToast extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Container(
-      width: size.width * 0.85,
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(25.0),
         color: Colors.redAccent,
-        boxShadow: const [
-          BoxShadow(blurRadius: 6, color: Colors.white),
-          BoxShadow(blurRadius: 4, color: Colors.black38),
-        ],
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.close,
-            color: Colors.white,
-            size: size.height * 0.1,
+          const Center(
+            child: Icon(
+              Icons.close,
+              color: Colors.white,
+            ),
           ),
-          const SizedBox(
-            width: 12.0,
-          ),
-          SizedBox(
-            width: size.width * 0.85 - size.height * 0.1 - 60,
-            child: Text(
-              errorText.toUpperCase().replaceAll(
-                  RegExp(
-                    r'[^\s\w]',
-                  ),
-                  ' '),
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: size.height * 0.05,
-                fontWeight: FontWeight.bold,
-              ),
+          const SizedBox(width: 12.0),
+          Text(
+            errorText.toUpperCase().replaceAll(
+                RegExp(
+                  r'[^\s\w]',
+                ),
+                ' '),
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ],

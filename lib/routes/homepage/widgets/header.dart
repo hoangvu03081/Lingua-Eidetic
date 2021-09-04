@@ -1,7 +1,9 @@
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lingua_eidetic/constants.dart';
+import 'package:lingua_eidetic/routes/routes.dart';
 import 'package:lingua_eidetic/services/auth_service.dart';
 import 'package:lingua_eidetic/widgets/search_box.dart';
 
@@ -35,10 +37,30 @@ class Header extends StatelessWidget {
                 height: 50,
                 child: Row(
                   children: [
-                    CircleAvatar(
-                      radius: 20,
-                      backgroundImage: NetworkImage(urlImage ??
-                          'https://github.com/hoangvu03081/Lingua-Eidetic/blob/main/assets/images/hacker.png?raw=true'),
+                    FutureBuilder(
+                      future: Connectivity().checkConnectivity(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return const Text('Something went wrong');
+                        }
+                        if (snapshot.hasData) {
+                          if (snapshot.data != ConnectivityResult.none) {
+                            return CircleAvatar(
+                              radius: 20,
+                              backgroundImage: NetworkImage(urlImage ??
+                                  'https://github.com/hoangvu03081/Lingua-Eidetic/blob/main/assets/images/hacker.png?raw=true'),
+                            );
+                          }
+                          return const CircleAvatar(
+                            radius: 20,
+                            backgroundImage:
+                                AssetImage('asset/images/hacker.png'),
+                          );
+                        }
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      },
                     ),
                     const SizedBox(width: defaultPadding),
                     Expanded(
@@ -46,7 +68,7 @@ class Header extends StatelessWidget {
                         'Hi, $username!',
                         style: GoogleFonts.montserrat(
                           textStyle: const TextStyle(
-                            fontSize: 20,
+                            fontSize: 24,
                             color: Colors.black,
                             fontWeight: FontWeight.w700,
                           ),
@@ -94,6 +116,8 @@ class Header extends StatelessWidget {
                         onSelected: (int value) {
                           switch (value) {
                             case 1:
+                              Navigator.of(context)
+                                  .pushNamed(RouteGenerator.COMMUNITY_PAGE);
 
                               /// TODO: COMMUNITY HERE
                               break;
@@ -117,7 +141,7 @@ class Header extends StatelessWidget {
                 child: Text(
                   'Collections',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 22,
                     fontWeight: FontWeight.w600,
                     color: Colors.black,
                   ),

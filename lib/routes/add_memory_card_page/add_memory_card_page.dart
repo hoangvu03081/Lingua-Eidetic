@@ -119,10 +119,6 @@ class _AddMemoryCardPageState extends State<AddMemoryCardPage> {
                       });
                     },
                     itemBuilder: (BuildContext context, int index) {
-                      // return Image.network(
-                      //   "https://via.placeholder.com/288x188",
-                      //   fit: BoxFit.fill,
-                      // );
                       return Image.file(
                         File(widget.images![index]),
                         fit: BoxFit.cover,
@@ -154,6 +150,7 @@ class _AddMemoryCardPageState extends State<AddMemoryCardPage> {
                     ),
                   ),
                   const SizedBox(height: defaultPadding),
+                  // TODO: Change to tag textfield
                   Container(
                     height: 100,
                     child: TextField(
