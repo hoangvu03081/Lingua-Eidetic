@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lingua_eidetic/models/comment.dart';
 import 'package:lingua_eidetic/repositories/comment_repository.dart';
 import 'package:lingua_eidetic/services/auth_service.dart';
@@ -8,7 +9,7 @@ class CommentService {
   final CommentRepository _repository = CommentRepository();
   final Auth _auth = Auth();
 
-  Stream get data =>
+  Stream<QuerySnapshot> get data =>
       _repository.collectionStream(collectionId: communityService.current);
 
   Future<void> comment(String content) async {

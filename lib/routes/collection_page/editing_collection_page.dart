@@ -3,9 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:lingua_eidetic/constants.dart';
 import 'package:lingua_eidetic/models/memory_card.dart';
+import 'package:lingua_eidetic/routes/collection_page/collection_page.dart';
 import 'package:lingua_eidetic/routes/collection_page/widgets/caption_textfield.dart';
 import 'package:lingua_eidetic/routes/collection_page/widgets/title_header.dart';
+import 'package:lingua_eidetic/routes/homepage/widgets/text_badge.dart';
 import 'package:lingua_eidetic/routes/share_collection/widgets/appbar.dart';
+import 'package:lingua_eidetic/services/review_service.dart';
 
 class EditingCollectionPage extends StatelessWidget {
   const EditingCollectionPage({
@@ -23,65 +26,102 @@ class EditingCollectionPage extends StatelessWidget {
     final availIn = card.available.difference(DateTime.now());
     final hours = availIn.inHours;
     final minutes = availIn.inMinutes;
+    final size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      appBar: getCustomAppBar(context, 'Collection name'),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: defaultPadding * 2,
-            vertical: defaultPadding * 2,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(22),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.25),
-                      offset: const Offset(0, 4),
-                      blurRadius: 4,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: getCustomAppBar(context, 'Collection name'),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: defaultPadding * 2,
+              vertical: defaultPadding * 2,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(22),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.25),
+                        offset: const Offset(0, 4),
+                        blurRadius: 4,
+                      ),
+                    ],
+                  ),
+                  height: 300,
+                  width: double.infinity,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(22),
+                    child: Image.file(
+                      File(imagePath),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: defaultPadding * 2),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextBadge(
+                      text: 'Level: ${CollectionPage.titles[card.level]}',
+                      fontSize: 14,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: defaultPadding,
+                        horizontal: defaultPadding * 1.5,
+                      ),
+                      backColor: const Color(0xFF75A4FF),
+                      fontWeight: FontWeight.bold,
+                    ),
+                    const SizedBox(width: defaultPadding * 2),
+                    TextBadge(
+                      text:
+                          'Exp: ${card.exp}/${ReviewService.levelSystem[card.level]?.maxExp}',
+                      fontSize: 14,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: defaultPadding,
+                        horizontal: defaultPadding * 1.5,
+                      ),
+                      backColor: const Color(0xFF75A4FF),
+                      fontWeight: FontWeight.bold,
                     ),
                   ],
                 ),
-                height: 300,
-                width: double.infinity,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(22),
-                  child: Image.file(
-                    File(imagePath),
-                    fit: BoxFit.cover,
+                const SizedBox(height: defaultPadding * 2),
+                TitleHeader(
+                  title: hours < 0
+                      ? 'Available'
+                      : hours == 0
+                          ? minutes < 0
+                              ? 'Available'
+                              : 'Cooldown: $minutes minutes'
+                          : 'Cooldown: $hours hours',
+                  backColor: const Color(0xFF2A3387),
+                ),
+                const SizedBox(height: defaultPadding * 2),
+                const Padding(
+                  padding: EdgeInsets.only(left: defaultPadding),
+                  child: Text(
+                    'Captions',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF172853),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: defaultPadding * 2),
-              TitleHeader(
-                title: hours < 0
-                    ? 'Available'
-                    : hours == 0
-                        ? minutes < 0
-                            ? 'Available'
-                            : 'Cooldown: $minutes'
-                        : 'Cooldown: $hours',
-                backColor: const Color(0xFF2A3387),
-              ),
-              const SizedBox(height: defaultPadding * 2),
-              const Padding(
-                padding: EdgeInsets.only(left: defaultPadding),
-                child: Text(
-                  'Captions',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF172853),
-                  ),
+                const SizedBox(height: defaultPadding),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(minHeight: 155),
+                  child: CaptionTextField(card: card),
                 ),
-              ),
-              const SizedBox(height: defaultPadding),
-              const CaptionTextField(),
-            ],
+              ],
+            ),
           ),
         ),
       ),

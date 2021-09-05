@@ -13,12 +13,14 @@ class CollectionCardV2 extends StatefulWidget {
     required this.avail,
     required this.total,
     required this.remove,
+    required this.setParentState,
   }) : super(key: key);
 
   final String title;
   final int avail;
   final int total;
   final VoidCallback remove;
+  final VoidCallback setParentState;
 
   @override
   _CollectionCardV2State createState() => _CollectionCardV2State();
@@ -44,7 +46,9 @@ class _CollectionCardV2State extends State<CollectionCardV2> {
                   arguments: {
                     'id': (widget.key as ValueKey).value,
                     'title': widget.title
-                  });
+                  }).then((value) {
+                widget.setParentState();
+              });
             },
             onHorizontalDragStart: (details) {
               startX = details.globalPosition.dx;
@@ -149,7 +153,8 @@ class _CollectionCardV2State extends State<CollectionCardV2> {
                 height: 28,
                 child: Center(
                   child: Text(
-                    '${(widget.avail / (widget.total == 0 ? widget.avail : widget.total) * 100).toStringAsFixed(1)}%',
+                    '${getPercentage(widget.avail, widget.total)}%',
+                    // '${}%',
                     style: const TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 10,
@@ -187,5 +192,12 @@ class _CollectionCardV2State extends State<CollectionCardV2> {
         ],
       ),
     );
+  }
+
+  int getPercentage(int avail, int total) {
+    if (widget.total != 0) {
+      return ((widget.avail / widget.total) * 100).toInt();
+    }
+    return 0;
   }
 }

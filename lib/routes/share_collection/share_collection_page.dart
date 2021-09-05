@@ -7,6 +7,7 @@ import 'package:lingua_eidetic/constants.dart';
 import 'package:lingua_eidetic/routes/routes.dart';
 import 'package:lingua_eidetic/routes/share_collection/models/image_model.dart';
 import 'package:lingua_eidetic/routes/share_collection/widgets/appbar.dart';
+import 'package:lingua_eidetic/services/upload_service.dart';
 
 class ShareCollectionPage extends StatefulWidget {
   const ShareCollectionPage({Key? key}) : super(key: key);
@@ -23,10 +24,14 @@ class _ShareCollectionPageState extends State<ShareCollectionPage> {
   );
 
   final List<ItemModel> imagePaths = [];
+  final nameController = TextEditingController();
+  final descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final uploadService = UploadService();
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -35,7 +40,17 @@ class _ShareCollectionPageState extends State<ShareCollectionPage> {
         floatingActionButton: CircleAvatar(
           backgroundColor: const Color(0xFF172853),
           child: IconButton(
-            onPressed: () {},
+            onPressed: () async {
+              // TODO: Check Upload
+              await uploadService.uploadCollection(
+                name: nameController.text,
+                description: descriptionController.text,
+                imagePath: imagePaths
+                    .map<String>((ItemModel item) => item.path)
+                    .toList(),
+              );
+              Navigator.of(context).pop();
+            },
             icon: const Icon(Icons.arrow_right_alt),
             color: Colors.white,
             padding: const EdgeInsets.all(defaultPadding),
@@ -49,16 +64,25 @@ class _ShareCollectionPageState extends State<ShareCollectionPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildHeader('Collection Name'),
-                _buildTextField(maxLines: 1, hintMaxLines: 2, height: 50),
+                _buildTextField(
+                  maxLines: 1,
+                  hintMaxLines: 2,
+                  height: 50,
+                  controller: nameController,
+                ),
                 const SizedBox(height: defaultPadding * 3),
                 _buildHeader('Description'),
-                _buildTextField(hintMaxLines: 5, height: 100),
+                _buildTextField(
+                  hintMaxLines: 5,
+                  height: 100,
+                  controller: descriptionController,
+                ),
                 const SizedBox(height: defaultPadding * 2),
                 _buildHeader('Description images'),
                 const SizedBox(height: defaultPadding),
                 if (imagePaths.isNotEmpty)
                   SizedBox(
-                    height: 200,
+                    height: 300,
                     child: Swiper(
                       itemBuilder: (BuildContext context, int index) {
                         return Image.file(
@@ -150,8 +174,12 @@ class _ShareCollectionPageState extends State<ShareCollectionPage> {
     );
   }
 
-  Widget _buildTextField(
-      {int? maxLines, required int hintMaxLines, required double height}) {
+  Widget _buildTextField({
+    int? maxLines,
+    required int hintMaxLines,
+    required double height,
+    required TextEditingController controller,
+  }) {
     return Container(
       height: height,
       decoration: BoxDecoration(
@@ -167,6 +195,7 @@ class _ShareCollectionPageState extends State<ShareCollectionPage> {
       ),
       child: TextField(
         maxLines: maxLines,
+        controller: controller,
         decoration: InputDecoration(
           hintMaxLines: hintMaxLines,
           border: InputBorder.none,

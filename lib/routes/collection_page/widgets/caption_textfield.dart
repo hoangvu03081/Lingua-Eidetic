@@ -1,14 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:lingua_eidetic/constants.dart';
+import 'package:lingua_eidetic/models/memory_card.dart';
 
 class CaptionTextField extends StatefulWidget {
-  const CaptionTextField({Key? key}) : super(key: key);
+  const CaptionTextField({
+    Key? key,
+    required this.card,
+    this.canDelete = true,
+    this.canAdding = true,
+  }) : super(key: key);
+  final MemoryCard card;
+  final bool canDelete;
+  final bool canAdding;
 
   @override
   _CaptionTextFieldState createState() => _CaptionTextFieldState();
 }
 
 class _CaptionTextFieldState extends State<CaptionTextField> {
+  final List<String> _items = [];
+  final _controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _items.addAll(widget.card.caption);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -25,80 +50,66 @@ class _CaptionTextFieldState extends State<CaptionTextField> {
           ],
         ),
       ),
-      child: const CustomTextField(),
-    );
-  }
-}
-
-class CustomTextField extends StatefulWidget {
-  const CustomTextField({Key? key}) : super(key: key);
-
-  @override
-  _CustomTextFieldState createState() => _CustomTextFieldState();
-}
-
-class _CustomTextFieldState extends State<CustomTextField> {
-  final List<String> _items = ['first'];
-  final _controller = TextEditingController();
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      spacing: defaultPadding,
-      children: [
-        ..._items.map<Widget>(
-          (item) => SizedBox(
-            height: 45,
-            child: InputChip(
-              label: Text(
-                item,
-                style: const TextStyle(
-                  color: Color(0xFF465FB8),
-                  fontWeight: FontWeight.w600,
+      child: Wrap(
+        spacing: defaultPadding,
+        children: [
+          ..._items.map<Widget>(
+            (item) => SizedBox(
+              height: 45,
+              child: InputChip(
+                label: Text(
+                  item,
+                  style: const TextStyle(
+                    color: Color(0xFF465FB8),
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              backgroundColor: Colors.white30,
-              labelPadding: const EdgeInsets.only(left: 4, right: 2),
-              deleteIconColor: const Color(0xFF172853),
-              pressElevation: 0,
-              // labelStyle: TextStyle(),
-              onPressed: () {},
-              onDeleted: () {},
-            ),
-          ),
-        ),
-        Transform.translate(
-          offset: const Offset(0, -2),
-          child: SizedBox(
-            height: 40,
-            child: IntrinsicWidth(
-              child: TextField(
-                controller: _controller,
-                decoration: const InputDecoration(
-                  hintText: '+ Caption',
-                  border: InputBorder.none,
-                  focusedBorder: UnderlineInputBorder(),
-                  contentPadding: EdgeInsets.zero,
-                ),
-                onEditingComplete: () {},
-                onSubmitted: (String value) {
-                  setState(() {
-                    _items.add(value);
-                  });
-                  _controller.clear();
-                },
+                visualDensity: VisualDensity.compact,
+                backgroundColor: Colors.white30,
+                labelPadding:
+                    EdgeInsets.only(left: 4, right: widget.canDelete ? 2 : 4),
+                deleteIconColor: widget.canDelete
+                    ? const Color(0xFF172853)
+                    : Colors.transparent,
+                pressElevation: 0,
+                onPressed: () {},
+                onDeleted: widget.canDelete
+                    ? () {
+                        setState(() {
+                          _items.remove(item);
+                        });
+                      }
+                    : null,
               ),
             ),
           ),
-        ),
-      ],
+          if (widget.canAdding)
+            Transform.translate(
+              offset: const Offset(0, -2),
+              child: SizedBox(
+                height: 40,
+                child: IntrinsicWidth(
+                  child: TextField(
+                    controller: _controller,
+                    decoration: const InputDecoration(
+                      hintText: '+ Caption',
+                      border: InputBorder.none,
+                      focusedBorder: UnderlineInputBorder(),
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                    onEditingComplete: () {},
+                    onSubmitted: (String value) {
+                      setState(() {
+                        _items.add(value);
+                      });
+                      _controller.clear();
+                    },
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

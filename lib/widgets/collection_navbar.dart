@@ -61,18 +61,15 @@ class _CollectionNavbarState extends State<CollectionNavbar> {
     Size size = MediaQuery.of(context).size;
     return GestureDetector(
         onTapUp: onTapListener,
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
-          child: SizedBox(
-            height: size.height * 0.1,
-            child: RiveAnimation.asset(
-              'assets/lingua_eidetic.riv',
-              fit: BoxFit.contain,
-              onInit: _onRiveInit,
-              //TODO: Change artboard name
-              artboard: 'navbar',
-              antialiasing: true,
-            ),
+        child: SizedBox(
+          height: 50,
+          child: RiveAnimation.asset(
+            'assets/lingua_eidetic.riv',
+            fit: BoxFit.contain,
+            onInit: _onRiveInit,
+            //TODO: Change artboard name
+            artboard: 'navbar',
+            antialiasing: true,
           ),
         ));
   }

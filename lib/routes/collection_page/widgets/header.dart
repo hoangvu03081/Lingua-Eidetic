@@ -56,40 +56,30 @@ class _HeaderState extends State<Header> {
               ),
             ),
           ),
-          Text(
-            widget.title,
-            style: const TextStyle(
-              color: Color(0xFF172853),
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
+          Expanded(
+            child: Text(
+              widget.title,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Color(0xFF172853),
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           StreamBuilder<int>(
               stream: cardService.getAvailableCardCount(),
               builder: (context, snapshot) {
                 if (snapshot.hasData && snapshot.data == 0) {
-                  return const SizedBox(
+                  return SizedBox(
                     width: 60 + defaultPadding,
-                    child: Icon(
-                      Icons.backup,
-                      size: 30,
-                      color: Color(0x00000000),
-                    ),
+                    child: _buildUploadBtn(context),
                   );
                 } else {
                   return Row(
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context)
-                              .pushNamed(RouteGenerator.SHARE_COLLECTION_PAGE);
-                        },
-                        child: const Icon(
-                          Icons.backup,
-                          size: 30,
-                          color: Color(0xFF172853),
-                        ),
-                      ),
+                      _buildUploadBtn(context),
                       const SizedBox(width: defaultPadding),
                       GestureDetector(
                         onTap: () {
@@ -107,6 +97,19 @@ class _HeaderState extends State<Header> {
                 }
               })
         ],
+      ),
+    );
+  }
+
+  Widget _buildUploadBtn(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).pushNamed(RouteGenerator.SHARE_COLLECTION_PAGE);
+      },
+      child: const Icon(
+        Icons.backup,
+        size: 30,
+        color: Color(0xFF172853),
       ),
     );
   }

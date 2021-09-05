@@ -2,9 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lingua_eidetic/models/memory_card.dart';
+import 'package:lingua_eidetic/models/shared_collection.dart';
 import 'package:lingua_eidetic/repositories/card_repository.dart';
 import 'package:lingua_eidetic/repositories/collection_repository.dart';
 import 'package:lingua_eidetic/routes/collection_page/editing_collection_page.dart';
+import 'package:lingua_eidetic/routes/community/community_download_page.dart';
 import 'package:lingua_eidetic/routes/community/community_page.dart';
 import 'package:lingua_eidetic/routes/reviewpage/review_page.dart';
 import 'package:lingua_eidetic/routes/reviewpage/wrong_review_page.dart';
@@ -38,6 +40,7 @@ class RouteGenerator {
   static const String DESCRIPTION_IMAGES_PAGE = "/description-images";
   static const String PREVIEW_SHARE_PAGE = "/preview-share";
   static const String EDITING_COLLECTION_PAGE = "/edit-collection";
+  static const String DOWNLOAD_COLLECTION_PAGE = "/download-collection";
 
   final Auth auth = Auth();
   final CollectionRepository collectionRepository = CollectionRepository();
@@ -154,6 +157,14 @@ class RouteGenerator {
               card: item,
               imagePath: imagePath,
             ),
+          ),
+        );
+      case DOWNLOAD_COLLECTION_PAGE:
+        final collection = settings.arguments as SharedCollection;
+        return MaterialPageRoute(
+          builder: (context) => Provider<Auth>.value(
+            value: auth,
+            builder: (_, __) => CommunityDownloadPage(collection: collection),
           ),
         );
 
