@@ -44,11 +44,17 @@ class CustomHeader extends StatelessWidget {
           ),
           Expanded(
             flex: 6,
-            child: SizedBox(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
               height: height,
               child: Align(
                 alignment: Alignment.center,
-                child: Text(title, style: titleStyle),
+                child: Text(
+                  title,
+                  style: titleStyle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
           ),

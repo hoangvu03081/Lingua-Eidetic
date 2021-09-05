@@ -6,7 +6,10 @@ class CommentRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Stream<QuerySnapshot> collectionStream({required String collectionId}) {
-    return _firestore.collection(CloudPath.comment(collectionId)).snapshots();
+    return _firestore
+        .collection(CloudPath.comment(collectionId))
+        .orderBy('commentDate', descending: true)
+        .snapshots();
   }
 
   Future<void> addComment(

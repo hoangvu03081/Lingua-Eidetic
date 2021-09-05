@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:lingua_eidetic/constants.dart';
 import 'package:lingua_eidetic/models/collection.dart';
 import 'package:lingua_eidetic/routes/homepage/widgets/collection_card_v2.dart';
+import 'package:lingua_eidetic/routes/homepage/widgets/header.dart';
 import 'package:lingua_eidetic/services/collection_service.dart';
 
 class CollectionList extends StatefulWidget {
@@ -11,9 +13,11 @@ class CollectionList extends StatefulWidget {
     Key? key,
     required this.data,
     required this.query,
+    required this.onQuery,
   }) : super(key: key);
   final String query;
   final Stream<QuerySnapshot<Object?>> data;
+  final ValueChanged<String> onQuery;
 
   @override
   _CollectionListState createState() => _CollectionListState();
@@ -49,8 +53,25 @@ class _CollectionListState extends State<CollectionList> {
 
           return ListView.builder(
             itemBuilder: (context, index) {
-              String id = _ids[index];
-              Collection item = _cached[index];
+              if (index == 0) {
+                return Padding(
+                  padding: const EdgeInsets.only(
+                    top: defaultPadding * 2,
+                    left: defaultPadding,
+                    right: defaultPadding,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Header(onQuery: widget.onQuery),
+                      const SizedBox(height: defaultPadding * 2),
+                    ],
+                  ),
+                );
+              }
+
+              String id = _ids[index - 1];
+              Collection item = _cached[index - 1];
 
               return FutureBuilder<List<int>>(
                 builder:
@@ -87,7 +108,7 @@ class _CollectionListState extends State<CollectionList> {
                 ]),
               );
             },
-            itemCount: _cached.length,
+            itemCount: _cached.length + 1,
           );
         }
         return const Center(
