@@ -13,12 +13,14 @@ class CollectionCardV2 extends StatefulWidget {
     required this.avail,
     required this.total,
     required this.remove,
+    required this.setParentState,
   }) : super(key: key);
 
   final String title;
   final int avail;
   final int total;
   final VoidCallback remove;
+  final VoidCallback setParentState;
 
   @override
   _CollectionCardV2State createState() => _CollectionCardV2State();
@@ -38,14 +40,15 @@ class _CollectionCardV2State extends State<CollectionCardV2> {
         alignment: Alignment.centerRight,
         children: [
           GestureDetector(
-            onTap: () async {
+            onTap: () {
               FocusScope.of(context).unfocus();
-              await Navigator.of(context)
-                  .pushNamed(RouteGenerator.COLLECTION_PAGE, arguments: {
-                'id': (widget.key as ValueKey).value,
-                'title': widget.title
+              Navigator.of(context).pushNamed(RouteGenerator.COLLECTION_PAGE,
+                  arguments: {
+                    'id': (widget.key as ValueKey).value,
+                    'title': widget.title
+                  }).then((value) {
+                widget.setParentState();
               });
-              if (mounted) setState(() {});
             },
             onHorizontalDragStart: (details) {
               startX = details.globalPosition.dx;

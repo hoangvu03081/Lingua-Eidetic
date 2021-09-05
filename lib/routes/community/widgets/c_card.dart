@@ -7,15 +7,22 @@ import 'package:lingua_eidetic/routes/routes.dart';
 import 'package:lingua_eidetic/services/auth_service.dart';
 
 class CCard extends StatelessWidget {
-  const CCard({Key? key, required this.collection}) : super(key: key);
+  const CCard({
+    Key? key,
+    required this.collection,
+    required this.setParentState,
+  }) : super(key: key);
   final SharedCollection collection;
+  final VoidCallback setParentState;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed(RouteGenerator.DOWNLOAD_COLLECTION_PAGE,
-            arguments: collection);
+        Navigator.of(context)
+            .pushNamed(RouteGenerator.DOWNLOAD_COLLECTION_PAGE,
+                arguments: collection)
+            .then((value) => setParentState());
       },
       child: Container(
         height: 125,

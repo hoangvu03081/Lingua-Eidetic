@@ -105,11 +105,15 @@ class WrongReviewPage extends StatelessWidget {
               height: size.height * 0.01,
             ),
             // TODO: Check caption tags
-            SizedBox(
-              width: size.width * 0.84,
-              child: CaptionTextField(
-                card: card,
-                canDelete: false,
+            SingleChildScrollView(
+              child: SizedBox(
+                width: size.width * 0.84,
+                height: size.height * 0.19,
+                child: CaptionTextField(
+                  card: card,
+                  canDelete: false,
+                  canAdding: false,
+                ),
               ),
             ),
             // Container(

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lingua_eidetic/models/collection.dart';
@@ -21,7 +23,7 @@ class _CollectionListState extends State<CollectionList> {
   final CollectionService collectionService = CollectionService();
   final List<Collection> _cached = [];
   final List<String> _ids = [];
-
+// Future<int> avail = collectionService.getAvailableCollectionCount(collectionId: collectionId);
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -44,6 +46,7 @@ class _CollectionListState extends State<CollectionList> {
               _ids.add(snapshot.data!.docs[i].id);
             }
           }
+
           return ListView.builder(
             itemBuilder: (context, index) {
               String id = _ids[index];
@@ -61,6 +64,15 @@ class _CollectionListState extends State<CollectionList> {
                       title: item.name,
                       avail: avail.data![0],
                       total: avail.data![1],
+                      setParentState: () {
+                        Timer.periodic(const Duration(milliseconds: 400),
+                            (Timer t) {
+                          if (mounted) {
+                            setState(() {});
+                            t.cancel();
+                          }
+                        });
+                      },
                       remove: () {
                         collectionService.deleteCollection(collectionId: id);
                       },

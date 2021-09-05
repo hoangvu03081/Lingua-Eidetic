@@ -70,7 +70,7 @@ class EditingCollectionPage extends StatelessWidget {
                   children: [
                     TextBadge(
                       text: 'Level: ${CollectionPage.titles[card.level]}',
-                      fontSize: 16,
+                      fontSize: 14,
                       padding: const EdgeInsets.symmetric(
                         vertical: defaultPadding,
                         horizontal: defaultPadding * 1.5,
@@ -82,7 +82,7 @@ class EditingCollectionPage extends StatelessWidget {
                     TextBadge(
                       text:
                           'Exp: ${card.exp}/${ReviewService.levelSystem[card.level]?.maxExp}',
-                      fontSize: 16,
+                      fontSize: 14,
                       padding: const EdgeInsets.symmetric(
                         vertical: defaultPadding,
                         horizontal: defaultPadding * 1.5,
@@ -116,7 +116,10 @@ class EditingCollectionPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: defaultPadding),
-                CaptionTextField(card: card),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(minHeight: 155),
+                  child: CaptionTextField(card: card),
+                ),
               ],
             ),
           ),

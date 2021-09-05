@@ -13,6 +13,7 @@ class TextBadge extends StatelessWidget {
     this.fontWeight = FontWeight.w600,
     this.icon,
     this.hasBoxShadow = false,
+    this.onTap,
   }) : super(key: key);
 
   final Color backColor;
@@ -23,35 +24,39 @@ class TextBadge extends StatelessWidget {
   final FontWeight fontWeight;
   final Icon? icon;
   final bool hasBoxShadow;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(200),
-        color: backColor,
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 4,
-            color: Colors.black.withOpacity(0.25),
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      padding: padding,
-      child: Row(
-        children: [
-          if (icon != null) icon!,
-          Text(
-            text,
-            style: TextStyle(
-              color: textColor,
-              fontWeight: fontWeight,
-              fontSize: fontSize,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(200),
+          color: backColor,
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 4,
+              color: Colors.black.withOpacity(0.25),
+              offset: const Offset(0, 2),
             ),
-          ),
-        ],
+          ],
+        ),
+        padding: padding,
+        child: Row(
+          children: [
+            if (icon != null) icon!,
+            Text(
+              text,
+              style: TextStyle(
+                color: textColor,
+                fontWeight: fontWeight,
+                fontSize: fontSize,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

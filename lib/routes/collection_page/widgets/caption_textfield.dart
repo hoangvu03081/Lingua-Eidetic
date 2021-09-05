@@ -7,9 +7,11 @@ class CaptionTextField extends StatefulWidget {
     Key? key,
     required this.card,
     this.canDelete = true,
+    this.canAdding = true,
   }) : super(key: key);
   final MemoryCard card;
   final bool canDelete;
+  final bool canAdding;
 
   @override
   _CaptionTextFieldState createState() => _CaptionTextFieldState();
@@ -49,7 +51,7 @@ class _CaptionTextFieldState extends State<CaptionTextField> {
         ),
       ),
       child: Wrap(
-        spacing: widget.canDelete ? defaultPadding : 0,
+        spacing: defaultPadding,
         children: [
           ..._items.map<Widget>(
             (item) => SizedBox(
@@ -81,30 +83,31 @@ class _CaptionTextFieldState extends State<CaptionTextField> {
               ),
             ),
           ),
-          Transform.translate(
-            offset: const Offset(0, -2),
-            child: SizedBox(
-              height: 40,
-              child: IntrinsicWidth(
-                child: TextField(
-                  controller: _controller,
-                  decoration: const InputDecoration(
-                    hintText: '+ Caption',
-                    border: InputBorder.none,
-                    focusedBorder: UnderlineInputBorder(),
-                    contentPadding: EdgeInsets.zero,
+          if (widget.canAdding)
+            Transform.translate(
+              offset: const Offset(0, -2),
+              child: SizedBox(
+                height: 40,
+                child: IntrinsicWidth(
+                  child: TextField(
+                    controller: _controller,
+                    decoration: const InputDecoration(
+                      hintText: '+ Caption',
+                      border: InputBorder.none,
+                      focusedBorder: UnderlineInputBorder(),
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                    onEditingComplete: () {},
+                    onSubmitted: (String value) {
+                      setState(() {
+                        _items.add(value);
+                      });
+                      _controller.clear();
+                    },
                   ),
-                  onEditingComplete: () {},
-                  onSubmitted: (String value) {
-                    setState(() {
-                      _items.add(value);
-                    });
-                    _controller.clear();
-                  },
                 ),
               ),
             ),
-          ),
         ],
       ),
     );

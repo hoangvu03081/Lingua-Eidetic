@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:lingua_eidetic/constants.dart';
 import 'package:lingua_eidetic/models/shared_collection.dart';
@@ -127,7 +129,19 @@ class _CommunityPageState extends State<CommunityPage> {
                           if (snapshot.hasData) {
                             return ListView.builder(
                               itemBuilder: (context, index) {
-                                return CCard(collection: snapshot.data![index]);
+                                return CCard(
+                                  collection: snapshot.data![index],
+                                  setParentState: () {
+                                    Timer.periodic(
+                                        const Duration(milliseconds: 400),
+                                        (Timer t) {
+                                      if (mounted) {
+                                        setState(() {});
+                                        t.cancel();
+                                      }
+                                    });
+                                  },
+                                );
                               },
                               itemCount: snapshot.data!.length,
                             );
@@ -148,7 +162,19 @@ class _CommunityPageState extends State<CommunityPage> {
                         if (snapshot.hasData) {
                           return ListView.builder(
                             itemBuilder: (context, index) {
-                              return CCard(collection: snapshot.data![index]);
+                              return CCard(
+                                collection: snapshot.data![index],
+                                setParentState: () {
+                                  Timer.periodic(
+                                      const Duration(milliseconds: 400),
+                                      (Timer t) {
+                                    if (mounted) {
+                                      setState(() {});
+                                      t.cancel();
+                                    }
+                                  });
+                                },
+                              );
                             },
                             itemCount: snapshot.data!.length,
                           );

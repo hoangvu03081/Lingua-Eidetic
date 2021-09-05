@@ -67,6 +67,7 @@ class _CardGroupState extends State<CardGroup> {
                   gridItems.add(MemoryCard.fromMap(item));
                 }
               }
+
               return GridView.builder(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: 200,
