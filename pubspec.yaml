@@ -68,6 +68,9 @@ dependencies:
   cached_network_image: ^3.1.0
   http: ^0.13.3
 
+  #Deploy Model AI
+  tflite: ^1.1.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -113,6 +116,7 @@ flutter:
     - assets/translations/
     - assets/
     - assets/images/
+    - assets/model_ai/
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

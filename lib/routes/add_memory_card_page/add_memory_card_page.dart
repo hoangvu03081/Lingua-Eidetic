@@ -5,6 +5,7 @@ import 'package:lingua_eidetic/constants.dart';
 import 'package:lingua_eidetic/models/memory_card.dart';
 import 'package:lingua_eidetic/services/card_service.dart';
 import 'package:lingua_eidetic/services/collection_service.dart';
+import 'package:lingua_eidetic/routes/add_memory_card_page/utilities/generate_word.dart';
 
 class AddMemoryCardPage extends StatefulWidget {
   const AddMemoryCardPage({Key? key, required this.images}) : super(key: key);
@@ -18,10 +19,11 @@ class _AddMemoryCardPageState extends State<AddMemoryCardPage> {
   int _activeIndex = 0;
   late final List<TextEditingController> _captionController;
   final focusNode = FocusNode();
-
+  final _generateCap = GenerationCap();
   @override
   void initState() {
     super.initState();
+    _generateCap.makeCaptionfromList(widget.images!);
     _captionController = List.generate(
         widget.images!.length, (index) => TextEditingController());
   }
@@ -34,12 +36,20 @@ class _AddMemoryCardPageState extends State<AddMemoryCardPage> {
     }
     focusNode.dispose();
   }
+  void autoGenerateCaption() {
+    setState(() {
+      _captionController[_activeIndex].text = _generateCap.getStringCaption();
+    });
+    print(_generateCap.getStringCaption());
+  }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final cardService = CardService();
     final collectionService = CollectionService();
+
+
 
     return Scaffold(
       backgroundColor: const Color(0xFFEDF2F5),
@@ -174,24 +184,27 @@ class _AddMemoryCardPageState extends State<AddMemoryCardPage> {
                     ),
                   ),
                   const SizedBox(height: defaultPadding),
-                  Row(
-                    children: [
-                      SizedBox(
-                        height: 40,
-                        child: Image.asset(
-                          'assets/images/spinner.png',
-                          fit: BoxFit.contain,
+                  GestureDetector(
+                    onTap: autoGenerateCaption,
+                   child: Row(
+                      children: [
+                        SizedBox(
+                          height: 40,
+                          child: Image.asset(
+                            'assets/images/spinner.png',
+                            fit: BoxFit.contain,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: defaultPadding),
-                      const Text(
-                        'Auto generate caption',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
+                        const SizedBox(width: defaultPadding),
+                        const Text(
+                          'Auto generate caption',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),
