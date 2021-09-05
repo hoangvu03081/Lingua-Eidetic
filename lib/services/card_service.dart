@@ -112,6 +112,20 @@ class CardService {
         imagePath: imagePath);
   }
 
+  /// calculate Time CoolDown
+  Future<String> getTimeCoolDown({required DateTime timeAvailable}) async{
+    DateTime current = DateTime.now();
+    String timing = "";
+    if(current.isAfter(timeAvailable))
+      return timing;
+
+    int hours = timeAvailable.difference(current).inHours;
+    int min = timeAvailable.difference(current).inMinutes;
+    min = min - hours*60;
+    timing = "$hours:$min";
+    return timing;
+  }
+
   /// return an image using [cardId],\
   /// this function will first try to find the image on local storage, if the image exists, it return a path to
   /// the image
@@ -143,7 +157,6 @@ class CardService {
     if (card == null) throw ('');
     final networkImage = await http.get(Uri.parse(card.imagePath));
     final file = File(AppConstant.getImage(cardId));
-
     await file.writeAsBytes(networkImage.bodyBytes);
     return;
   }
