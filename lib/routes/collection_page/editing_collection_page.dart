@@ -33,7 +33,7 @@ class EditingCollectionPage extends StatelessWidget {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        appBar: getCustomAppBar(context, 'Collection name'),
+        appBar: getCustomAppBar(context, title),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(

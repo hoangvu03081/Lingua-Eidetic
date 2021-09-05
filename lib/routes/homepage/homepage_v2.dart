@@ -49,7 +49,6 @@ class _HomePageV2State extends State<HomePageV2> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    const headerHeight = 114 + defaultPadding * 6;
 
     return WillPopScope(
       onWillPop: () async {
@@ -68,34 +67,39 @@ class _HomePageV2State extends State<HomePageV2> {
             },
           ),
           body: SafeArea(
-            child: NestedScrollView(
-              headerSliverBuilder:
-                  (BuildContext context, bool innerBoxIsScrolled) {
-                return [
-                  SliverAppBar(
-                    titleSpacing: 0,
-                    title: SizedBox(
-                      height: headerHeight + defaultPadding * 2,
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          top: defaultPadding * 2,
-                          left: defaultPadding,
-                          right: defaultPadding,
-                        ),
-                        child: Header(height: headerHeight, onQuery: onQuery),
-                      ),
-                    ),
-                    toolbarHeight: headerHeight + defaultPadding * 2,
-                    backgroundColor: Colors.transparent,
-                    leading: const SizedBox(),
-                    leadingWidth: 0,
-                  )
-                ];
-              },
-              body: CollectionList(
-                data: collectionService.data,
-                query: _query,
-              ),
+            // child: NestedScrollView(
+            //   headerSliverBuilder:
+            //       (BuildContext context, bool innerBoxIsScrolled) {
+            //     return [
+            //       SliverAppBar(
+            //         titleSpacing: 0,
+            //         title: SizedBox(
+            //           height: headerHeight + defaultPadding * 2,
+            //           child: Padding(
+            //             padding: const EdgeInsets.only(
+            //               top: defaultPadding * 2,
+            //               left: defaultPadding,
+            //               right: defaultPadding,
+            //             ),
+            //             child: Header(height: headerHeight, onQuery: onQuery),
+            //           ),
+            //         ),
+            //         toolbarHeight: headerHeight + defaultPadding * 2,
+            //         backgroundColor: Colors.transparent,
+            //         leading: const SizedBox(),
+            //         leadingWidth: 0,
+            //       )
+            //     ];
+            //   },
+            //   body: CollectionList(
+            //     data: collectionService.data,
+            //     query: _query,
+            //   ),
+            // ),
+            child: CollectionList(
+              data: collectionService.data,
+              query: _query,
+              onQuery: onQuery,
             ),
           ),
         ),
@@ -191,10 +195,11 @@ class _HomePageV2State extends State<HomePageV2> {
   void _addingSuccessfully() {
     collectionService.addCollection(name: titleController.text);
     titleFocusNode.unfocus();
-    showToast(
-      fToast,
-      const SuccessToast(successText: 'Successfully added the collection'),
-      3,
+    ToastManager.showToast(
+      fToast: fToast,
+      child:
+          const SuccessToast(successText: 'Successfully added the collection'),
+      seconds: 3,
       bottom: defaultPadding * 4,
       left: 0,
       right: 0,
@@ -203,10 +208,10 @@ class _HomePageV2State extends State<HomePageV2> {
   }
 
   void _titleEmptyToast() {
-    showToast(
-      fToast,
-      const ErrorToast(errorText: 'Title must not be empty'),
-      2,
+    ToastManager.showToast(
+      fToast: fToast,
+      child: const ErrorToast(errorText: 'Title must not be empty'),
+      seconds: 2,
       bottom: defaultPadding * 4,
       left: 0,
       right: 0,

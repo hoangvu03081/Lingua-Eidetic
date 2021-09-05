@@ -96,10 +96,10 @@ class _AuthSignInFormState extends State<AuthSignInForm>
         await auth.signInWithMailAndPassword(_email, _password);
       }
     } on FirebaseAuthException catch (e) {
-      showToast(
-        fToast,
-        ErrorToast(errorText: e.code),
-        5,
+      ToastManager.showToast(
+        fToast: fToast,
+        child: ErrorToast(errorText: e.code),
+        seconds: 5,
         left: 0,
         right: 0,
         bottom: defaultPadding * 4 + MediaQuery.of(context).viewInsets.bottom,

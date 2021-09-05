@@ -81,7 +81,7 @@ class _CommunityDownloadPageState extends State<CommunityDownloadPage> {
                             Icons.chevron_left,
                             size: 30,
                           ),
-                          title: 'title',
+                          title: widget.collection.name,
                           action: GestureDetector(
                             onTap: () {
                               communityService.downloadCollection();
@@ -322,6 +322,7 @@ class _CommunityDownloadPageState extends State<CommunityDownloadPage> {
                                                               .comment(
                                                                   controller
                                                                       .text);
+                                                          controller.clear();
                                                         },
                                                         child: const Icon(
                                                           Icons.send,

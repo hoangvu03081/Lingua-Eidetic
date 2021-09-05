@@ -1,16 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lingua_eidetic/constants.dart';
 
-void showToast(FToast fToast, Widget child, int seconds,
-    {double? right, double? bottom, double? left, double? top}) {
-  fToast.showToast(
-    child: child,
-    positionedToastBuilder: (context, child) {
-      return Positioned(
-          child: child, right: right, bottom: bottom, left: left, top: top);
-    },
-    toastDuration: Duration(seconds: seconds),
-  );
+class ToastManager {
+  static void showToast({
+    required FToast fToast,
+    required Widget child,
+    int seconds = 3,
+    double? right,
+    double? bottom,
+    double? left,
+    double? top,
+  }) {
+    final duration = Duration(seconds: seconds);
+    fToast.showToast(
+      child: child,
+      positionedToastBuilder: (context, child) {
+        return Positioned(
+            child: child, right: right, bottom: bottom, left: left, top: top);
+      },
+      toastDuration: duration,
+    );
+  }
 }
 
 class ErrorToast extends StatelessWidget {
@@ -23,64 +34,88 @@ class ErrorToast extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25.0),
-        color: Colors.redAccent,
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Center(
-            child: Icon(
-              Icons.close,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(width: 12.0),
-          Text(
-            errorText.toUpperCase().replaceAll(
-                RegExp(
-                  r'[^\s\w]',
+    return Card(
+      color: const Color(0xFFEF5350),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: defaultPadding * 2,
+          horizontal: defaultPadding,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.warning_amber,
+                size: 40,
+                color: Colors.white,
+              ),
+              const SizedBox(height: defaultPadding * 2),
+              Text(
+                errorText.toUpperCase().replaceAll(
+                    RegExp(
+                      r'[^\s\w]',
+                    ),
+                    ' '),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
                 ),
-                ' '),
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-            ),
+              ),
+              const SizedBox(width: defaultPadding / 2 + 24),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 }
 
 class SuccessToast extends StatelessWidget {
-  const SuccessToast({Key? key, required this.successText}) : super(key: key);
+  const SuccessToast({
+    Key? key,
+    required this.successText,
+  }) : super(key: key);
   final String successText;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25.0),
-        color: Colors.greenAccent,
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.check),
-          const SizedBox(width: 12.0),
-          Text(
-            successText,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-            ),
+    final size = MediaQuery.of(context).size;
+    return Card(
+      color: Colors.greenAccent,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: defaultPadding * 2,
+          horizontal: defaultPadding,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.warning_amber,
+                size: 40,
+                color: Colors.black,
+              ),
+              const SizedBox(height: defaultPadding * 2),
+              Text(
+                successText.toUpperCase().replaceAll(
+                    RegExp(
+                      r'[^\s\w]',
+                    ),
+                    ' '),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 20,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(width: defaultPadding / 2 + 24),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

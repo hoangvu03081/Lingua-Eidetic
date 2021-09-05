@@ -34,10 +34,10 @@ class _AuthWithGoogleFacebookState extends State<AuthWithGoogleFacebook> {
       final user = await signInMethod();
       return user;
     } on FirebaseAuthException catch (e) {
-      showToast(
-        fToast,
-        ErrorToast(errorText: e.code),
-        5,
+      ToastManager.showToast(
+        fToast: fToast,
+        child: ErrorToast(errorText: e.code),
+        seconds: 5,
         left: 0,
         right: 0,
         bottom: defaultPadding * 4 + MediaQuery.of(context).viewInsets.bottom,

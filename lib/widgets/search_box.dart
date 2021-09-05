@@ -29,10 +29,7 @@ class SearchBox extends StatelessWidget {
           vertical: defaultPadding * 1.5,
         ),
         hintText: 'Search',
-        hintStyle: const TextStyle(
-          color: Colors.black54,
-          fontSize: 14,
-        ),
+        hintStyle: Theme.of(context).textTheme.caption,
       ),
     );
   }

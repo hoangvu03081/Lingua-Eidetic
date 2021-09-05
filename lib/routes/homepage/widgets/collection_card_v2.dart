@@ -110,7 +110,7 @@ class _CollectionCardV2State extends State<CollectionCardV2> {
                       widget.title,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
-                        fontSize: 26,
+                        fontSize: 18,
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
                       ),
@@ -167,9 +167,9 @@ class _CollectionCardV2State extends State<CollectionCardV2> {
           ),
           // divider
           Positioned(
-            top: 0,
+            top: 8,
             right: 16 - dx,
-            bottom: defaultPadding * 2,
+            bottom: 24,
             child: SizedBox(
               width: 1.5,
               child: Container(
@@ -178,9 +178,9 @@ class _CollectionCardV2State extends State<CollectionCardV2> {
             ),
           ),
           Positioned(
-            top: 0,
+            top: 8,
             right: 20 - dx,
-            bottom: defaultPadding * 2,
+            bottom: 24,
             child: SizedBox(
               width: 2,
               height: 134,
