@@ -24,6 +24,8 @@ import 'package:lingua_eidetic/services/review_service.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
+import 'auth/auth_page.dart';
+
 class RouteGenerator {
   static const String LANDING_PAGE = "/";
   static const String SIGN_IN_PAGE = "/sign-in";
@@ -49,6 +51,7 @@ class RouteGenerator {
     switch (settings.name) {
       case LANDING_PAGE:
         return MaterialPageRoute(builder: (context) {
+          return LandingPage();
           return StreamBuilder(
             stream: auth.authStateChanges(),
             builder: (context, snapshot) {
@@ -58,7 +61,7 @@ class RouteGenerator {
                   /// landing page has login and register button
                   return Provider<Auth>.value(
                     value: auth,
-                    builder: (context, child) => const AuthenticationPage(),
+                    builder: (context, child) => const AuthPage(),
                   );
                 }
 

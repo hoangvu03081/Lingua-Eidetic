@@ -202,6 +202,8 @@ class _ReviewPageState extends State<ReviewPage> with TickerProviderStateMixin {
                                           text: text);
                                       break;
                                     case ReviewStatus.IGNORE:
+                                      print('ignore');
+                                      break;
                                     default:
                                   }
                                   _textController.text = '';
