@@ -181,12 +181,12 @@ class WrongReviewPage extends StatelessWidget {
                             label: 'Add synonym',
                           ),
                           const SheetAction(
-                            key: ReviewStatus.CONTINUE,
+                            key: ReviewStatus.IGNORE,
                             icon: Icons.remove,
                             label: 'Ignore this answer',
                           )
                         ]);
-                    Navigator.of(context).pop(result);
+                    if (result != null) Navigator.of(context).pop(result);
                   },
                   child: SizedBox(
                       height: size.height * 0.042,

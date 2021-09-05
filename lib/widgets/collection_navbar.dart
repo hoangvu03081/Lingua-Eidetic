@@ -28,16 +28,6 @@ class _CollectionNavbarState extends State<CollectionNavbar> {
     widget.galleryButtonFunction();
   }
 
-  void _homeButtonClicked() {
-    print('leftmost clicked');
-    //_home!.fire();
-  }
-
-  void _downloadButtonClicked() {
-    print('rightmost clicked');
-    //_download!.fire();
-  }
-
   SMIBool? _open;
   SMITrigger? _home;
   SMITrigger? _download;
@@ -83,8 +73,5 @@ class _CollectionNavbarState extends State<CollectionNavbar> {
       _cameraButtonClicked();
     else if (x <= size.width * 0.43 && x >= size.width * 0.29)
       _galleryButtonClicked();
-    else if (x >= size.width * 0.85)
-      _downloadButtonClicked();
-    else if (x <= size.width * 0.15) _homeButtonClicked();
   }
 }
