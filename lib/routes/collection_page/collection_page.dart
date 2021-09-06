@@ -54,34 +54,10 @@ class _CollectionPageState extends State<CollectionPage> {
         }
       }),
       body: SafeArea(
-        child: NestedScrollView(
-          headerSliverBuilder: (context, innerBoxIsScrolled) {
-            return [
-              SliverAppBar(
-                floating: true,
-                titleSpacing: 0,
-                title: CustomHeader(
-                  leadingIcon: Icon(
-                    Icons.chevron_left,
-                    color: Theme.of(context).accentColor,
-                    size: 32,
-                  ),
-                  height: 75,
-                  title: widget.title,
-                ),
-                backgroundColor: Colors.transparent,
-                toolbarHeight: 75,
-                leading: const SizedBox(),
-                leadingWidth: 0,
-              )
-            ];
-          },
-          body: SingleChildScrollView(
-            child: Column(
-              children:
-                  List.generate(expandArr.length, (index) => _buildCard(index))
-                      .toList(),
-            ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: List.generate(
+                expandArr.length + 1, (index) => _buildCard(index)).toList(),
           ),
         ),
       ),
@@ -89,21 +65,33 @@ class _CollectionPageState extends State<CollectionPage> {
   }
 
   Widget _buildCard(int index) {
+    if (index == 0) {
+      return CustomHeader(
+        leadingIcon: Icon(
+          Icons.chevron_left,
+          color: Theme.of(context).accentColor,
+          size: 32,
+        ),
+        height: 75,
+        title: widget.title,
+      );
+    }
+    final i = index - 1;
     return GestureDetector(
       onTap: () {
         setState(() {
-          if (prevActive == index && expandArr[prevActive]) {
+          if (prevActive == i && expandArr[prevActive]) {
             expandArr[prevActive] = false;
           } else {
             expandArr[prevActive] = false;
-            expandArr[index] = true;
-            prevActive = index;
+            expandArr[i] = true;
+            prevActive = i;
           }
         });
       },
       child: CardGroup(
-        index: index,
-        isExpand: expandArr[index],
+        index: i,
+        isExpand: expandArr[i],
         collectionTitle: widget.title,
       ),
     );
