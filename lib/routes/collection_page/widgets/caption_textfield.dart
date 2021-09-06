@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lingua_eidetic/constants.dart';
+import 'package:lingua_eidetic/widgets/custom_toast.dart';
 
 class CaptionTextField extends StatefulWidget {
   const CaptionTextField({
@@ -19,6 +21,8 @@ class CaptionTextField extends StatefulWidget {
 }
 
 class _CaptionTextFieldState extends State<CaptionTextField> {
+  late final fToast = FToast();
+
   final List<String> _items = [];
   final _controller = TextEditingController();
 
@@ -30,6 +34,7 @@ class _CaptionTextFieldState extends State<CaptionTextField> {
         _items.add(value);
       }
     }
+    fToast.init(context);
   }
 
   @override
@@ -111,6 +116,17 @@ class _CaptionTextFieldState extends State<CaptionTextField> {
                           setState(() {
                             _items.add(value);
                           });
+                        } else if (value.trim() == '') {
+                          showToast(
+                              fToast: fToast,
+                              child: const ErrorToast(
+                                  errorText: 'Please input something'));
+                        } else {
+                          showToast(
+                              fToast: fToast,
+                              child: const ErrorToast(
+                                  errorText:
+                                      'Please input something different'));
                         }
                         _controller.clear();
                         if (widget.onChange != null) {

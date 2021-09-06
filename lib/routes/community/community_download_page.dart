@@ -317,6 +317,7 @@ class _CommunityDownloadPageState extends State<CommunityDownloadPage> {
                                             maxLines: 10,
                                             controller: controller,
                                             decoration: InputDecoration(
+                                              hintText: 'Type here...',
                                               contentPadding:
                                                   const EdgeInsets.all(
                                                       defaultPadding),

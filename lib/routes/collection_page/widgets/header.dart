@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lingua_eidetic/constants.dart';
 import 'package:lingua_eidetic/routes/routes.dart';
 import 'package:lingua_eidetic/services/card_service.dart';
+import 'package:lingua_eidetic/widgets/custom_header.dart';
 
 class Header extends StatefulWidget {
   const Header({
@@ -18,56 +19,25 @@ class Header extends StatefulWidget {
 }
 
 class _HeaderState extends State<Header> {
-  late final FToast fToast;
-  @override
-  void initState() {
-    super.initState();
-    fToast = FToast();
-    fToast.init(context);
-  }
-
   @override
   Widget build(BuildContext context) {
     final cardService = CardService();
     return Container(
-      height: widget.height,
-      padding: const EdgeInsets.only(
-        left: defaultPadding,
-        right: defaultPadding,
-        bottom: defaultPadding,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).pop();
-            },
-            child: SizedBox(
-              width: 60 + defaultPadding,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Icon(
-                  Icons.keyboard_arrow_left,
-                  color: Theme.of(context).accentColor,
-                  size: 30,
-                ),
-              ),
-            ),
+        height: widget.height,
+        padding: const EdgeInsets.only(
+          left: defaultPadding,
+          right: defaultPadding,
+          bottom: defaultPadding,
+        ),
+        child: CustomHeader(
+          leadingIcon: Icon(
+            Icons.chevron_left,
+            color: Theme.of(context).accentColor,
+            size: 32,
           ),
-          Expanded(
-            child: Text(
-              widget.title,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Theme.of(context).accentColor,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          StreamBuilder<int>(
+          height: 75,
+          title: widget.title, // widget.title
+          action: StreamBuilder<int>(
               stream: cardService.getAvailableCardCount(),
               builder: (context, snapshot) {
                 if (snapshot.hasData && snapshot.data == 0) {
@@ -83,24 +53,12 @@ class _HeaderState extends State<Header> {
                     children: [
                       _buildUploadBtn(context),
                       const SizedBox(width: defaultPadding),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context)
-                              .pushNamed(RouteGenerator.REVIEW_PAGE);
-                        },
-                        child: Icon(
-                          Icons.keyboard_arrow_right,
-                          size: 30,
-                          color: Theme.of(context).accentColor,
-                        ),
-                      ),
+                      _buildTestBtn(context),
                     ],
                   );
                 }
-              })
-        ],
-      ),
-    );
+              }),
+        ));
   }
 
   Widget _buildUploadBtn(BuildContext context) {
@@ -110,6 +68,19 @@ class _HeaderState extends State<Header> {
       },
       child: Icon(
         Icons.backup,
+        size: 30,
+        color: Theme.of(context).accentColor,
+      ),
+    );
+  }
+
+  Widget _buildTestBtn(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).pushNamed(RouteGenerator.REVIEW_PAGE);
+      },
+      child: Icon(
+        Icons.keyboard_arrow_right,
         size: 30,
         color: Theme.of(context).accentColor,
       ),

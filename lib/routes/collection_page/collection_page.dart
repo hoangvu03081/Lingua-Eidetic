@@ -5,7 +5,6 @@ import 'package:lingua_eidetic/routes/routes.dart';
 import 'package:lingua_eidetic/services/collection_service.dart';
 import 'package:lingua_eidetic/services/image_service.dart';
 import 'package:lingua_eidetic/widgets/collection_navbar.dart';
-import 'package:lingua_eidetic/widgets/custom_header.dart';
 
 class CollectionPage extends StatefulWidget {
   const CollectionPage({Key? key, required this.id, required this.title})
@@ -66,15 +65,7 @@ class _CollectionPageState extends State<CollectionPage> {
 
   Widget _buildCard(int index) {
     if (index == 0) {
-      return CustomHeader(
-        leadingIcon: Icon(
-          Icons.chevron_left,
-          color: Theme.of(context).accentColor,
-          size: 32,
-        ),
-        height: 75,
-        title: widget.title,
-      );
+      return Header(height: 75, title: widget.title);
     }
     final i = index - 1;
     return GestureDetector(

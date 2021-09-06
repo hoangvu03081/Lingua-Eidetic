@@ -12,6 +12,7 @@ import 'package:lingua_eidetic/routes/community/widgets/auto_gen_btn.dart';
 import 'package:lingua_eidetic/routes/homepage/widgets/text_badge.dart';
 import 'package:lingua_eidetic/routes/share_collection/widgets/appbar.dart';
 import 'package:lingua_eidetic/services/review_service.dart';
+import 'package:lingua_eidetic/widgets/custom_header.dart';
 
 class EditingCollectionPage extends StatefulWidget {
   const EditingCollectionPage({
@@ -63,7 +64,6 @@ class _EditingCollectionPageState extends State<EditingCollectionPage> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        appBar: getCustomAppBar(context, widget.title),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(
@@ -73,6 +73,15 @@ class _EditingCollectionPageState extends State<EditingCollectionPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                CustomHeader(
+                  leadingIcon: Icon(
+                    Icons.chevron_left,
+                    color: Theme.of(context).accentColor,
+                    size: 32,
+                  ),
+                  title: widget.title,
+                  height: 75,
+                ),
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(22),

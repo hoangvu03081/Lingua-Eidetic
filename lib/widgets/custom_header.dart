@@ -20,8 +20,8 @@ class CustomHeader extends StatelessWidget {
       height: height,
       child: Row(
         children: [
-          Expanded(
-            flex: 1,
+          SizedBox(
+            width: 60 + defaultPadding,
             child: GestureDetector(
               onTap: () {
                 if (Navigator.canPop(context)) Navigator.of(context).pop();
@@ -36,7 +36,6 @@ class CustomHeader extends StatelessWidget {
             ),
           ),
           Expanded(
-            flex: 6,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
               height: height,
@@ -54,8 +53,8 @@ class CustomHeader extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(
-            flex: 1,
+          SizedBox(
+            width: 60 + defaultPadding,
             child: action != null
                 ? Align(
                     alignment: Alignment.centerRight,
