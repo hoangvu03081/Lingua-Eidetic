@@ -9,15 +9,15 @@ class GenerationCap {
     _object = DetectObject();
   }
 
-  void makeCaptionfromList(List listImagePath) {
+  Future<void> makeCaptionfromList(List listImagePath) async {
     for (int i = 0; i < listImagePath.length; i++) {
-      makeCaptionfromImg(i, listImagePath[i]);
+      await makeCaptionfromImg(i, listImagePath[i]);
     }
   }
 
   List<String> getStringCaption(int index) => _fullCaption[index];
 
-  Future makeCaptionfromImg(int index, String imagePath) async {
+  Future<void> makeCaptionfromImg(int index, String imagePath) async {
     await _object.detectObject(File(imagePath));
     while (_fullCaption.length <= index) {
       _fullCaption.add([]);

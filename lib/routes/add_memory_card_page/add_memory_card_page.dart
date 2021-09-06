@@ -134,6 +134,7 @@ class _AddMemoryCardPageState extends State<AddMemoryCardPage> {
                         onIndexChanged: (index) {
                           setState(() {
                             _activeIndex = index;
+                            captionTextFieldKey = UniqueKey();
                           });
                         },
                         itemBuilder: (BuildContext context, int index) {

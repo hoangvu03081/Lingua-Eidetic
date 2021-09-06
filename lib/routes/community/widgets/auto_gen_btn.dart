@@ -21,6 +21,7 @@ class AutoGenBtn extends StatelessWidget {
                 borderRadius: BorderRadius.circular(25),
               ),
             ),
+            backgroundColor: MaterialStateProperty.all(const Color(0xFF587CFE)),
           ),
           child: Row(
             children: [

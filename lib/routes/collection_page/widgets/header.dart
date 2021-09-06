@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lingua_eidetic/constants.dart';
 import 'package:lingua_eidetic/routes/routes.dart';
@@ -43,10 +44,7 @@ class _HeaderState extends State<Header> {
                 if (snapshot.hasData && snapshot.data == 0) {
                   return SizedBox(
                     width: 60 + defaultPadding,
-                    child: Offstage(
-                      offstage: true,
-                      child: _buildUploadBtn(context),
-                    ),
+                    child: _buildUploadBtn(context),
                   );
                 } else {
                   return Row(
@@ -66,10 +64,14 @@ class _HeaderState extends State<Header> {
       onTap: () {
         Navigator.of(context).pushNamed(RouteGenerator.SHARE_COLLECTION_PAGE);
       },
-      child: Icon(
-        Icons.backup,
-        size: 30,
-        color: Theme.of(context).accentColor,
+      child: SizedBox(
+        height: 30,
+        width: 30,
+        child: SvgPicture.asset(
+          'assets/images/share.svg',
+          fit: BoxFit.contain,
+          color: Theme.of(context).accentColor,
+        ),
       ),
     );
   }
