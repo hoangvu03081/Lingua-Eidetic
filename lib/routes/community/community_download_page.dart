@@ -27,11 +27,20 @@ class _CommunityDownloadPageState extends State<CommunityDownloadPage> {
   bool? isAlreadyLoved;
   final controller = TextEditingController();
   final DateFormat formatter = DateFormat('yyyy-MM-dd');
+  final focusNode = FocusNode();
+  var borderColor = Colors.transparent;
 
   @override
   void initState() {
     super.initState();
     cLove = widget.collection.love;
+    focusNode.addListener(() {
+      if (focusNode.hasFocus) {
+        setState(() {
+          borderColor = const Color(0xFF9DA1FF);
+        });
+      }
+    });
   }
 
   @override
@@ -314,35 +323,24 @@ class _CommunityDownloadPageState extends State<CommunityDownloadPage> {
                                         Container(
                                           height: 100,
                                           child: TextField(
-                                            maxLines: 10,
+                                            focusNode: focusNode,
                                             controller: controller,
-                                            decoration: InputDecoration(
+                                            onSubmitted: (String content) {
+                                              commentService.comment(content);
+                                              controller.clear();
+                                            },
+                                            decoration: const InputDecoration(
                                               hintText: 'Type here...',
-                                              contentPadding:
-                                                  const EdgeInsets.all(
-                                                      defaultPadding),
-                                              border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        defaultPadding),
-                                              ),
-                                              enabledBorder:
-                                                  const OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                  color: Colors.transparent,
-                                                ),
-                                              ),
-                                              focusedBorder:
-                                                  const OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                  color: Color(0xFF9DA1FF),
-                                                ),
-                                              ),
+                                              contentPadding: EdgeInsets.all(
+                                                  defaultPadding),
+                                              border: InputBorder.none,
                                             ),
                                           ),
                                           decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(8),
+                                            border:
+                                                Border.all(color: borderColor),
                                             gradient: const LinearGradient(
                                               begin: Alignment.topLeft,
                                               end: Alignment.bottomRight,

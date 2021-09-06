@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lingua_eidetic/constants.dart';
@@ -8,7 +7,6 @@ import 'package:lingua_eidetic/routes/collection_page/widgets/title_header.dart'
 import 'package:lingua_eidetic/routes/routes.dart';
 import 'package:lingua_eidetic/services/card_service.dart';
 import 'package:lingua_eidetic/routes/collection_page/collection_page.dart';
-import 'package:lingua_eidetic/widgets/outer_box_shadow.dart';
 import 'package:lingua_eidetic/widgets/cooldown_lock.dart';
 
 class CardGroup extends StatefulWidget {
