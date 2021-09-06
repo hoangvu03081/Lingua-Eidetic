@@ -19,9 +19,10 @@ PreferredSizeWidget getCustomAppBar(BuildContext context, String title,
     leadingWidth: 30,
     title: Text(
       title,
-      style: TextStyle(
-        color: Theme.of(context).accentColor,
-      ),
+      style: Theme.of(context).textTheme.headline5!.copyWith(
+            fontFamily: 'Montserrat',
+            fontWeight: FontWeight.bold,
+          ),
     ),
     centerTitle: true,
     actions: actions,

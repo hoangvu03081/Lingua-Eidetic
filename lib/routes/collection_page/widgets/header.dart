@@ -62,7 +62,10 @@ class _HeaderState extends State<Header> {
   Widget _buildUploadBtn(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed(RouteGenerator.SHARE_COLLECTION_PAGE);
+        Navigator.of(context).pushNamed(
+          RouteGenerator.SHARE_COLLECTION_PAGE,
+          arguments: widget.title,
+        );
       },
       child: SizedBox(
         height: 30,

@@ -2,6 +2,7 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lingua_eidetic/constants.dart';
 import 'package:lingua_eidetic/models/comment.dart';
 import 'package:lingua_eidetic/models/shared_collection.dart';
@@ -9,6 +10,7 @@ import 'package:lingua_eidetic/routes/homepage/widgets/text_badge.dart';
 import 'package:lingua_eidetic/services/comment_service.dart';
 import 'package:lingua_eidetic/services/community_service.dart';
 import 'package:lingua_eidetic/widgets/custom_header.dart';
+import 'package:lingua_eidetic/widgets/custom_toast.dart';
 
 class CommunityDownloadPage extends StatefulWidget {
   const CommunityDownloadPage({
@@ -22,6 +24,7 @@ class CommunityDownloadPage extends StatefulWidget {
 }
 
 class _CommunityDownloadPageState extends State<CommunityDownloadPage> {
+  late final fToast = FToast();
   bool isDownloaded = false;
   int cLove = 0;
   bool? isAlreadyLoved;
@@ -41,6 +44,7 @@ class _CommunityDownloadPageState extends State<CommunityDownloadPage> {
         });
       }
     });
+    fToast.init(context);
   }
 
   @override
@@ -117,6 +121,10 @@ class _CommunityDownloadPageState extends State<CommunityDownloadPage> {
                                   });
                               await Future.delayed(const Duration(seconds: 1));
                               Navigator.of(context).pop();
+                              showToast(
+                                  fToast: fToast,
+                                  child: const SuccessToast(
+                                      successText: 'Download successfully'));
                             },
                             child: CircleAvatar(
                               backgroundColor: Theme.of(context).accentColor,

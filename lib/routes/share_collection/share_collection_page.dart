@@ -10,8 +10,8 @@ import 'package:lingua_eidetic/routes/share_collection/widgets/appbar.dart';
 import 'package:lingua_eidetic/services/upload_service.dart';
 
 class ShareCollectionPage extends StatefulWidget {
-  const ShareCollectionPage({Key? key}) : super(key: key);
-
+  const ShareCollectionPage({Key? key, required this.title}) : super(key: key);
+  final String title;
   @override
   _ShareCollectionPageState createState() => _ShareCollectionPageState();
 }
@@ -20,11 +20,11 @@ class _ShareCollectionPageState extends State<ShareCollectionPage> {
   final List<ItemModel> imagePaths = [];
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
+  final uploadService = UploadService();
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final uploadService = UploadService();
 
     return GestureDetector(
       onTap: () {
@@ -34,8 +34,8 @@ class _ShareCollectionPageState extends State<ShareCollectionPage> {
         floatingActionButton: CircleAvatar(
           backgroundColor: Theme.of(context).accentColor,
           child: IconButton(
-            onPressed: () async {
-              await uploadService.uploadCollection(
+            onPressed: () {
+              uploadService.uploadCollection(
                 name: nameController.text,
                 description: descriptionController.text,
                 imagePath: imagePaths
@@ -49,7 +49,7 @@ class _ShareCollectionPageState extends State<ShareCollectionPage> {
             padding: const EdgeInsets.all(defaultPadding),
           ),
         ),
-        appBar: getCustomAppBar(context, 'Anatomy'),
+        appBar: getCustomAppBar(context, widget.title),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
@@ -58,24 +58,25 @@ class _ShareCollectionPageState extends State<ShareCollectionPage> {
               children: [
                 _buildHeader('Collection Name'),
                 _buildTextField(
-                  maxLines: 1,
-                  hintMaxLines: 2,
-                  height: 50,
-                  controller: nameController,
-                ),
+                    maxLines: 1,
+                    hintMaxLines: 2,
+                    height: size.height * 0.1,
+                    controller: nameController,
+                    hint: 'Please write your collection\'s name here'),
                 const SizedBox(height: defaultPadding * 3),
                 _buildHeader('Description'),
                 _buildTextField(
-                  hintMaxLines: 5,
-                  height: 100,
-                  controller: descriptionController,
-                ),
+                    hintMaxLines: 5,
+                    height: size.height * 0.2,
+                    controller: descriptionController,
+                    hint:
+                        'Please write your description for the collection here.'),
                 const SizedBox(height: defaultPadding * 2),
                 _buildHeader('Description images'),
                 const SizedBox(height: defaultPadding),
                 if (imagePaths.isNotEmpty)
                   SizedBox(
-                    height: 300,
+                    height: size.height * 0.7,
                     child: Swiper(
                       itemBuilder: (BuildContext context, int index) {
                         return Image.file(
@@ -107,40 +108,48 @@ class _ShareCollectionPageState extends State<ShareCollectionPage> {
                       onTap: () async {
                         final result = await Navigator.of(context).pushNamed(
                                 RouteGenerator.DESCRIPTION_IMAGES_PAGE)
-                            as List<ItemModel>;
-                        setState(() {
-                          imagePaths.addAll(result);
-                        });
+                            as List<ItemModel>?;
+                        if (result != null) {
+                          setState(() {
+                            imagePaths.addAll(result);
+                          });
+                        }
                       },
-                      child: Container(
-                        width: size.width,
-                        padding: const EdgeInsets.symmetric(
-                            vertical: defaultPadding * 2),
-                        child: Column(
-                          children: [
-                            Container(
-                              child: const Icon(
-                                Icons.add,
-                                color: Color(0xFFCECDCD),
+                      child: ConstrainedBox(
+                        constraints:
+                            BoxConstraints(minHeight: size.height * 0.3),
+                        child: Container(
+                          width: size.width,
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: defaultPadding * 2),
+                          child: Column(
+                            children: [
+                              Container(
+                                child: const Icon(
+                                  Icons.add,
+                                  color: Color(0xFFCECDCD),
+                                ),
+                                padding:
+                                    const EdgeInsets.all(defaultPadding / 2),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: const Color(0xFFCECDCD), width: 2),
+                                  borderRadius: BorderRadius.circular(500),
+                                ),
                               ),
-                              padding: const EdgeInsets.all(defaultPadding / 2),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: const Color(0xFFCECDCD), width: 2),
-                                borderRadius: BorderRadius.circular(500),
-                              ),
-                            ),
-                            const SizedBox(height: defaultPadding),
-                            const Text(
-                              'Select at least 2 description images',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Color(0xFFCECDCD),
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16,
-                              ),
-                            )
-                          ],
+                              const SizedBox(height: defaultPadding),
+                              const Text(
+                                'Select at least 2 description images',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Color(0xFFCECDCD),
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -176,6 +185,7 @@ class _ShareCollectionPageState extends State<ShareCollectionPage> {
     required int hintMaxLines,
     required double height,
     required TextEditingController controller,
+    required String hint,
   }) {
     return Container(
       height: height,
@@ -197,7 +207,7 @@ class _ShareCollectionPageState extends State<ShareCollectionPage> {
           hintMaxLines: hintMaxLines,
           border: InputBorder.none,
           contentPadding: const EdgeInsets.all(defaultPadding),
-          hintText: 'Please write your collection\'s name here',
+          hintText: hint,
         ),
       ),
     );

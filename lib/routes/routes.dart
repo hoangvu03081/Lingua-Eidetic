@@ -127,10 +127,12 @@ class RouteGenerator {
           ),
         );
       case SHARE_COLLECTION_PAGE:
+        final title = settings.arguments as String;
+
         return MaterialPageRoute(
           builder: (context) => Provider<Auth>.value(
             value: auth,
-            builder: (_, __) => const ShareCollectionPage(),
+            builder: (_, __) => ShareCollectionPage(title: title),
           ),
         );
       case DESCRIPTION_IMAGES_PAGE:
