@@ -201,9 +201,11 @@ class _CommunityDownloadPageState extends State<CommunityDownloadPage> {
                               ),
                             ),
                             const Expanded(child: SizedBox()),
-                            const Text(
-                              'John Leo',
-                              style: TextStyle(
+                            Text(
+                              widget.collection.author.trim() == ''
+                                  ? 'Anonymous'
+                                  : widget.collection.author,
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
                               ),

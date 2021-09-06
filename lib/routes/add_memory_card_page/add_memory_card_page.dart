@@ -18,7 +18,6 @@ class AddMemoryCardPage extends StatefulWidget {
 
 class _AddMemoryCardPageState extends State<AddMemoryCardPage> {
   int _activeIndex = 0;
-  final focusNode = FocusNode();
   final _generateCap = GenerationCap();
   List<List<String>> captionLists = [];
   var captionTextFieldKey = UniqueKey();
@@ -33,12 +32,10 @@ class _AddMemoryCardPageState extends State<AddMemoryCardPage> {
   @override
   void dispose() {
     super.dispose();
-    focusNode.dispose();
   }
 
   void autoGenerateCaption() {
     setState(() {
-      captionTextFieldKey = UniqueKey();
       final captions = _generateCap.getStringCaption(_activeIndex);
       for (String value in captions) {
         if (!(captionLists[_activeIndex].contains(value) ||
@@ -46,6 +43,7 @@ class _AddMemoryCardPageState extends State<AddMemoryCardPage> {
           captionLists[_activeIndex].add(value);
         }
       }
+      captionTextFieldKey = UniqueKey();
     });
   }
 
@@ -84,7 +82,6 @@ class _AddMemoryCardPageState extends State<AddMemoryCardPage> {
                 child: IconButton(
                   splashRadius: 15,
                   onPressed: () {
-                    focusNode.unfocus();
                     for (int i = 0; i < captionLists.length; i++) {
                       cardService.addCard(
                           MemoryCard(

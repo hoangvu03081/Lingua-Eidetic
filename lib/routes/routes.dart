@@ -154,6 +154,7 @@ class RouteGenerator {
         final item = arguments['item'] as MemoryCard;
         final title = arguments['collectionTitle'] as String;
         final imagePath = arguments['localPath'] as String;
+        final id = arguments['id'] as String;
         return MaterialPageRoute(
           builder: (context) => Provider<Auth>.value(
             value: auth,
@@ -161,6 +162,7 @@ class RouteGenerator {
               title: title,
               card: item,
               imagePath: imagePath,
+              id: id,
             ),
           ),
         );

@@ -87,6 +87,9 @@ class _CaptionTextFieldState extends State<CaptionTextField> {
                   onPressed: () {},
                   onDeleted: widget.canDelete
                       ? () {
+                          if (widget.onChange != null) {
+                            widget.onChange!(_items);
+                          }
                           setState(() {
                             _items.remove(item);
                           });

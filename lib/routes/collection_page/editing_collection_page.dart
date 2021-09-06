@@ -11,6 +11,7 @@ import 'package:lingua_eidetic/routes/collection_page/widgets/title_header.dart'
 import 'package:lingua_eidetic/routes/community/widgets/auto_gen_btn.dart';
 import 'package:lingua_eidetic/routes/homepage/widgets/text_badge.dart';
 import 'package:lingua_eidetic/routes/share_collection/widgets/appbar.dart';
+import 'package:lingua_eidetic/services/card_service.dart';
 import 'package:lingua_eidetic/services/review_service.dart';
 import 'package:lingua_eidetic/widgets/custom_header.dart';
 
@@ -20,10 +21,12 @@ class EditingCollectionPage extends StatefulWidget {
     required this.title,
     required this.card,
     required this.imagePath,
+    required this.id,
   }) : super(key: key);
   final String title;
   final MemoryCard card;
   final String imagePath;
+  final String id;
 
   @override
   _EditingCollectionPageState createState() => _EditingCollectionPageState();
@@ -31,7 +34,9 @@ class EditingCollectionPage extends StatefulWidget {
 
 class _EditingCollectionPageState extends State<EditingCollectionPage> {
   final _generateCap = GenerationCap();
-  final List<String> captionList = [];
+  final cardService = CardService();
+  var captionTextFieldKey = UniqueKey();
+  List<String> captionList = [];
 
   @override
   void initState() {
@@ -41,24 +46,21 @@ class _EditingCollectionPageState extends State<EditingCollectionPage> {
   }
 
   void autoGenerateCaption() {
-    final caption = _generateCap.getStringCaption(0);
     setState(() {
+      final caption = _generateCap.getStringCaption(0);
       for (String value in caption) {
         if (!(captionList.contains(value) || value.trim() == '')) {
           captionList.add(value);
         }
       }
+      captionTextFieldKey = UniqueKey();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final availIn = widget.card.available.difference(DateTime.now());
-    final hours = availIn.inHours;
-    final minutes = availIn.inMinutes;
     final size = MediaQuery.of(context).size;
 
-    /// TODO: them button
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -81,6 +83,14 @@ class _EditingCollectionPageState extends State<EditingCollectionPage> {
                   ),
                   title: widget.title,
                   height: 75,
+                  action: GestureDetector(
+                    onTap: () {
+                      cardService.addCardCaption(
+                          cardId: widget.id, captions: captionList);
+                      Navigator.of(context).pop();
+                    },
+                    child: const Icon(Icons.done, size: 32),
+                  ),
                 ),
                 Container(
                   decoration: BoxDecoration(
@@ -132,16 +142,24 @@ class _EditingCollectionPageState extends State<EditingCollectionPage> {
                   ],
                 ),
                 const SizedBox(height: defaultPadding * 2),
-                TitleHeader(
-                  title: hours < 0
-                      ? 'Available'
-                      : hours == 0
-                          ? minutes < 0
-                              ? 'Available'
-                              : 'Cooldown: $minutes minutes'
-                          : 'Cooldown: $hours hours',
-                  backColor: const Color(0xFF2A3387),
-                ),
+                FutureBuilder<String>(
+                    future: cardService.getTimeCoolDown(
+                        timeAvailable: widget.card.available),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return const Text('Something went wrong');
+                      }
+                      if (snapshot.hasData) {
+                        final availIn = snapshot.data!;
+                        return TitleHeader(
+                          title: availIn == ''
+                              ? 'Available Now'
+                              : 'Cooldown: $availIn',
+                          backColor: const Color(0xFF2A3387),
+                        );
+                      }
+                      return const SizedBox();
+                    }),
                 const SizedBox(height: defaultPadding * 2),
                 Padding(
                   padding: const EdgeInsets.only(left: defaultPadding),
@@ -157,7 +175,13 @@ class _EditingCollectionPageState extends State<EditingCollectionPage> {
                 const SizedBox(height: defaultPadding),
                 ConstrainedBox(
                   constraints: const BoxConstraints(minHeight: 155),
-                  child: CaptionTextField(key: UniqueKey(), items: captionList),
+                  child: CaptionTextField(
+                    key: captionTextFieldKey,
+                    items: captionList,
+                    onChange: (items) {
+                      captionList = items;
+                    },
+                  ),
                 ),
                 const SizedBox(height: defaultPadding),
                 AutoGenBtn(onPressed: autoGenerateCaption),

@@ -9,6 +9,8 @@ import 'package:lingua_eidetic/routes/share_collection/models/image_model.dart';
 import 'package:lingua_eidetic/routes/share_collection/widgets/appbar.dart';
 import 'package:lingua_eidetic/services/upload_service.dart';
 
+final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
 class ShareCollectionPage extends StatefulWidget {
   const ShareCollectionPage({Key? key, required this.title}) : super(key: key);
   final String title;
@@ -31,10 +33,11 @@ class _ShareCollectionPageState extends State<ShareCollectionPage> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
+        key: _scaffoldKey,
         floatingActionButton: CircleAvatar(
           backgroundColor: Theme.of(context).accentColor,
           child: IconButton(
-            onPressed: () {
+            onPressed: () async {
               uploadService.uploadCollection(
                 name: nameController.text,
                 description: descriptionController.text,
@@ -42,6 +45,25 @@ class _ShareCollectionPageState extends State<ShareCollectionPage> {
                     .map<String>((ItemModel item) => item.path)
                     .toList(),
               );
+              showDialog(
+                  context: _scaffoldKey.currentContext!,
+                  builder: (context) {
+                    return AlertDialog(
+                      contentPadding: EdgeInsets.zero,
+                      insetPadding: EdgeInsets.symmetric(
+                        vertical: (size.height - 100) / 2,
+                        horizontal: (size.width - 100) / 2,
+                      ),
+                      content: const SizedBox(
+                        width: 100,
+                        height: 100,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                    );
+                  });
+              await Future.delayed(const Duration(seconds: 1));
               Navigator.of(context).pop();
             },
             icon: const Icon(Icons.arrow_right_alt),
