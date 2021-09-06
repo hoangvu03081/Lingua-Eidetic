@@ -9,9 +9,9 @@ void main() async {
   await AppStartup.init();
   runApp(
     EasyLocalization(
-        supportedLocales: [
-          const Locale('en'),
-          const Locale('vi'),
+        supportedLocales: const [
+          Locale('en'),
+          Locale('vi'),
         ],
         path: 'assets/translations',
         saveLocale: false,
@@ -38,6 +38,10 @@ class MyApp extends StatelessWidget {
       locale: context.locale,
       onGenerateRoute: routeGenerator.generateRoute,
       initialRoute: RouteGenerator.LANDING_PAGE,
+      theme: ThemeData(
+        accentColor: const Color(0xFF172853),
+        scaffoldBackgroundColor: const Color(0xFFEDF2F5),
+      ),
     );
   }
 }

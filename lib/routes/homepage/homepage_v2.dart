@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -7,7 +6,6 @@ import 'package:lingua_eidetic/constants.dart';
 import 'package:lingua_eidetic/routes/homepage/widgets/add_btn.dart';
 import 'package:lingua_eidetic/widgets/custom_toast.dart';
 import 'package:lingua_eidetic/routes/homepage/widgets/collection_list.dart';
-import 'package:lingua_eidetic/routes/homepage/widgets/header.dart';
 import 'package:lingua_eidetic/services/collection_service.dart';
 
 class HomePageV2 extends StatefulWidget {
@@ -18,26 +16,17 @@ class HomePageV2 extends StatefulWidget {
 }
 
 class _HomePageV2State extends State<HomePageV2> {
-  FocusNode titleFocusNode = FocusNode();
-  TextEditingController titleController = TextEditingController();
-  late final FToast fToast;
-  double topOffset = 0;
+  late final fToast = FToast();
 
   @override
   void initState() {
     super.initState();
-    fToast = FToast();
     fToast.init(context);
   }
 
-  @override
-  void dispose() {
-    titleController.dispose();
-    titleFocusNode.dispose();
-    super.dispose();
-  }
+  String title = '';
 
-  var _query = '';
+  String _query = '';
 
   void onQuery(String query) {
     setState(() {
@@ -48,59 +37,50 @@ class _HomePageV2State extends State<HomePageV2> {
   final collectionService = CollectionService();
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
-    return WillPopScope(
-      onWillPop: () async {
-        removeOverlay();
-        return false;
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
       },
-      child: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
-        child: Scaffold(
-          backgroundColor: const Color(0xFFEDF2F5),
-          bottomNavigationBar: AddBtn(
-            openAddForm: () {
-              _buildAddFormV2(context);
-            },
-          ),
-          body: SafeArea(
-            // child: NestedScrollView(
-            //   headerSliverBuilder:
-            //       (BuildContext context, bool innerBoxIsScrolled) {
-            //     return [
-            //       SliverAppBar(
-            //         titleSpacing: 0,
-            //         title: SizedBox(
-            //           height: headerHeight + defaultPadding * 2,
-            //           child: Padding(
-            //             padding: const EdgeInsets.only(
-            //               top: defaultPadding * 2,
-            //               left: defaultPadding,
-            //               right: defaultPadding,
-            //             ),
-            //             child: Header(height: headerHeight, onQuery: onQuery),
-            //           ),
-            //         ),
-            //         toolbarHeight: headerHeight + defaultPadding * 2,
-            //         backgroundColor: Colors.transparent,
-            //         leading: const SizedBox(),
-            //         leadingWidth: 0,
-            //       )
-            //     ];
-            //   },
-            //   body: CollectionList(
-            //     data: collectionService.data,
-            //     query: _query,
-            //   ),
-            // ),
-            child: CollectionList(
-              data: collectionService.data,
-              query: _query,
-              onQuery: onQuery,
-            ),
+      child: Scaffold(
+        bottomNavigationBar: AddBtn(
+          openAddForm: () {
+            _buildAddFormV2(context);
+          },
+        ),
+        body: SafeArea(
+          // child: NestedScrollView(
+          //   headerSliverBuilder:
+          //       (BuildContext context, bool innerBoxIsScrolled) {
+          //     return [
+          //       SliverAppBar(
+          //         titleSpacing: 0,
+          //         title: SizedBox(
+          //           height: headerHeight + defaultPadding * 2,
+          //           child: Padding(
+          //             padding: const EdgeInsets.only(
+          //               top: defaultPadding * 2,
+          //               left: defaultPadding,
+          //               right: defaultPadding,
+          //             ),
+          //             child: Header(height: headerHeight, onQuery: onQuery),
+          //           ),
+          //         ),
+          //         toolbarHeight: headerHeight + defaultPadding * 2,
+          //         backgroundColor: Colors.transparent,
+          //         leading: const SizedBox(),
+          //         leadingWidth: 0,
+          //       )
+          //     ];
+          //   },
+          //   body: CollectionList(
+          //     data: collectionService.data,
+          //     query: _query,
+          //   ),
+          // ),
+          child: CollectionList(
+            data: collectionService.data,
+            query: _query,
+            onQuery: onQuery,
           ),
         ),
       ),
@@ -192,10 +172,9 @@ class _HomePageV2State extends State<HomePageV2> {
   //   );
   // }
 
-  void _addingSuccessfully() {
-    collectionService.addCollection(name: titleController.text);
-    titleFocusNode.unfocus();
-    ToastManager.showToast(
+  void _addingSuccessfully(String title) {
+    collectionService.addCollection(name: title);
+    showToast(
       fToast: fToast,
       child:
           const SuccessToast(successText: 'Successfully added the collection'),
@@ -204,11 +183,10 @@ class _HomePageV2State extends State<HomePageV2> {
       left: 0,
       right: 0,
     );
-    titleController.clear();
   }
 
   void _titleEmptyToast() {
-    ToastManager.showToast(
+    showToast(
       fToast: fToast,
       child: const ErrorToast(errorText: 'Title must not be empty'),
       seconds: 2,
@@ -218,20 +196,18 @@ class _HomePageV2State extends State<HomePageV2> {
     );
   }
 
-  OverlayEntry? overlayEntry;
-  void removeOverlay() {
-    if (overlayEntry != null) {
-      overlayEntry!.remove();
-      overlayEntry = null;
-    }
-  }
-
   Future<void> _buildAddFormV2(BuildContext context) async {
     return showDialog<void>(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Input your collection name below:'),
+          title: Text(
+            'Input your collection name below:',
+            style: Theme.of(context)
+                .textTheme
+                .headline6!
+                .copyWith(fontWeight: FontWeight.bold),
+          ),
           titlePadding: const EdgeInsets.only(
             top: defaultPadding * 2,
             left: defaultPadding * 2,
@@ -249,9 +225,12 @@ class _HomePageV2State extends State<HomePageV2> {
               children: <Widget>[
                 Expanded(
                   child: TextField(
-                    controller: titleController,
+                    autofocus: true,
+                    onChanged: (String value) {
+                      title = value;
+                    },
                     onSubmitted: (String value) {
-                      _addCollection();
+                      _addCollection(value);
                     },
                     style: const TextStyle(fontSize: 16),
                     decoration: const InputDecoration(
@@ -266,7 +245,7 @@ class _HomePageV2State extends State<HomePageV2> {
                 ),
                 TextButton(
                   onPressed: () {
-                    _addCollection();
+                    _addCollection(title);
                   },
                   child: const Text('Add'),
                 )
@@ -278,12 +257,13 @@ class _HomePageV2State extends State<HomePageV2> {
     );
   }
 
-  void _addCollection() {
-    if (titleController.text.isEmpty) {
+  void _addCollection(String title) {
+    print('Not error yet');
+    if (title.trim() == '') {
       _titleEmptyToast();
       return;
     }
-    _addingSuccessfully();
+    _addingSuccessfully(title);
     Navigator.of(context).pop();
   }
 }

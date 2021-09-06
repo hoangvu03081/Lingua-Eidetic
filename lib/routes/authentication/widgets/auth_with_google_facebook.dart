@@ -26,7 +26,7 @@ class AuthWithGoogleFacebook extends StatefulWidget {
 }
 
 class _AuthWithGoogleFacebookState extends State<AuthWithGoogleFacebook> {
-  late final FToast fToast;
+  late final fToast = FToast();
 
   Future<User?> _signIn(SignInMethod signInMethod) async {
     try {
@@ -34,7 +34,7 @@ class _AuthWithGoogleFacebookState extends State<AuthWithGoogleFacebook> {
       final user = await signInMethod();
       return user;
     } on FirebaseAuthException catch (e) {
-      ToastManager.showToast(
+      showToast(
         fToast: fToast,
         child: ErrorToast(errorText: e.code),
         seconds: 5,
@@ -61,7 +61,6 @@ class _AuthWithGoogleFacebookState extends State<AuthWithGoogleFacebook> {
   @override
   void initState() {
     super.initState();
-    fToast = FToast();
     fToast.init(context);
   }
 

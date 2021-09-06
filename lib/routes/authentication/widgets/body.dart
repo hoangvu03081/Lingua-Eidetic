@@ -22,7 +22,6 @@ class AuthenticationPageBody extends StatelessWidget {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFFEDF2F5),
         body: SizedBox(
           height: size.height,
           child: Stack(

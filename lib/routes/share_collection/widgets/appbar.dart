@@ -10,17 +10,17 @@ PreferredSizeWidget getCustomAppBar(BuildContext context, String title,
       onTap: () {
         Navigator.of(context).pop();
       },
-      child: const Icon(
+      child: Icon(
         Icons.chevron_left,
-        color: Color(0xFF172853),
+        color: Theme.of(context).accentColor,
         size: 30,
       ),
     ),
     leadingWidth: 30,
     title: Text(
       title,
-      style: const TextStyle(
-        color: Color(0xFF172853),
+      style: TextStyle(
+        color: Theme.of(context).accentColor,
       ),
     ),
     centerTitle: true,

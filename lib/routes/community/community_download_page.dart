@@ -36,7 +36,6 @@ class _CommunityDownloadPageState extends State<CommunityDownloadPage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     controller.dispose();
     super.dispose();
   }
@@ -77,21 +76,42 @@ class _CommunityDownloadPageState extends State<CommunityDownloadPage> {
                     child: Column(
                       children: [
                         CustomHeader(
-                          leadingIcon: const Icon(
+                          leadingIcon: Icon(
                             Icons.chevron_left,
                             size: 30,
+                            color: Theme.of(context).accentColor,
                           ),
                           title: widget.collection.name,
                           action: GestureDetector(
-                            onTap: () {
+                            onTap: () async {
                               communityService.downloadCollection();
                               setState(() {
                                 isDownloaded = true;
                               });
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      contentPadding: EdgeInsets.zero,
+                                      insetPadding: EdgeInsets.symmetric(
+                                        vertical: (size.height - 100) / 2,
+                                        horizontal: (size.width - 100) / 2,
+                                      ),
+                                      content: const SizedBox(
+                                        width: 100,
+                                        height: 100,
+                                        child: Center(
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      ),
+                                    );
+                                  });
+                              await Future.delayed(const Duration(seconds: 1));
+                              Navigator.of(context).pop();
                             },
-                            child: const CircleAvatar(
-                              backgroundColor: Color(0xFF172853),
-                              child: Icon(
+                            child: CircleAvatar(
+                              backgroundColor: Theme.of(context).accentColor,
+                              child: const Icon(
                                 Icons.arrow_downward,
                                 color: Colors.white,
                               ),
@@ -234,8 +254,6 @@ class _CommunityDownloadPageState extends State<CommunityDownloadPage> {
                     ),
                   ),
                   const SizedBox(height: defaultPadding * 3),
-
-                  // TODO: comment
                   StreamBuilder<QuerySnapshot>(
                     stream: commentService.data,
                     builder: (context, snapshot) {
@@ -247,7 +265,7 @@ class _CommunityDownloadPageState extends State<CommunityDownloadPage> {
 
                         return ConstrainedBox(
                           constraints: BoxConstraints(
-                            minHeight: 100,
+                            minHeight: 200,
                             maxHeight: size.height,
                           ),
                           child: Container(
@@ -294,51 +312,32 @@ class _CommunityDownloadPageState extends State<CommunityDownloadPage> {
                                         ),
                                         const SizedBox(height: defaultPadding),
                                         Container(
-                                          height: 50,
-                                          padding: const EdgeInsets.all(
-                                              defaultPadding),
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              const CircleAvatar(
-                                                backgroundColor: Colors.blue,
-                                                radius: 12,
+                                          height: 100,
+                                          child: TextField(
+                                            maxLines: 10,
+                                            controller: controller,
+                                            decoration: InputDecoration(
+                                              contentPadding:
+                                                  const EdgeInsets.all(
+                                                      defaultPadding),
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        defaultPadding),
                                               ),
-                                              const SizedBox(
-                                                  width: defaultPadding),
-                                              Expanded(
-                                                child: SizedBox(
-                                                  height: 24,
-                                                  child: TextField(
-                                                    controller: controller,
-                                                    decoration: InputDecoration(
-                                                      suffixIcon:
-                                                          GestureDetector(
-                                                        onTap: () {
-                                                          FocusScope.of(context)
-                                                              .unfocus();
-                                                          commentService
-                                                              .comment(
-                                                                  controller
-                                                                      .text);
-                                                          controller.clear();
-                                                        },
-                                                        child: const Icon(
-                                                          Icons.send,
-                                                          color: Colors.blue,
-                                                          size: 20,
-                                                        ),
-                                                      ),
-                                                      suffixIconConstraints:
-                                                          const BoxConstraints(
-                                                        maxWidth: 20,
-                                                      ),
-                                                    ),
-                                                  ),
+                                              enabledBorder:
+                                                  const OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: Colors.transparent,
                                                 ),
                                               ),
-                                            ],
+                                              focusedBorder:
+                                                  const OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: Color(0xFF9DA1FF),
+                                                ),
+                                              ),
+                                            ),
                                           ),
                                           decoration: BoxDecoration(
                                             borderRadius:
@@ -374,8 +373,8 @@ class _CommunityDownloadPageState extends State<CommunityDownloadPage> {
                                     child: Container(
                                       margin: const EdgeInsets.only(
                                           bottom: defaultPadding * 2),
-                                      padding:
-                                          const EdgeInsets.all(defaultPadding),
+                                      padding: const EdgeInsets.all(
+                                          defaultPadding * 2),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(8),
                                         gradient: const LinearGradient(
@@ -423,6 +422,8 @@ class _CommunityDownloadPageState extends State<CommunityDownloadPage> {
                                                     color: Colors.grey[500],
                                                   ),
                                                 ),
+                                                const SizedBox(
+                                                    height: defaultPadding * 2),
                                                 CircleAvatar(
                                                   radius: 12,
                                                   child: Image.network((comment

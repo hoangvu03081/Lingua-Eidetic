@@ -47,7 +47,7 @@ class CollectionCard extends StatelessWidget {
       ),
       height: 120,
       decoration: BoxDecoration(
-        color: Color(0xFF172853),
+        color: Theme.of(context).accentColor,
         borderRadius: BorderRadius.circular(9),
         boxShadow: [
           BoxShadow(

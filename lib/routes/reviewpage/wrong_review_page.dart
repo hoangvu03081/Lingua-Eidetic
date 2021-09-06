@@ -7,9 +7,7 @@ import 'package:lingua_eidetic/models/memory_card.dart';
 import 'package:lingua_eidetic/routes/collection_page/widgets/caption_textfield.dart';
 import 'package:lingua_eidetic/services/card_service.dart';
 import 'package:lingua_eidetic/utilities/firestore_path.dart';
-import 'package:textfield_tags/textfield_tags.dart';
 
-//TODO: Add captions to box
 class WrongReviewPage extends StatelessWidget {
   const WrongReviewPage({Key? key, required this.wrong}) : super(key: key);
 
@@ -24,7 +22,6 @@ class WrongReviewPage extends StatelessWidget {
     final cardId = temp.id;
     final card = MemoryCard.fromMap(temp.data() as Map<String, dynamic>);
     return Scaffold(
-      backgroundColor: Color(0xFFEDF2F5),
       body: SizedBox(
         height: size.height,
         width: size.width,
@@ -37,7 +34,7 @@ class WrongReviewPage extends StatelessWidget {
               height: size.height * 0.045,
               decoration: BoxDecoration(
                 color: Colors.white,
-                border: Border.all(width: 1, color: Color(0xFFFF2358)),
+                border: Border.all(width: 1, color: const Color(0xFFFF2358)),
                 borderRadius: const BorderRadius.all(Radius.circular(30)),
               ),
               child: Padding(
@@ -91,11 +88,11 @@ class WrongReviewPage extends StatelessWidget {
             Row(
               children: [
                 SizedBox(width: size.width * 0.16),
-                const Text(
+                Text(
                   'Captions',
                   style: TextStyle(
                     fontSize: 24,
-                    color: Color(0xFF172853),
+                    color: Theme.of(context).accentColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -104,13 +101,12 @@ class WrongReviewPage extends StatelessWidget {
             SizedBox(
               height: size.height * 0.01,
             ),
-            // TODO: Check caption tags
             SingleChildScrollView(
               child: SizedBox(
                 width: size.width * 0.84,
                 height: size.height * 0.19,
                 child: CaptionTextField(
-                  card: card,
+                  items: card.caption,
                   canDelete: false,
                   canAdding: false,
                 ),
@@ -163,7 +159,8 @@ class WrongReviewPage extends StatelessWidget {
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
-                            side: const BorderSide(color: Color(0xFF172853)))),
+                            side: BorderSide(
+                                color: Theme.of(context).accentColor))),
                     backgroundColor: MaterialStateProperty.all(Colors.white),
                   ),
                   onPressed: () async {
@@ -191,8 +188,9 @@ class WrongReviewPage extends StatelessWidget {
                   child: SizedBox(
                       height: size.height * 0.042,
                       width: size.width * 0.22,
-                      child: const Center(
-                          child: Icon(Icons.menu, color: Color(0xFF172853)))),
+                      child: Center(
+                          child: Icon(Icons.menu,
+                              color: Theme.of(context).accentColor))),
                 ),
                 SizedBox(width: size.width * 0.04),
                 ElevatedButton(

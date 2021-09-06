@@ -54,29 +54,29 @@ class RouteGenerator {
     switch (settings.name) {
       case LANDING_PAGE:
         return MaterialPageRoute(builder: (context) {
-          return LandingPage();
-          return StreamBuilder(
-            stream: auth.authStateChanges(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.active) {
-                final user = snapshot.data;
-                if (user == null) {
-                  /// landing page has login and register button
-                  return Provider<Auth>.value(
-                    value: auth,
-                    builder: (context, child) => const AuthPage(),
-                  );
-                }
+          return const LandingPage();
+          // return StreamBuilder(
+          //   stream: auth.authStateChanges(),
+          //   builder: (context, snapshot) {
+          //     if (snapshot.connectionState == ConnectionState.active) {
+          //       final user = snapshot.data;
+          //       if (user == null) {
+          //         /// landing page has login and register button
+          //         return Provider<Auth>.value(
+          //           value: auth,
+          //           builder: (context, child) => const AuthPage(),
+          //         );
+          //       }
 
-                /// return homepage
-                return Provider<Auth>.value(
-                  value: auth,
-                  builder: (_, __) => const HomePageV2(),
-                );
-              }
-              return const SizedBox();
-            },
-          );
+          //       /// return homepage
+          //       return Provider<Auth>.value(
+          //         value: auth,
+          //         builder: (_, __) => const HomePageV2(),
+          //       );
+          //     }
+          //     return const SizedBox();
+          //   },
+          // );
         });
       case SIGN_IN_PAGE:
         return MaterialPageRoute(

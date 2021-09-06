@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:lingua_eidetic/routes/auth/auth_page.dart';
 import 'package:lingua_eidetic/routes/auth/startup_animation.dart';
-import 'package:lingua_eidetic/routes/authentication/authentication_page.dart';
 import 'package:lingua_eidetic/routes/homepage/homepage_v2.dart';
 import 'package:lingua_eidetic/routes/routes.dart';
 import 'package:lingua_eidetic/services/auth_service.dart';

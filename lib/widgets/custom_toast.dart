@@ -2,26 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lingua_eidetic/constants.dart';
 
-class ToastManager {
-  static void showToast({
-    required FToast fToast,
-    required Widget child,
-    int seconds = 3,
-    double? right,
-    double? bottom,
-    double? left,
-    double? top,
-  }) {
-    final duration = Duration(seconds: seconds);
-    fToast.showToast(
-      child: child,
-      positionedToastBuilder: (context, child) {
-        return Positioned(
-            child: child, right: right, bottom: bottom, left: left, top: top);
-      },
-      toastDuration: duration,
-    );
-  }
+void showToast({
+  required FToast fToast,
+  required Widget child,
+  int seconds = 3,
+  double? right,
+  double? bottom,
+  double? left,
+  double? top,
+}) {
+  final duration = Duration(seconds: seconds);
+  fToast.showToast(
+    child: child,
+    positionedToastBuilder: (context, child) {
+      return Positioned(
+          child: child, right: right, bottom: bottom, left: left, top: top);
+    },
+    toastDuration: duration,
+  );
 }
 
 class ErrorToast extends StatelessWidget {
@@ -94,7 +92,7 @@ class SuccessToast extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Icon(
-                Icons.warning_amber,
+                Icons.check,
                 size: 40,
                 color: Colors.black,
               ),

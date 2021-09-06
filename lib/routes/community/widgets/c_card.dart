@@ -27,7 +27,7 @@ class CCard extends StatelessWidget {
       child: Container(
         height: 125,
         margin: const EdgeInsets.only(bottom: defaultPadding * 2),
-        padding: const EdgeInsets.all(defaultPadding),
+        padding: const EdgeInsets.all(defaultPadding * 2),
         decoration: BoxDecoration(
             color: const Color(0xFFE9ECFC),
             borderRadius: BorderRadius.circular(10),
@@ -41,17 +41,12 @@ class CCard extends StatelessWidget {
         child: Stack(
           children: [
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Text(
-                      collection.name,
-                      style: const TextStyle(
-                        fontSize: 22,
-                      ),
-                    ),
-                    const SizedBox(width: defaultPadding),
-                  ],
+                Text(
+                  collection.name,
+                  style: Theme.of(context).textTheme.headline5,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: defaultPadding * 2),
                 Row(
@@ -85,9 +80,12 @@ class CCard extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(collection.author.trim().isEmpty
-                            ? 'Anonymous'
-                            : collection.author),
+                        Text(
+                          collection.author.trim().isEmpty
+                              ? 'Anonymous'
+                              : collection.author,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                         const SizedBox(height: defaultPadding / 2),
                         Container(
                           width: 35,
@@ -109,6 +107,7 @@ class CCard extends StatelessWidget {
                 children: [
                   Text('${collection.love}'),
                   const Icon(Icons.favorite_border_outlined),
+                  const SizedBox(width: defaultPadding),
                   Text('${collection.download}'),
                   const Icon(Icons.arrow_downward),
                 ],

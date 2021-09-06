@@ -34,63 +34,59 @@ class _CollectionCardV2State extends State<CollectionCardV2> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Padding(
+    return Container(
       padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-      child: Stack(
-        alignment: Alignment.centerRight,
-        children: [
-          GestureDetector(
-            onTap: () {
-              FocusScope.of(context).unfocus();
-              Navigator.of(context).pushNamed(RouteGenerator.COLLECTION_PAGE,
-                  arguments: {
-                    'id': (widget.key as ValueKey).value,
-                    'title': widget.title
-                  }).then((value) {
-                widget.setParentState();
-              });
-            },
-            onHorizontalDragStart: (details) {
-              startX = details.globalPosition.dx;
-            },
-            onHorizontalDragUpdate: (details) {
+      margin: const EdgeInsets.only(bottom: defaultPadding * 2),
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+          Navigator.of(context).pushNamed(RouteGenerator.COLLECTION_PAGE,
+              arguments: {
+                'id': (widget.key as ValueKey).value,
+                'title': widget.title
+              }).then((value) {
+            widget.setParentState();
+          });
+        },
+        onHorizontalDragStart: (details) {
+          startX = details.globalPosition.dx;
+        },
+        onHorizontalDragUpdate: (details) {
+          setState(() {
+            dx = details.globalPosition.dx - startX;
+          });
+        },
+        onHorizontalDragEnd: (details) {
+          double v = details.velocity.pixelsPerSecond.dx;
+          if (dx <= -size.width / 2 || v < -1000) {
+            // delete
+            const dur = Duration(milliseconds: 40);
+            Timer.periodic(dur, (Timer t) {
               setState(() {
-                dx = details.globalPosition.dx - startX;
+                if (v < -1000) {
+                  dx += v / 25;
+                } else {
+                  dx -= size.width / 25;
+                }
               });
-            },
-            onHorizontalDragEnd: (details) {
-              double v = details.velocity.pixelsPerSecond.dx;
-              if (dx <= -size.width / 2 || v < -1000) {
-                // delete
-                const dur = Duration(milliseconds: 40);
-                Timer.periodic(dur, (Timer t) {
-                  setState(() {
-                    if (v < -1000) {
-                      dx += v / 25;
-                    } else {
-                      dx -= size.width / 40;
-                    }
-                  });
-                  if (dx <= -size.width) {
-                    widget.remove();
-                    t.cancel();
-                  }
-                });
-              } else {
-                setState(() {
-                  dx = 0;
-                });
+              if (dx <= -size.width) {
+                widget.remove();
+                t.cancel();
               }
-            },
-            child: Container(
+            });
+          } else {
+            setState(() {
+              dx = 0;
+            });
+          }
+        },
+        child: Stack(
+          children: [
+            Container(
               transform: Matrix4.translationValues(dx, 0, 0),
-              margin: const EdgeInsets.only(bottom: defaultPadding * 2),
-              padding: const EdgeInsets.symmetric(
-                vertical: defaultPadding * 2,
-                horizontal: defaultPadding * 3,
-              ),
+              padding: const EdgeInsets.all(defaultPadding * 2),
               decoration: BoxDecoration(
-                color: const Color(0xFF172853),
+                color: Theme.of(context).accentColor,
                 borderRadius: const BorderRadius.all(Radius.circular(8)),
                 boxShadow: [
                   BoxShadow(
@@ -109,11 +105,9 @@ class _CollectionCardV2State extends State<CollectionCardV2> {
                     child: Text(
                       widget.title,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
+                      style: Theme.of(context).textTheme.headline6!.copyWith(
+                            color: Colors.white,
+                          ),
                     ),
                   ),
                   const SizedBox(height: defaultPadding),
@@ -124,7 +118,7 @@ class _CollectionCardV2State extends State<CollectionCardV2> {
                       const SizedBox(width: defaultPadding),
                       TextBadge(
                         text: '${widget.total} total',
-                        textColor: const Color(0xFF172853),
+                        textColor: Theme.of(context).accentColor,
                         backColor: Colors.white,
                       ),
                     ],
@@ -132,64 +126,64 @@ class _CollectionCardV2State extends State<CollectionCardV2> {
                 ],
               ),
             ),
-          ),
 
-          // percent balloon
-          Positioned.fill(
-            right: defaultPadding * 4 - dx,
-            bottom: defaultPadding * 2,
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(14),
-                  color: const Color(0xFFFFFFFF),
-                  border: Border.all(
-                    color: const Color(0xFF638FFF),
-                    width: 1,
+            // percent balloon
+            Positioned(
+              right: defaultPadding * 4 - dx,
+              top: 0,
+              bottom: 0,
+              child: Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(14),
+                    color: const Color(0xFFFFFFFF),
+                    border: Border.all(
+                      color: const Color(0xFF638FFF),
+                      width: 1,
+                    ),
                   ),
-                ),
-                width: 28,
-                height: 28,
-                child: Center(
-                  child: Text(
-                    '${getPercentage(widget.avail, widget.total)}%',
-                    // '${}%',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 10,
-                      color: Color(0xFF333D61),
+                  width: 30,
+                  height: 30,
+                  child: Center(
+                    child: Text(
+                      '${getPercentage(widget.avail, widget.total)}%',
+                      // '${}%',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 10,
+                        color: Color(0xFF333D61),
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-          // divider
-          Positioned(
-            top: 8,
-            right: 16 - dx,
-            bottom: 24,
-            child: SizedBox(
-              width: 1.5,
-              child: Container(
-                color: const Color(0xFF253F81),
+            // divider
+            Positioned(
+              top: 8,
+              right: 16 - dx,
+              bottom: 8,
+              child: SizedBox(
+                width: 1.5,
+                child: Container(
+                  color: const Color(0xFF253F81),
+                ),
               ),
             ),
-          ),
-          Positioned(
-            top: 8,
-            right: 20 - dx,
-            bottom: 24,
-            child: SizedBox(
-              width: 2,
-              height: 134,
-              child: Container(
-                color: const Color(0xFF253F81),
+            Positioned(
+              top: 8,
+              right: 20 - dx,
+              bottom: 8,
+              child: SizedBox(
+                width: 2,
+                height: 134,
+                child: Container(
+                  color: const Color(0xFF253F81),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

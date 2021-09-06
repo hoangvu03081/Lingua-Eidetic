@@ -27,7 +27,7 @@ class _CollectionListState extends State<CollectionList> {
   final CollectionService collectionService = CollectionService();
   final List<Collection> _cached = [];
   final List<String> _ids = [];
-// Future<int> avail = collectionService.getAvailableCollectionCount(collectionId: collectionId);
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -55,18 +55,11 @@ class _CollectionListState extends State<CollectionList> {
             itemBuilder: (context, index) {
               if (index == 0) {
                 return Padding(
-                  padding: const EdgeInsets.only(
-                    top: defaultPadding * 2,
-                    left: defaultPadding,
-                    right: defaultPadding,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: defaultPadding * 2,
+                    horizontal: defaultPadding,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Header(onQuery: widget.onQuery),
-                      const SizedBox(height: defaultPadding * 2),
-                    ],
-                  ),
+                  child: Header(onQuery: widget.onQuery),
                 );
               }
 

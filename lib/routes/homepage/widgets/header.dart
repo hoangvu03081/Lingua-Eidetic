@@ -1,8 +1,7 @@
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lingua_eidetic/constants.dart';
+import 'package:lingua_eidetic/routes/homepage/widgets/user_avatar.dart';
 import 'package:lingua_eidetic/routes/routes.dart';
 import 'package:lingua_eidetic/services/auth_service.dart';
 import 'package:lingua_eidetic/widgets/search_box.dart';
@@ -16,11 +15,10 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     final auth = Auth();
     final String? urlImage = auth.currentUser?.photoURL;
     String? username = auth.currentUser?.displayName;
-    if (username == null || username.trim().isEmpty) {
+    if (username == null || username.trim() == '') {
       username = 'User';
     }
     return Column(
@@ -28,36 +26,15 @@ class Header extends StatelessWidget {
       children: [
         Row(
           children: [
-            FutureBuilder(
-              future: Connectivity().checkConnectivity(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return const Text('Something went wrong');
-                }
-                if (snapshot.hasData) {
-                  if (snapshot.data != ConnectivityResult.none) {
-                    return CircleAvatar(
-                      radius: 20,
-                      backgroundImage: NetworkImage(urlImage ??
-                          'https://github.com/hoangvu03081/Lingua-Eidetic/blob/main/assets/images/hacker.png?raw=true'),
-                    );
-                  }
-                  return const CircleAvatar(
-                    radius: 20,
-                    backgroundImage: AssetImage('asset/images/hacker.png'),
-                  );
-                }
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              },
-            ),
+            UserAvatar(urlImage: urlImage),
             const SizedBox(width: defaultPadding),
             Expanded(
               child: Text(
                 'Hi, $username!',
-                style: GoogleFonts.montserrat(
-                    textStyle: Theme.of(context).textTheme.headline5!),
+                style: Theme.of(context).textTheme.headline5!.copyWith(
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
             ),
             PopupMenuButton<int>(
@@ -102,8 +79,6 @@ class Header extends StatelessWidget {
                     case 1:
                       Navigator.of(context)
                           .pushNamed(RouteGenerator.COMMUNITY_PAGE);
-
-                      /// TODO: COMMUNITY HERE
                       break;
                     case 2:
                       auth.signOut();

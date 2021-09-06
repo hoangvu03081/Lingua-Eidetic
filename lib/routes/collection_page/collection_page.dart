@@ -1,14 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:lingua_eidetic/constants.dart';
-import 'package:lingua_eidetic/models/memory_card.dart';
 import 'package:lingua_eidetic/routes/collection_page/widgets/card_group.dart';
 import 'package:lingua_eidetic/routes/collection_page/widgets/header.dart';
 import 'package:lingua_eidetic/routes/routes.dart';
-import 'package:lingua_eidetic/services/card_service.dart';
 import 'package:lingua_eidetic/services/collection_service.dart';
 import 'package:lingua_eidetic/services/image_service.dart';
 import 'package:lingua_eidetic/widgets/collection_navbar.dart';
+import 'package:lingua_eidetic/widgets/custom_header.dart';
 
 class CollectionPage extends StatefulWidget {
   const CollectionPage({Key? key, required this.id, required this.title})
@@ -56,7 +53,6 @@ class _CollectionPageState extends State<CollectionPage> {
               .pushNamed(RouteGenerator.ADD_COLLECTION_PAGE, arguments: [temp]);
         }
       }),
-      backgroundColor: const Color(0xFFEDF2F5),
       body: SafeArea(
         child: NestedScrollView(
           headerSliverBuilder: (context, innerBoxIsScrolled) {
@@ -64,7 +60,12 @@ class _CollectionPageState extends State<CollectionPage> {
               SliverAppBar(
                 floating: true,
                 titleSpacing: 0,
-                title: Header(
+                title: CustomHeader(
+                  leadingIcon: Icon(
+                    Icons.chevron_left,
+                    color: Theme.of(context).accentColor,
+                    size: 32,
+                  ),
                   height: 75,
                   title: widget.title,
                 ),

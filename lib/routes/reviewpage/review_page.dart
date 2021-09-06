@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lingua_eidetic/routes/routes.dart';
 import 'package:lingua_eidetic/services/card_service.dart';
-import 'package:lingua_eidetic/services/collection_service.dart';
 import 'package:lingua_eidetic/services/review_service.dart';
 import 'package:lingua_eidetic/utilities/firestore_path.dart';
 import 'package:lottie/lottie.dart';
@@ -53,7 +52,6 @@ class _ReviewPageState extends State<ReviewPage> with TickerProviderStateMixin {
               ),
             ));
       }
-      ;
     });
   }
 
@@ -69,7 +67,6 @@ class _ReviewPageState extends State<ReviewPage> with TickerProviderStateMixin {
     final reviewService = context.watch<ReviewService>();
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: const Color(0xFFEDF2F5),
       body: FutureBuilder<List<QueryDocumentSnapshot<Object?>>>(
         future: reviewService.data,
         builder: (context, snapshot) {
@@ -99,10 +96,10 @@ class _ReviewPageState extends State<ReviewPage> with TickerProviderStateMixin {
                       SizedBox(height: size.height * 0.1),
                       Text(
                         '$current/$length',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
-                          color: const Color(0xFF172853),
+                          color: Theme.of(context).accentColor,
                         ),
                       ),
                       Row(
@@ -112,7 +109,7 @@ class _ReviewPageState extends State<ReviewPage> with TickerProviderStateMixin {
                             onPressed: () => Navigator.of(context).pop(),
                             child: const Icon(
                               Icons.close,
-                              color: const Color(0xFF3C5BA5),
+                              color: Color(0xFF3C5BA5),
                               size: 35,
                             ),
                           ),
@@ -175,9 +172,9 @@ class _ReviewPageState extends State<ReviewPage> with TickerProviderStateMixin {
                                     memoryCard: cardList[current],
                                   )) {
                                     _textController.text = '';
-                                    if (current >= length - 1)
+                                    if (current >= length - 1) {
                                       Navigator.of(context).pop();
-                                    else {
+                                    } else {
                                       reviewService.updateCurrent(current + 1);
                                       displayAnimation();
                                     }
@@ -207,10 +204,11 @@ class _ReviewPageState extends State<ReviewPage> with TickerProviderStateMixin {
                                     default:
                                   }
                                   _textController.text = '';
-                                  if (current >= length - 1)
+                                  if (current >= length - 1) {
                                     Navigator.of(context).pop();
-                                  else
+                                  } else {
                                     reviewService.updateCurrent(current + 1);
+                                  }
                                 }),
                           ),
                           decoration: BoxDecoration(

@@ -17,12 +17,6 @@ class ShareCollectionPage extends StatefulWidget {
 }
 
 class _ShareCollectionPageState extends State<ShareCollectionPage> {
-  final headerStyle = const TextStyle(
-    color: Color(0xFF172853),
-    fontSize: 18,
-    fontWeight: FontWeight.bold,
-  );
-
   final List<ItemModel> imagePaths = [];
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -38,10 +32,9 @@ class _ShareCollectionPageState extends State<ShareCollectionPage> {
       },
       child: Scaffold(
         floatingActionButton: CircleAvatar(
-          backgroundColor: const Color(0xFF172853),
+          backgroundColor: Theme.of(context).accentColor,
           child: IconButton(
             onPressed: () async {
-              // TODO: Check Upload
               await uploadService.uploadCollection(
                 name: nameController.text,
                 description: descriptionController.text,
@@ -169,7 +162,11 @@ class _ShareCollectionPageState extends State<ShareCollectionPage> {
       ),
       child: Text(
         title,
-        style: headerStyle,
+        style: TextStyle(
+          color: Theme.of(context).accentColor,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }

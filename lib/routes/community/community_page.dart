@@ -15,176 +15,133 @@ class CommunityPage extends StatefulWidget {
 }
 
 class _CommunityPageState extends State<CommunityPage> {
-  String query = '';
+  final communityService = CommunityService();
+  Future<List<SharedCollection>>? future;
+  @override
+  void initState() {
+    super.initState();
+    future = communityService.getCollection();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final communityService = CommunityService();
-
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
         body: SafeArea(
-          child: NestedScrollView(
-            headerSliverBuilder: (context, innerScroll) {
-              return [
-                SliverAppBar(
-                  floating: true,
-                  titleSpacing: 0,
-                  title: Container(
-                    height: 100,
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Color(0xB8CDCFFF),
-                          Color(0xC9D3D8FF),
-                        ],
-                      ),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      vertical: defaultPadding,
-                      horizontal: defaultPadding * 2,
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Icon(
-                                Icons.chevron_left,
-                                color: Color(0xFF172853),
-                                size: 30,
-                              ),
-                            ),
-                            const Text(
-                              'Community',
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: Color(0xFF637BDB),
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const Icon(
-                              Icons.chevron_left,
-                              size: 30,
-                              color: Colors.transparent,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: defaultPadding),
-                        SizedBox(
-                          height: 40,
-                          child: SearchBox(
-                            filterFunc: (value) {
-                              setState(() {
-                                query = value;
-                              });
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  backgroundColor: Colors.transparent,
-                  leading: const SizedBox(),
-                  leadingWidth: 0,
-                  toolbarHeight: 100,
-                )
-              ];
-            },
-            body: Container(
-              decoration: const BoxDecoration(
-                color: Colors.blue,
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xC9D3D8FF),
-                    Color(0xFFE8F7FF),
-                  ],
-                ),
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.blue,
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(0xB8CDCFFF),
+                  Color(0xFFE8F7FF),
+                ],
               ),
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: defaultPadding * 2),
-                child: Builder(
-                  builder: (context) {
-                    if (query == '') {
-                      return FutureBuilder<List<SharedCollection>>(
-                        future: communityService.getCollection(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError) {
-                            return const Text('Something went wrong');
-                          }
+            ),
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: defaultPadding * 2),
+              child: Builder(
+                builder: (context) {
+                  return FutureBuilder<List<SharedCollection>>(
+                    future: future,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return const Text('Something went wrong');
+                      }
 
-                          if (snapshot.hasData) {
-                            return ListView.builder(
-                              itemBuilder: (context, index) {
-                                return CCard(
-                                  collection: snapshot.data![index],
-                                  setParentState: () {
-                                    Timer.periodic(
-                                        const Duration(milliseconds: 400),
-                                        (Timer t) {
-                                      if (mounted) {
-                                        setState(() {});
-                                        t.cancel();
-                                      }
-                                    });
-                                  },
-                                );
-                              },
-                              itemCount: snapshot.data!.length,
-                            );
-                          }
-
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        },
-                      );
-                    }
-                    return FutureBuilder<List<SharedCollection>>(
-                      future: communityService.search(query),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          return const Text('Something went wrong');
-                        }
-
-                        if (snapshot.hasData) {
-                          return ListView.builder(
-                            itemBuilder: (context, index) {
-                              return CCard(
-                                collection: snapshot.data![index],
-                                setParentState: () {
-                                  Timer.periodic(
-                                      const Duration(milliseconds: 400),
-                                      (Timer t) {
-                                    if (mounted) {
-                                      setState(() {});
-                                      t.cancel();
-                                    }
-                                  });
-                                },
+                      if (snapshot.hasData) {
+                        return ListView.builder(
+                          itemBuilder: (context, index) {
+                            if (index == 0) {
+                              return Padding(
+                                padding: const EdgeInsets.only(
+                                  top: defaultPadding,
+                                  bottom: defaultPadding * 2,
+                                ),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Icon(
+                                            Icons.chevron_left,
+                                            color:
+                                                Theme.of(context).accentColor,
+                                            size: 30,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Community',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5!
+                                              .copyWith(
+                                                color: const Color(0xFF637BDB),
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                        ),
+                                        const Icon(
+                                          Icons.chevron_left,
+                                          size: 30,
+                                          color: Colors.transparent,
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: defaultPadding),
+                                    SizedBox(
+                                      height: 40,
+                                      child: SearchBox(
+                                        filterFunc: (value) {
+                                          setState(() {
+                                            if (value == '') {
+                                              future = communityService
+                                                  .getCollection();
+                                            } else {
+                                              future = communityService
+                                                  .search(value);
+                                            }
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               );
-                            },
-                            itemCount: snapshot.data!.length,
-                          );
-                        }
+                            }
+                            return CCard(
+                              collection: snapshot.data![index - 1],
+                              setParentState: () {
+                                Timer.periodic(
+                                    const Duration(milliseconds: 400),
+                                    (Timer t) {
+                                  if (mounted) {
+                                    setState(() {});
+                                    t.cancel();
+                                  }
+                                });
+                              },
+                            );
+                          },
+                          itemCount: snapshot.data!.length + 1,
+                        );
+                      }
 
-                        return const Center(child: CircularProgressIndicator());
-                      },
-                    );
-                  },
-                ),
+                      return const Center(child: CircularProgressIndicator());
+                    },
+                  );
+                },
               ),
             ),
           ),

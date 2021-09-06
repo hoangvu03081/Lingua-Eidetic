@@ -38,7 +38,7 @@ class _CardGroupState extends State<CardGroup> {
       children: [
         TitleHeader(title: CollectionPage.titles[widget.index + 1]!),
         AnimatedContainer(
-          duration: const Duration(milliseconds: 600),
+          duration: const Duration(milliseconds: 300),
           height: widget.isExpand ? size.height * 0.5 : 0,
           margin: EdgeInsets.all(widget.isExpand ? defaultPadding * 2 : 0),
           decoration: BoxDecoration(
@@ -86,57 +86,52 @@ class _CardGroupState extends State<CardGroup> {
                       padding: const EdgeInsets.all(defaultPadding),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
-                        child: Container(
-                          decoration: BoxDecoration(boxShadow: [
-                            OuterBoxShadow(
-                                blurRadius: 4,
-                                offset: const Offset(0, 4),
-                                color: Colors.black.withOpacity(0.25))
-                          ]),
-                          child: Stack(
-                            children: [
-                              FutureBuilder<String>(
-                                future: cardService.getImage(cardId: id),
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            FutureBuilder<String>(
+                              future: cardService.getImage(cardId: id),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context).pushNamed(
+                                          RouteGenerator
+                                              .EDITING_COLLECTION_PAGE,
+                                          arguments: {
+                                            'collectionTitle':
+                                                widget.collectionTitle,
+                                            'item': gridItems[index],
+                                            'localPath': snapshot.data!,
+                                          });
+                                    },
+                                    child: Image.file(
+                                      File(snapshot.data!),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  );
+                                }
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              },
+                            ),
+                            Positioned(
+                              bottom: 10,
+                              right: 10,
+                              child: FutureBuilder<String>(
+                                future: cardService.getTimeCoolDown(
+                                    timeAvailable: gridItems[index].available),
                                 builder: (context, snapshot) {
                                   if (snapshot.hasData) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        /// TODO: edit page
-                                        Navigator.of(context).pushNamed(
-                                            RouteGenerator.EDITING_COLLECTION_PAGE,
-                                            arguments: {
-                                              'collectionTitle':
-                                              widget.collectionTitle,
-                                              'item': gridItems[index],
-                                              'localPath': snapshot.data!,
-                                            });
-                                      },
-                                      child: Image.file(
-                                        File(snapshot.data!),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    );
+                                    return CoolDownLock(
+                                        timeCooldown: snapshot.data!);
                                   }
                                   return const Center(
                                       child: CircularProgressIndicator());
                                 },
                               ),
-                              Positioned(
-                                  bottom: 10,
-                                  right: 10,
-                                  child:  FutureBuilder<String>(
-                                    future: cardService.getTimeCoolDown(timeAvailable: gridItems[index].available),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.hasData) {
-                                        return CoolDownLock(timeCooldown: snapshot.data!);
-                                      }
-                                      return const Center(
-                                          child: CircularProgressIndicator());
-                                    },
-                                  ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ),

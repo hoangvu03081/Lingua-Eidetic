@@ -1,29 +1,29 @@
 import 'package:lingua_eidetic/routes/add_memory_card_page/utilities/object_detection.dart';
 import 'dart:io';
 
-class GenerationCap{
+class GenerationCap {
   late DetectObject _object;
-  late List _listCap;
-  String _fullCaption = "";
+  final List<List<String>> _fullCaption = [];
 
-  GenerationCap(){
+  GenerationCap() {
     _object = DetectObject();
   }
 
   void makeCaptionfromList(List listImagePath) {
-    for(int i = 0; i < listImagePath.length; i++){
-      makeCaptionfromImg(listImagePath[i]);
+    for (int i = 0; i < listImagePath.length; i++) {
+      makeCaptionfromImg(i, listImagePath[i]);
     }
   }
 
-  String getStringCaption() {
-    return _fullCaption;
-  }
+  List<String> getStringCaption(int index) => _fullCaption[index];
 
-  Future makeCaptionfromImg(String imagePath) async{
+  Future makeCaptionfromImg(int index, String imagePath) async {
     await _object.detectObject(File(imagePath));
-    for(int i = 0; i  < _object.getListRecognition().length; i++){
-      _fullCaption += _object.getListRecognition()[i]["detectedClass"] + " ";
+    while (_fullCaption.length <= index) {
+      _fullCaption.add([]);
+    }
+    for (int i = 0; i < _object.getListRecognition().length; i++) {
+      _fullCaption[index].add(_object.getListRecognition()[i]["detectedClass"]);
     }
   }
 }

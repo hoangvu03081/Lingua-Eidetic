@@ -44,6 +44,8 @@ class AuthSignInForm extends StatefulWidget {
 
 class _AuthSignInFormState extends State<AuthSignInForm>
     with SingleTickerProviderStateMixin {
+  late final fToast = FToast();
+
   late final anim = Provider.of<AnimTriggerModel>(context);
   String title = 'Welcome\n';
   String subtitle = 'Sign in to continue!';
@@ -75,7 +77,6 @@ class _AuthSignInFormState extends State<AuthSignInForm>
   String get _password => passwordController.text;
 
   String get _rPassword => rPasswordController.text;
-  late final FToast fToast;
 
   Future<void> _submit() async {
     setState(() => _submitted = true);
@@ -96,7 +97,7 @@ class _AuthSignInFormState extends State<AuthSignInForm>
         await auth.signInWithMailAndPassword(_email, _password);
       }
     } on FirebaseAuthException catch (e) {
-      ToastManager.showToast(
+      showToast(
         fToast: fToast,
         child: ErrorToast(errorText: e.code),
         seconds: 5,
@@ -145,8 +146,6 @@ class _AuthSignInFormState extends State<AuthSignInForm>
         _enableSubmit = (!_submitted) || (_submitted && !isError());
       });
     });
-
-    fToast = FToast();
     fToast.init(context);
   }
 
