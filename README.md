@@ -1,16 +1,29 @@
-# lingua_eidetic
 
-A new Flutter project.
+# Lingua Eidetic
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+[![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs) ![Flutter](https://img.shields.io/badge/-Flutter-46d1fd?style=flat-square&logo=flutter)
+  
+A visual-text spaced-repetition learning app built on Flutter that enables users to learn more quickly
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## Features
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Authentication with Google, Facebook, and email using firebase
+- Data, learning progress is all sync to cloud
+- Data persists both offline and online
+- Levelling/Cooldown system for spaced repitition learning
+- Share, download collections through a community system
+- Powerful collections searching using ElasticSearch
+- Image captioning AI for quickly identifying object
+
+  
+## Screenshots
+
+![App Screenshot](./readme/Sign%20In%20Page.png)
+![App Screenshot](./readme/HomePage.png)
+![App Screenshot](./readme/Card.png)
+![App Screenshot](./readme/Take%20test.png)
+![App Screenshot](./readme/Community.png)
+
+  
