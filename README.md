@@ -15,7 +15,7 @@ A visual-text spaced-repetition learning app built on Flutter that enables users
 - Levelling/Cooldown system for spaced repitition learning
 - Share, download collections through a community system
 - Powerful collections searching using ElasticSearch
-- Image captioning AI for quickly identifying object
+- Image captioning for quick word generation from users photos
 
   
 ## Screenshots
